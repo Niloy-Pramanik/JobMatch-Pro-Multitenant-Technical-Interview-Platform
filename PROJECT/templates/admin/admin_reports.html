@@ -1,0 +1,1293 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Reports - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar - Admin Style */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            height: 80px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-brand .admin-badge {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #e53e3e;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header - Landing Page Design */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.users {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-icon.jobs {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-icon.applications {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-icon.success {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: #48bb78;
+        }
+
+        .stat-change.negative {
+            color: #e53e3e;
+        }
+
+        /* Reports Grid */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Chart Sections */
+        .chart-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        /* Chart Placeholder */
+        .chart-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #cbd5e0;
+            margin-top: 20px;
+        }
+
+        .chart-placeholder {
+            color: #718096;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .chart-icon {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 16px;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a202c;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        /* Metric Lists */
+        .metric-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .metric-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .metric-info {
+            flex: 1;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .metric-description {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .metric-value {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 16px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: #667eea;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .skill-category {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+
+        .skill-demand {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .filter-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .reports-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-section {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Admin Style -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                    <span class="admin-badge">Admin</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/admin-dashboard">Dashboard</a></li>
+                    <li><a href="/admin-users">Users</a></li>
+                    <li><a href="/admin-jobs">Jobs</a></li>
+                    <li><a href="/admin-companies">Companies</a></li>
+                    <li><a href="/admin-exams">Exams</a></li>
+                    <li><a href="/admin-reports" class="active">Reports</a></li>
+                    <li><a href="/admin-settings">Settings</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">5</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">AD</div>
+                        <div class="user-info">
+                            <div class="user-name">Admin User</div>
+                            <div class="user-role">System Admin</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Landing Page Design -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/admin-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Reports & Analytics</span>
+                        </div>
+                        <h1 class="page-title">Reports & Analytics</h1>
+                        <p class="page-subtitle">Comprehensive platform analytics and insights for data-driven decisions</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/admin-export" class="btn btn-ghost">
+                            <i class="fas fa-download"></i>
+                            Export Data
+                        </a>
+                        <a href="/admin-dashboard" class="btn btn-ghost">
+                            <i class="fas fa-chart-line"></i>
+                            Live Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">12,847</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +12% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon jobs">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-value">2,156</div>
+                    <div class="stat-label">Total Jobs</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +8% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon applications">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-value">45,692</div>
+                    <div class="stat-label">Applications</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +15% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value">78%</div>
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +3% this month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        Report Filters
+                    </h3>
+                    <button class="btn btn-secondary btn-sm" onclick="resetFilters()">
+                        <i class="fas fa-refresh"></i>
+                        Reset Filters
+                    </button>
+                </div>
+
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label" for="dateRange">Date Range</label>
+                        <select id="dateRange" class="filter-input filter-select">
+                            <option value="7d">Last 7 days</option>
+                            <option value="30d" selected>Last 30 days</option>
+                            <option value="90d">Last 90 days</option>
+                            <option value="1y">Last year</option>
+                            <option value="custom">Custom range</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="reportType">Report Type</label>
+                        <select id="reportType" class="filter-input filter-select">
+                            <option value="overview">Platform Overview</option>
+                            <option value="users">User Analytics</option>
+                            <option value="jobs">Job Market</option>
+                            <option value="skills">Skills Demand</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="department">Department</label>
+                        <select id="department" class="filter-input filter-select">
+                            <option value="">All Departments</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="quality">Quality Assurance</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="location">Location</label>
+                        <select id="location" class="filter-input filter-select">
+                            <option value="">All Locations</option>
+                            <option value="remote">Remote</option>
+                            <option value="california">California</option>
+                            <option value="texas">Texas</option>
+                            <option value="new-york">New York</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Grid -->
+            <div class="reports-grid">
+                <!-- Left Column - Charts -->
+                <div class="chart-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-chart-area"></i>
+                            </div>
+                            User Growth Trends
+                        </h3>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-expand"></i>
+                                Fullscreen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="chart-placeholder">
+                            User Growth Chart Will Display Here
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Quick Stats -->
+                <div class="chart-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Quick Metrics
+                        </h3>
+                    </div>
+
+                    <div class="metric-list">
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">New Users Today</div>
+                                <div class="metric-description">Registered in last 24h</div>
+                            </div>
+                            <div class="metric-value">124</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Active Sessions</div>
+                                <div class="metric-description">Currently online</div>
+                            </div>
+                            <div class="metric-value">1,847</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Applications Today</div>
+                                <div class="metric-description">Submitted in last 24h</div>
+                            </div>
+                            <div class="metric-value">312</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Response Rate</div>
+                                <div class="metric-description">Employer responses</div>
+                            </div>
+                            <div class="metric-value">89%</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Platform Uptime</div>
+                                <div class="metric-description">Last 30 days</div>
+                            </div>
+                            <div class="metric-value">99.8%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Status Distribution -->
+            <div class="chart-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        Application Status Distribution
+                    </h3>
+                    <button class="btn btn-secondary btn-sm">
+                        <i class="fas fa-download"></i>
+                        Export Chart
+                    </button>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-icon">
+                        <i class="fas fa-chart-donut"></i>
+                    </div>
+                    <div class="chart-placeholder">
+                        Application Status Pie Chart Will Display Here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Market Analytics -->
+            <div class="reports-grid">
+                <!-- Top Hiring Companies -->
+                <div class="chart-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            Top Hiring Companies
+                        </h3>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Active Jobs</th>
+                                <th>Applications</th>
+                                <th>Avg. per Job</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Tesla Inc.</strong></td>
+                                <td>47</td>
+                                <td>1,248</td>
+                                <td>26.5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ford Motor Company</strong></td>
+                                <td>32</td>
+                                <td>892</td>
+                                <td>27.9</td>
+                            </tr>
+                            <tr>
+                                <td><strong>General Motors</strong></td>
+                                <td>28</td>
+                                <td>743</td>
+                                <td>26.5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Boeing Corporation</strong></td>
+                                <td>19</td>
+                                <td>524</td>
+                                <td>27.6</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lockheed Martin</strong></td>
+                                <td>15</td>
+                                <td>412</td>
+                                <td>27.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Top Locations -->
+                <div class="chart-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            Top Locations
+                        </h3>
+                    </div>
+
+                    <div class="metric-list">
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">California</div>
+                                <div class="metric-description">Silicon Valley, LA</div>
+                            </div>
+                            <div class="metric-value">3,247</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Texas</div>
+                                <div class="metric-description">Austin, Houston</div>
+                            </div>
+                            <div class="metric-value">1,892</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">New York</div>
+                                <div class="metric-description">NYC, Buffalo</div>
+                            </div>
+                            <div class="metric-value">1,543</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-info">
+                                <div class="metric-label">Remote</div>
+                                <div class="metric-description">Work from home</div>
+                            </div>
+                            <div class="metric-value">8,924</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills in Demand -->
+            <div class="chart-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        Skills in Demand
+                    </h3>
+                    <button class="btn btn-secondary btn-sm">
+                        <i class="fas fa-eye"></i>
+                        View All Skills
+                    </button>
+                </div>
+
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div class="skill-name">Lean Manufacturing</div>
+                        <div class="skill-category">Manufacturing</div>
+                        <div class="skill-demand">847</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">Six Sigma</div>
+                        <div class="skill-category">Quality</div>
+                        <div class="skill-demand">723</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">AutoCAD</div>
+                        <div class="skill-category">Engineering</div>
+                        <div class="skill-demand">692</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">PLC Programming</div>
+                        <div class="skill-category">Automation</div>
+                        <div class="skill-demand">634</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">Project Management</div>
+                        <div class="skill-category">Management</div>
+                        <div class="skill-demand">589</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">SOLIDWORKS</div>
+                        <div class="skill-category">Engineering</div>
+                        <div class="skill-demand">567</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">Quality Control</div>
+                        <div class="skill-category">Quality</div>
+                        <div class="skill-demand">543</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-name">CNC Programming</div>
+                        <div class="skill-category">Manufacturing</div>
+                        <div class="skill-demand">512</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Filter functionality
+        function resetFilters() {
+            document.getElementById('dateRange').value = '30d';
+            document.getElementById('reportType').value = 'overview';
+            document.getElementById('department').value = '';
+            document.getElementById('location').value = '';
+            console.log('Filters reset to defaults');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Admin reports page loaded successfully');
+            
+            // Add event listeners for filters
+            document.getElementById('dateRange').addEventListener('change', function() {
+                console.log('Date range changed to:', this.value);
+            });
+            
+            document.getElementById('reportType').addEventListener('change', function() {
+                console.log('Report type changed to:', this.value);
+            });
+        });
+    </script>
+</body>
+</html>"""
+

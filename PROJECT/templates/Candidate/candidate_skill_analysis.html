@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap Analysis - IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Landing Page Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 220px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            margin-right: 15px;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        /* Analysis Topbar */
+        .analysis-topbar {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 24px 0;
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-topbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .analysis-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .analysis-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .analysis-details h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .analysis-subtitle {
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .analysis-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            min-height: calc(100vh - 160px);
+        }
+
+        /* Skills Portfolio Section */
+        .skills-portfolio {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 32px 40px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .section-description {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            padding: 40px;
+        }
+
+        .skill-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .skill-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .skill-proficiency {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .skill-proficiency.intermediate {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .skill-proficiency.advanced {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .skill-proficiency.expert {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .skill-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .skill-category {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-experience {
+            font-weight: 600;
+        }
+
+        .skill-progress {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .skill-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        /* Gap Analysis Section */
+        .gap-analysis {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .job-analysis-card {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 40px;
+        }
+
+        .job-analysis-card:last-child {
+            border-bottom: none;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .job-info h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .job-company {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .match-score.good {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .match-score.fair {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .match-score.poor {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .skills-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .skills-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .skills-section h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-section.matching h4 {
+            color: #38a169;
+        }
+
+        .skills-section.missing h4 {
+            color: #e53e3e;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
+        }
+
+        .skill-item-info {
+            flex: 1;
+        }
+
+        .skill-item-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .skill-item-category {
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .skill-importance {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .skill-importance.required {
+            background: linear-gradient(135deg, #fed7d7, #fc8181);
+            color: #c53030;
+        }
+
+        .skill-importance.preferred {
+            background: linear-gradient(135deg, #feebc8, #fbd38d);
+            color: #c05621;
+        }
+
+        .skill-importance.nice-to-have {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        /* Priority Section */
+        .priority-section {
+            background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .priority-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .priority-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .priority-column h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-column.high h5 {
+            color: #e53e3e;
+        }
+
+        .priority-column.medium h5 {
+            color: #ed8936;
+        }
+
+        .priority-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .priority-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .priority-list li::before {
+            content: '•';
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Learning Resources */
+        .learning-resources {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 40px;
+        }
+
+        .resource-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid #e2e8f0;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .resource-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 16px;
+        }
+
+        .resource-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .resource-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .resource-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .resource-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 24px;
+            color: #e2e8f0;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .empty-state .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .empty-state .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .nav-container,
+            .analysis-topbar-container {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+                padding: 30px;
+            }
+
+            .analysis-stats {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .analysis-topbar-container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .analysis-stats {
+                justify-content: center;
+                gap: 30px;
+            }
+
+            .skills-analysis {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .priority-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .job-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 30px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .section-header {
+                padding: 24px 30px;
+            }
+
+            .job-analysis-card {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 30px 15px;
+            }
+
+            .section-header {
+                padding: 20px;
+            }
+
+            .skills-grid,
+            .resources-grid {
+                padding: 20px;
+            }
+
+            .job-analysis-card {
+                padding: 20px;
+            }
+
+            .analysis-details h1 {
+                font-size: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .scale-in {
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        @keyframes scaleIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link">Browse Jobs</a></li>
+                <li><a href="/applications" class="nav-link">My Applications</a></li>
+                <li><a href="/skill-analysis" class="nav-link active">Skill Analysis</a></li>
+                <li><a href="/profile" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/skills" class="dropdown-item">
+                        <i class="fas fa-code"></i> Manage Skills
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Account Settings
+                    </a>
+                    <a href="/help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i> Help Center
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Analysis Topbar -->
+    <div class="analysis-topbar">
+        <div class="analysis-topbar-container">
+            <div class="analysis-info">
+                <div class="analysis-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="analysis-details">
+                    <h1>Skill Gap Analysis</h1>
+                    <p class="analysis-subtitle">Analyze your skills against top job opportunities and identify areas for improvement</p>
+                </div>
+            </div>
+
+            <div class="analysis-stats">
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Skills</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Jobs Analyzed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">87%</span>
+                    <span class="stat-label">Avg Match</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Skills Portfolio Section -->
+        <section class="skills-portfolio fade-in">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-user-cog"></i>
+                    Your Current Skills Portfolio
+                </h2>
+                <p class="section-description">
+                    Your professional skills and expertise levels based on your profile information.
+                </p>
+            </div>
+
+            <div class="skills-grid">
+                <!-- Skill Card 1 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">Python</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    Programming Languages
+                                </div>
+                                <div class="skill-experience">3 years</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency advanced">Advanced</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+
+                <!-- Skill Card 2 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">Django</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    Web Frameworks
+                                </div>
+                                <div class="skill-experience">2 years</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency intermediate">Intermediate</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 70%"></div>
+                    </div>
+                </div>
+
+                <!-- Skill Card 3 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">JavaScript</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    Programming Languages
+                                </div>
+                                <div class="skill-experience">3 years</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency advanced">Advanced</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <!-- Skill Card 4 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">React</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    Frontend Frameworks
+                                </div>
+                                <div class="skill-experience">2 years</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency intermediate">Intermediate</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <!-- Skill Card 5 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">PostgreSQL</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    Databases
+                                </div>
+                                <div class="skill-experience">2 years</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency intermediate">Intermediate</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+
+                <!-- Skill Card 6 -->
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div>
+                            <h3 class="skill-name">Machine Learning</h3>
+                            <div class="skill-meta">
+                                <div class="skill-category">
+                                    <i class="fas fa-tag"></i>
+                                    AI/ML
+                                </div>
+                                <div class="skill-experience">1 year</div>
+                            </div>
+                        </div>
+                        <div class="skill-proficiency">Beginner</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-fill" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gap Analysis Section -->
+        <section class="gap-analysis slide-up" style="animation-delay: 0.2s">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Skill Gap Analysis for Top Matched Jobs
+                </h2>
+                <p class="section-description">
+                    Detailed analysis of your skills against job requirements for positions that match your profile.
+                </p>
+            </div>
+
+            <!-- Job Analysis 1 -->
+            <div class="job-analysis-card">
+                <div class="job-header">
+                    <div class="job-info">
+                        <h3>Senior Software Engineer</h3>
+                        <div class="job-company">TechCorp Solutions</div>
+                        <div class="job-meta">
+                            <div class="job-meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Dhaka, Bangladesh</span>
+                            </div>
+                            <div class="job-meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-score good">92% Match</div>
+                </div>
+
+                <div class="skills-analysis">
+                    <div class="skills-section matching">
+                        <h4>
+                            <i class="fas fa-check-circle"></i>
+                            Skills You Have (5)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Python</div>
+                                <div class="skill-item-category">Programming Languages</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Django</div>
+                                <div class="skill-item-category">Web Frameworks</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">JavaScript</div>
+                                <div class="skill-item-category">Programming Languages</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">React</div>
+                                <div class="skill-item-category">Frontend Frameworks</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">PostgreSQL</div>
+                                <div class="skill-item-category">Databases</div>
+                            </div>
+                            <div class="skill-importance nice-to-have">Nice to Have</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section missing">
+                        <h4>
+                            <i class="fas fa-exclamation-circle"></i>
+                            Skills to Develop (2)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Docker</div>
+                                <div class="skill-item-category">DevOps</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">AWS</div>
+                                <div class="skill-item-category">Cloud Platforms</div>
+                            </div>
+                            <div class="skill-importance nice-to-have">Nice to Have</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="priority-section">
+                    <div class="priority-title">
+                        <i class="fas fa-flag"></i>
+                        Skill Development Priority
+                    </div>
+
+                    <div class="priority-grid">
+                        <div class="priority-column medium">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Medium Priority (Preferred):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>Docker</li>
+                            </ul>
+                        </div>
+
+                        <div class="priority-column low">
+                            <h5 style="color: #4a5568;">
+                                <i class="fas fa-info-circle"></i>
+                                Low Priority (Nice to Have):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>AWS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/jobs/1" class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        View Job Details
+                    </a>
+                    <button class="btn btn-secondary" onclick="generateLearningPlan(1)">
+                        <i class="fas fa-graduation-cap"></i>
+                        Create Learning Plan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job Analysis 2 -->
+            <div class="job-analysis-card">
+                <div class="job-header">
+                    <div class="job-info">
+                        <h3>Machine Learning Engineer</h3>
+                        <div class="job-company">AI Innovations Hub</div>
+                        <div class="job-meta">
+                            <div class="job-meta-item">
+                                <i class="fas fa-globe"></i>
+                                <span>Remote</span>
+                            </div>
+                            <div class="job-meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-score fair">68% Match</div>
+                </div>
+
+                <div class="skills-analysis">
+                    <div class="skills-section matching">
+                        <h4>
+                            <i class="fas fa-check-circle"></i>
+                            Skills You Have (2)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Python</div>
+                                <div class="skill-item-category">Programming Languages</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Machine Learning</div>
+                                <div class="skill-item-category">AI/ML</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section missing">
+                        <h4>
+                            <i class="fas fa-exclamation-circle"></i>
+                            Skills to Develop (4)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">TensorFlow</div>
+                                <div class="skill-item-category">ML Frameworks</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">PyTorch</div>
+                                <div class="skill-item-category">ML Frameworks</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Deep Learning</div>
+                                <div class="skill-item-category">AI/ML</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Computer Vision</div>
+                                <div class="skill-item-category">AI/ML</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="priority-section">
+                    <div class="priority-title">
+                        <i class="fas fa-flag"></i>
+                        Skill Development Priority
+                    </div>
+
+                    <div class="priority-grid">
+                        <div class="priority-column high">
+                            <h5>
+                                <i class="fas fa-exclamation"></i>
+                                High Priority (Required):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>TensorFlow</li>
+                                <li>Deep Learning</li>
+                            </ul>
+                        </div>
+
+                        <div class="priority-column medium">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Medium Priority (Preferred):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>PyTorch</li>
+                                <li>Computer Vision</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/jobs/2" class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        View Job Details
+                    </a>
+                    <button class="btn btn-secondary" onclick="generateLearningPlan(2)">
+                        <i class="fas fa-graduation-cap"></i>
+                        Create Learning Plan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Job Analysis 3 -->
+            <div class="job-analysis-card">
+                <div class="job-header">
+                    <div class="job-info">
+                        <h3>Full Stack Developer</h3>
+                        <div class="job-company">Innovation Labs</div>
+                        <div class="job-meta">
+                            <div class="job-meta-item">
+                                <i class="fas fa-globe"></i>
+                                <span>Remote</span>
+                            </div>
+                            <div class="job-meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-score good">85% Match</div>
+                </div>
+
+                <div class="skills-analysis">
+                    <div class="skills-section matching">
+                        <h4>
+                            <i class="fas fa-check-circle"></i>
+                            Skills You Have (3)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">JavaScript</div>
+                                <div class="skill-item-category">Programming Languages</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">React</div>
+                                <div class="skill-item-category">Frontend Frameworks</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">PostgreSQL</div>
+                                <div class="skill-item-category">Databases</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section missing">
+                        <h4>
+                            <i class="fas fa-exclamation-circle"></i>
+                            Skills to Develop (2)
+                        </h4>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">Node.js</div>
+                                <div class="skill-item-category">Backend Frameworks</div>
+                            </div>
+                            <div class="skill-importance required">Required</div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-item-info">
+                                <div class="skill-item-name">MongoDB</div>
+                                <div class="skill-item-category">Databases</div>
+                            </div>
+                            <div class="skill-importance preferred">Preferred</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="priority-section">
+                    <div class="priority-title">
+                        <i class="fas fa-flag"></i>
+                        Skill Development Priority
+                    </div>
+
+                    <div class="priority-grid">
+                        <div class="priority-column high">
+                            <h5>
+                                <i class="fas fa-exclamation"></i>
+                                High Priority (Required):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>Node.js</li>
+                            </ul>
+                        </div>
+
+                        <div class="priority-column medium">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Medium Priority (Preferred):
+                            </h5>
+                            <ul class="priority-list">
+                                <li>MongoDB</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/jobs/3" class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        View Job Details
+                    </a>
+                    <button class="btn btn-secondary" onclick="generateLearningPlan(3)">
+                        <i class="fas fa-graduation-cap"></i>
+                        Create Learning Plan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Resources Section -->
+        <section class="learning-resources scale-in" style="animation-delay: 0.4s">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    Recommended Learning Resources
+                </h2>
+                <p class="section-description">
+                    Curated learning resources to help you develop the skills identified in your gap analysis.
+                </p>
+            </div>
+
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3 class="resource-title">Online Courses</h3>
+                    <p class="resource-description">
+                        Comprehensive courses from Coursera, Udemy, edX, and LinkedIn Learning with hands-on projects.
+                    </p>
+                    <button class="resource-btn" onclick="openResourceType('courses')">
+                        Browse Courses
+                    </button>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="resource-title">Certifications</h3>
+                    <p class="resource-description">
+                        Industry-recognized certifications from AWS, Google, Microsoft, and other leading providers.
+                    </p>
+                    <button class="resource-btn" onclick="openResourceType('certifications')">
+                        View Certifications
+                    </button>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="resource-title">Communities</h3>
+                    <p class="resource-description">
+                        Join professional communities, forums, and networking groups to learn from peers and experts.
+                    </p>
+                    <button class="resource-btn" onclick="openResourceType('communities')">
+                        Join Communities
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Generate learning plan
+        function generateLearningPlan(jobId) {
+            showNotification('Generating personalized learning plan...', 'info');
+
+            setTimeout(() => {
+                showNotification('Learning plan created successfully!', 'success');
+                console.log('Generated learning plan for job:', jobId);
+                // In real app, navigate to learning plan page
+            }, 2000);
+        }
+
+        // Open resource type
+        function openResourceType(type) {
+            showNotification(`Opening ${type} resources...`, 'info');
+
+            setTimeout(() => {
+                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} resources loaded!`, 'success');
+                console.log('Opening resource type:', type);
+                // In real app, navigate to resources page
+            }, 1000);
+        }
+
+        // Animate skill progress bars
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.skill-progress-fill');
+
+            progressBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                }, index * 100);
+            });
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="closeNotification(this.parentElement)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; margin-left: 15px;">&times;</button>
+            `;
+
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '100px',
+                right: '30px',
+                background: 'white',
+                borderLeft: `5px solid ${getNotificationColor(type)}`,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                borderRadius: '12px',
+                padding: '20px 25px',
+                zIndex: '10000',
+                maxWidth: '400px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.4s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                fontWeight: '500'
+            });
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    closeNotification(notification);
+                }
+            }, 5000);
+        }
+
+        function closeNotification(notification) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: '#38a169',
+                error: '#e53e3e',
+                warning: '#dd6b20',
+                info: '#667eea'
+            };
+            return colors[type] || colors.info;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Skill Analysis page initialized');
+
+            // Animate progress bars after page load
+            setTimeout(() => {
+                animateProgressBars();
+            }, 1000);
+
+            // Welcome message
+            setTimeout(() => {
+                showNotification('Skill analysis loaded! Review your gaps and create learning plans.', 'success');
+            }, 2000);
+        });
+
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

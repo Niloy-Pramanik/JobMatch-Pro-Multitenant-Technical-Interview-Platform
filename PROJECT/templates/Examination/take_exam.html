@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exam.exam_title }} - JobMatch Pro{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Exam Header -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="mb-1">{{ exam.exam_title }}</h4>
+                            <p class="mb-0">{{ exam.description or 'Technical Assessment' }}</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="exam-timer">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <span id="timeRemaining">{{ exam.duration_minutes }}:00</span>
+                                </h5>
+                                <small>Time Remaining</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="exam-info">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <strong>Total Questions:</strong> {{ exam.total_questions }}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <strong>Duration:</strong> {{ exam.duration_minutes }} minutes
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <strong>Passing Score:</strong> {{ exam.passing_score }}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar">
+                                    0%
+                                </div>
+                            </div>
+                            <small class="text-muted">Progress: <span id="progressText">0 of {{ questions|length }} answered</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam Instructions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Instructions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Read each question carefully before answering
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    You can navigate between questions freely
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Your progress is automatically saved
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                    Timer will continue running once started
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                    Exam will auto-submit when time expires
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                    Make sure you have stable internet connection
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam Questions -->
+            <form id="examForm" action="{{ url_for('submit_exam') }}" method="POST">
+                <input type="hidden" name="attempt_id" value="{{ attempt.id }}">
+                
+                {% for question in questions %}
+                <div class="card mb-4 question-card" data-question-id="{{ question.id }}">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">
+                                Question {{ loop.index }} of {{ questions|length }}
+                                {% if question.category %}
+                                <span class="badge bg-info ms-2">{{ question.category }}</span>
+                                {% endif %}
+                            </h6>
+                            <div class="question-nav">
+                                {% if not loop.first %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="goToQuestion({{ loop.index - 1 }})">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                {% endif %}
+                                {% if not loop.last %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="goToQuestion({{ loop.index + 1 }})">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="question-content mb-4">
+                            <h5 class="question-text">{{ question.question_text }}</h5>
+                            {% if question.difficulty_level %}
+                            <small class="text-muted">
+                                <i class="fas fa-{{ 'star' if question.difficulty_level == 'Easy' else 'star-half-alt' if question.difficulty_level == 'Medium' else 'star' }} me-1"></i>
+                                Difficulty: {{ question.difficulty_level }}
+                                {% if question.points > 1 %}
+                                • {{ question.points }} points
+                                {% endif %}
+                            </small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="options">
+                            {% set question_answered = question.id in answered_ids %}
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="q{{ question.id }}_a" 
+                                       value="A"
+                                       onchange="updateProgress(); autoSave();">
+                                <label class="form-check-label option-label" for="q{{ question.id }}_a">
+                                    <span class="option-letter">A.</span> {{ question.option_a }}
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="q{{ question.id }}_b" 
+                                       value="B"
+                                       onchange="updateProgress(); autoSave();">
+                                <label class="form-check-label option-label" for="q{{ question.id }}_b">
+                                    <span class="option-letter">B.</span> {{ question.option_b }}
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="q{{ question.id }}_c" 
+                                       value="C"
+                                       onchange="updateProgress(); autoSave();">
+                                <label class="form-check-label option-label" for="q{{ question.id }}_c">
+                                    <span class="option-letter">C.</span> {{ question.option_c }}
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="q{{ question.id }}_d" 
+                                       value="D"
+                                       onchange="updateProgress(); autoSave();">
+                                <label class="form-check-label option-label" for="q{{ question.id }}_d">
+                                    <span class="option-letter">D.</span> {{ question.option_d }}
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-actions mt-4">
+                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="markForReview({{ question.id }})">
+                                <i class="fas fa-flag me-1"></i>Mark for Review
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm ms-2" onclick="clearAnswer({{ question.id }})">
+                                <i class="fas fa-eraser me-1"></i>Clear Answer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Submit Section -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="mb-3">Ready to Submit?</h5>
+                        <p class="text-muted mb-4">
+                            Make sure you have answered all questions. You cannot change your answers after submission.
+                        </p>
+                        
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="reviewAnswers()">
+                                <i class="fas fa-eye me-2"></i>Review Answers
+                            </button>
+                            <button type="button" class="btn btn-warning" onclick="saveAndExit()">
+                                <i class="fas fa-save me-2"></i>Save & Exit
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="submitExam()">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Question Navigator Sidebar -->
+<div class="question-navigator">
+    <div class="navigator-header">
+        <h6>Questions</h6>
+        <button class="btn-close" onclick="toggleNavigator()"></button>
+    </div>
+    <div class="navigator-body">
+        {% for question in questions %}
+        <button class="question-nav-btn" data-question="{{ loop.index }}" onclick="goToQuestion({{ loop.index }})">
+            {{ loop.index }}
+        </button>
+        {% endfor %}
+    </div>
+    <div class="navigator-footer">
+        <small class="text-muted">
+            <span class="legend-item">
+                <span class="legend-color answered"></span> Answered
+            </span>
+            <span class="legend-item">
+                <span class="legend-color flagged"></span> Flagged
+            </span>
+        </small>
+    </div>
+</div>
+
+<!-- Navigator Toggle Button -->
+<button class="navigator-toggle" onclick="toggleNavigator()">
+    <i class="fas fa-list"></i>
+</button>
+
+<style>
+.exam-timer {
+    font-family: 'Courier New', monospace;
+}
+
+.question-card {
+    display: none;
+    border-left: 4px solid #007bff;
+}
+
+.question-card.active {
+    display: block;
+}
+
+.question-card.answered {
+    border-left-color: #28a745;
+}
+
+.question-card.flagged {
+    border-left-color: #ffc107;
+}
+
+.option-label {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    display: block;
+    margin-bottom: 0;
+}
+
+.option-label:hover {
+    background-color: #f8f9fa;
+}
+
+.option-letter {
+    font-weight: bold;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.form-check-input:checked + .option-label {
+    background-color: #e3f2fd;
+    border-left: 3px solid #007bff;
+}
+
+.question-navigator {
+    position: fixed;
+    right: -300px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 280px;
+    height: 400px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: right 0.3s ease;
+    z-index: 1000;
+}
+
+.question-navigator.open {
+    right: 20px;
+}
+
+.navigator-header {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.navigator-body {
+    padding: 15px;
+    height: 280px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.question-nav-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #dee2e6;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.question-nav-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.question-nav-btn.answered {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.question-nav-btn.flagged {
+    background-color: #ffc107;
+    color: white;
+    border-color: #ffc107;
+}
+
+.question-nav-btn.current {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.navigator-footer {
+    padding: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+.legend-item {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+}
+
+.legend-color.answered {
+    background-color: #28a745;
+}
+
+.legend-color.flagged {
+    background-color: #ffc107;
+}
+
+.navigator-toggle {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.time-warning {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+</style>
+
+<script>
+let currentQuestion = 1;
+let totalQuestions = {{ questions|length }};
+let timeRemaining = {{ exam.duration_minutes }} * 60; // in seconds
+let timerInterval;
+let flaggedQuestions = new Set();
+
+// Initialize exam
+document.addEventListener('DOMContentLoaded', function() {
+    showQuestion(1);
+    startTimer();
+    updateProgress();
+    
+    // Prevent page refresh/close without warning
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Your exam progress may be lost.';
+    });
+});
+
+function startTimer() {
+    timerInterval = setInterval(function() {
+        timeRemaining--;
+        updateTimerDisplay();
+        
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            autoSubmitExam();
+        } else if (timeRemaining <= 300) { // 5 minutes warning
+            document.getElementById('timeRemaining').classList.add('time-warning');
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    document.getElementById('timeRemaining').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function showQuestion(questionNumber) {
+    // Hide all questions
+    document.querySelectorAll('.question-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Show current question
+    const currentCard = document.querySelector(`.question-card:nth-of-type(${questionNumber})`);
+    if (currentCard) {
+        currentCard.classList.add('active');
+        currentQuestion = questionNumber;
+        
+        // Update navigator
+        document.querySelectorAll('.question-nav-btn').forEach(btn => {
+            btn.classList.remove('current');
+        });
+        document.querySelector(`[data-question="${questionNumber}"]`).classList.add('current');
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+    }
+}
+
+function goToQuestion(questionNumber) {
+    if (questionNumber >= 1 && questionNumber <= totalQuestions) {
+        showQuestion(questionNumber);
+    }
+}
+
+function updateProgress() {
+    const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
+    const progressPercent = (answeredCount / totalQuestions) * 100;
+    
+    document.getElementById('progressBar').style.width = progressPercent + '%';
+    document.getElementById('progressBar').textContent = Math.round(progressPercent) + '%';
+    document.getElementById('progressText').textContent = `${answeredCount} of ${totalQuestions} answered`;
+    
+    // Update question cards and navigator
+    document.querySelectorAll('.question-card').forEach((card, index) => {
+        const questionId = card.dataset.questionId;
+        const isAnswered = document.querySelector(`input[name="question_${questionId}"]:checked`);
+        const navBtn = document.querySelector(`[data-question="${index + 1}"]`);
+        
+        if (isAnswered) {
+            card.classList.add('answered');
+            navBtn.classList.add('answered');
+        } else {
+            card.classList.remove('answered');
+            navBtn.classList.remove('answered');
+        }
+    });
+}
+
+function markForReview(questionId) {
+    const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
+    const questionNumber = Array.from(document.querySelectorAll('.question-card')).indexOf(questionCard) + 1;
+    const navBtn = document.querySelector(`[data-question="${questionNumber}"]`);
+    
+    if (flaggedQuestions.has(questionId)) {
+        flaggedQuestions.delete(questionId);
+        questionCard.classList.remove('flagged');
+        navBtn.classList.remove('flagged');
+    } else {
+        flaggedQuestions.add(questionId);
+        questionCard.classList.add('flagged');
+        navBtn.classList.add('flagged');
+    }
+}
+
+function clearAnswer(questionId) {
+    const radios = document.querySelectorAll(`input[name="question_${questionId}"]`);
+    radios.forEach(radio => radio.checked = false);
+    updateProgress();
+}
+
+function toggleNavigator() {
+    const navigator = document.querySelector('.question-navigator');
+    navigator.classList.toggle('open');
+}
+
+function reviewAnswers() {
+    const unanswered = [];
+    const flagged = [];
+    
+    document.querySelectorAll('.question-card').forEach((card, index) => {
+        const questionId = card.dataset.questionId;
+        const isAnswered = document.querySelector(`input[name="question_${questionId}"]:checked`);
+        
+        if (!isAnswered) {
+            unanswered.push(index + 1);
+        }
+        
+        if (flaggedQuestions.has(parseInt(questionId))) {
+            flagged.push(index + 1);
+        }
+    });
+    
+    let message = 'Review Summary:\n\n';
+    message += `Total Questions: ${totalQuestions}\n`;
+    message += `Answered: ${totalQuestions - unanswered.length}\n`;
+    message += `Unanswered: ${unanswered.length}\n`;
+    message += `Flagged for Review: ${flagged.length}\n\n`;
+    
+    if (unanswered.length > 0) {
+        message += `Unanswered Questions: ${unanswered.join(', ')}\n`;
+    }
+    
+    if (flagged.length > 0) {
+        message += `Flagged Questions: ${flagged.join(', ')}\n`;
+    }
+    
+    alert(message);
+}
+
+function saveAndExit() {
+    if (confirm('Save your progress and exit the exam? You can resume later.')) {
+        // Auto-save current state
+        autoSave();
+        window.location.href = '/candidate/dashboard';
+    }
+}
+
+function submitExam() {
+    const unansweredCount = totalQuestions - document.querySelectorAll('input[type="radio"]:checked').length;
+    
+    if (unansweredCount > 0) {
+        if (!confirm(`You have ${unansweredCount} unanswered questions. Are you sure you want to submit?`)) {
+            return;
+        }
+    }
+    
+    if (confirm('Are you sure you want to submit your exam? You cannot change your answers after submission.')) {
+        clearInterval(timerInterval);
+        document.getElementById('examForm').submit();
+    }
+}
+
+function autoSubmitExam() {
+    alert('Time is up! Your exam will be automatically submitted.');
+    document.getElementById('examForm').submit();
+}
+
+function autoSave() {
+    // Auto-save functionality - could be implemented with AJAX
+    console.log('Auto-saving exam progress...');
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft' && currentQuestion > 1) {
+        goToQuestion(currentQuestion - 1);
+    } else if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
+        goToQuestion(currentQuestion + 1);
+    }
+});
+</script>
+{% endblock %}

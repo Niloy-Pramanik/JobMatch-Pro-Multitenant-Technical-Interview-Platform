@@ -1,0 +1,1391 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Exams - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-card.active::before {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .stat-card.draft::before {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .stat-card.completed::before {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card .stat-icon {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-card.active .stat-icon {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-card.draft .stat-icon {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-card.completed .stat-icon {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .trend-up {
+            color: #48bb78;
+        }
+
+        .trend-neutral {
+            color: #718096;
+        }
+
+        /* Exams Section */
+        .exams-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Exam Table */
+        .exam-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .exam-table th {
+            background: #f8fafc;
+            color: #1a202c;
+            font-weight: 600;
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .exam-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .exam-table tr:hover {
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .exam-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .exam-title {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .exam-description {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .job-position {
+            font-weight: 500;
+            color: #667eea;
+            font-size: 15px;
+        }
+
+        .questions-count {
+            font-weight: 600;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .duration {
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            border: 2px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .status-inactive {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+            border: 2px solid rgba(229, 62, 62, 0.2);
+        }
+
+        .status-draft {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+            border: 2px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .exam-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Filters */
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .exam-table th,
+            .exam-table td {
+                padding: 12px;
+                font-size: 13px;
+            }
+            
+            .exam-actions {
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .page-header {
+                padding: 40px 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .exams-section {
+                padding: 20px;
+                margin: 0 16px 32px;
+            }
+            
+            .stat-card {
+                padding: 24px;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .exam-table-container {
+                font-size: 12px;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Figma Design Container */
+        .figma-container {
+            background: #f6f8fa;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 20px;
+            position: relative;
+        }
+
+        .figma-title {
+            position: absolute;
+            top: 12px;
+            left: 24px;
+            font-size: 14px;
+            color: #656d76;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="figma-container">
+        <div class="figma-title">IndustrialConnect Exams - Ready for Figma</div>
+        
+        <!-- Navigation with Fixed Alignment -->
+        <nav class="navbar" id="navbar">
+            <div class="container">
+                <div class="nav-container">
+                    <a href="/" class="nav-brand">
+                        <i class="fas fa-industry"></i>
+                        IndustrialConnect
+                    </a>
+                    
+                    <ul class="nav-links">
+                        <li><a href="/employer-dashboard">Dashboard</a></li>
+                        <li><a href="/post-job">Post Job</a></li>
+                        <li><a href="/manage-jobs">Manage Jobs</a></li>
+                        <li><a href="/applications">Applications</a></li>
+                        <li><a href="/analytics">Analytics</a></li>
+                        <li><a href="/exams" class="active">Exams</a></li>
+                        <li><a href="/candidates">Find Candidates</a></li>
+                    </ul>
+                    
+                    <div class="nav-actions">
+                        <div class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">3</div>
+                        </div>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar">JD</div>
+                            <div class="user-info">
+                                <div class="user-name">John Doe</div>
+                                <div class="user-company">Tesla Inc.</div>
+                            </div>
+                            <i class="fas fa-chevron-down user-dropdown"></i>
+                        </div>
+                    </div>
+                    
+                    <button class="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header fade-in-up">
+                    <div class="header-content">
+                        <div class="page-info">
+                            <div class="breadcrumb">
+                                <a href="/employer-dashboard">Dashboard</a>
+                                <i class="fas fa-chevron-right"></i>
+                                <span>Manage Exams</span>
+                            </div>
+                            <h1 class="page-title">Manage Exams</h1>
+                            <p class="page-subtitle">Create and manage MCQ assessments for candidate evaluation</p>
+                        </div>
+                        <div class="header-actions">
+                            <a href="/create-exam" class="btn btn-ghost">
+                                <i class="fas fa-plus"></i>
+                                Create New Exam
+                            </a>
+                            <a href="/exam-templates" class="btn btn-ghost">
+                                <i class="fas fa-copy"></i>
+                                Browse Templates
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid fade-in-up">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <span class="stat-value">12</span>
+                        <div class="stat-label">Total Exams</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+2 this month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card active">
+                        <div class="stat-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <span class="stat-value">8</span>
+                        <div class="stat-label">Active Exams</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>67% active rate</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card draft">
+                        <div class="stat-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <span class="stat-value">3</span>
+                        <div class="stat-label">Draft Exams</div>
+                        <div class="stat-trend trend-neutral">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending completion</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card completed">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="stat-value">245</span>
+                        <div class="stat-label">Total Attempts</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+38 this week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exams Section -->
+                <div class="exams-section fade-in-up">
+                    <div class="section-header">
+                        <h3 class="section-title">Exam Management</h3>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm" onclick="importExam()">
+                                <i class="fas fa-upload"></i>
+                                Import Exam
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="createExam()">
+                                <i class="fas fa-plus"></i>
+                                Create New Exam
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filters-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Job Position</label>
+                            <select class="filter-select" id="positionFilter">
+                                <option value="">All Positions</option>
+                                <option value="manufacturing">Manufacturing Engineer</option>
+                                <option value="aerospace">Aerospace Engineer</option>
+                                <option value="process">Process Engineer</option>
+                                <option value="automation">Automation Engineer</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Duration</label>
+                            <select class="filter-select" id="durationFilter">
+                                <option value="">All Durations</option>
+                                <option value="short">≤ 30 minutes</option>
+                                <option value="medium">30-60 minutes</option>
+                                <option value="long">> 60 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Exam Table -->
+                    <div class="exam-table-container">
+                        <table class="exam-table">
+                            <thead>
+                                <tr>
+                                    <th>Exam Title</th>
+                                    <th>Job Position</th>
+                                    <th>Questions</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="exam-title">Manufacturing Engineering Fundamentals</div>
+                                        <div class="exam-description">Comprehensive assessment covering lean manufacturing, process optimization, and quality control principles...</div>
+                                    </td>
+                                    <td>
+                                        <div class="job-position">Senior Manufacturing Engineer</div>
+                                    </td>
+                                    <td>
+                                        <div class="questions-count">
+                                            <i class="fas fa-question-circle"></i>
+                                            25 questions
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="duration">
+                                            <i class="fas fa-clock"></i>
+                                            45 min
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="status-badge status-active">Active</div>
+                                    </td>
+                                    <td>
+                                        <div class="exam-actions">
+                                            <button class="btn btn-secondary btn-xs" onclick="viewExam('manufacturing-fundamentals')">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-outline btn-xs" onclick="editExam('manufacturing-fundamentals')">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-warning btn-xs" onclick="viewResults('manufacturing-fundamentals')">
+                                                <i class="fas fa-chart-bar"></i>
+                                                Results
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="exam-title">Aerospace Systems Design</div>
+                                        <div class="exam-description">Advanced assessment covering aircraft systems, certification processes, and safety protocols...</div>
+                                    </td>
+                                    <td>
+                                        <div class="job-position">Aerospace Systems Engineer</div>
+                                    </td>
+                                    <td>
+                                        <div class="questions-count">
+                                            <i class="fas fa-question-circle"></i>
+                                            30 questions
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="duration">
+                                            <i class="fas fa-clock"></i>
+                                            60 min
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="status-badge status-active">Active</div>
+                                    </td>
+                                    <td>
+                                        <div class="exam-actions">
+                                            <button class="btn btn-secondary btn-xs" onclick="viewExam('aerospace-systems')">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-outline btn-xs" onclick="editExam('aerospace-systems')">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-warning btn-xs" onclick="viewResults('aerospace-systems')">
+                                                <i class="fas fa-chart-bar"></i>
+                                                Results
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="exam-title">Process Development & Optimization</div>
+                                        <div class="exam-description">Evaluation of chemical engineering principles, process design, and optimization techniques...</div>
+                                    </td>
+                                    <td>
+                                        <div class="job-position">Process Development Engineer</div>
+                                    </td>
+                                    <td>
+                                        <div class="questions-count">
+                                            <i class="fas fa-question-circle"></i>
+                                            20 questions
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="duration">
+                                            <i class="fas fa-clock"></i>
+                                            40 min
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="status-badge status-draft">Draft</div>
+                                    </td>
+                                    <td>
+                                        <div class="exam-actions">
+                                            <button class="btn btn-secondary btn-xs" onclick="viewExam('process-development')">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-primary btn-xs" onclick="editExam('process-development')">
+                                                <i class="fas fa-edit"></i>
+                                                Complete
+                                            </button>
+                                            <button class="btn btn-success btn-xs" onclick="publishExam('process-development')">
+                                                <i class="fas fa-play"></i>
+                                                Publish
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="exam-title">Industrial Automation & Control</div>
+                                        <div class="exam-description">Assessment covering PLC programming, SCADA systems, and industrial robotics...</div>
+                                    </td>
+                                    <td>
+                                        <div class="job-position">Industrial Automation Engineer</div>
+                                    </td>
+                                    <td>
+                                        <div class="questions-count">
+                                            <i class="fas fa-question-circle"></i>
+                                            35 questions
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="duration">
+                                            <i class="fas fa-clock"></i>
+                                            50 min
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="status-badge status-inactive">Inactive</div>
+                                    </td>
+                                    <td>
+                                        <div class="exam-actions">
+                                            <button class="btn btn-secondary btn-xs" onclick="viewExam('automation-control')">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-outline btn-xs" onclick="editExam('automation-control')">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-success btn-xs" onclick="activateExam('automation-control')">
+                                                <i class="fas fa-play"></i>
+                                                Activate
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="exam-title">Quality Assurance & Six Sigma</div>
+                                        <div class="exam-description">Comprehensive evaluation of quality management systems, statistical methods, and continuous improvement...</div>
+                                    </td>
+                                    <td>
+                                        <div class="job-position">Quality Engineer</div>
+                                    </td>
+                                    <td>
+                                        <div class="questions-count">
+                                            <i class="fas fa-question-circle"></i>
+                                            28 questions
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="duration">
+                                            <i class="fas fa-clock"></i>
+                                            55 min
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="status-badge status-active">Active</div>
+                                    </td>
+                                    <td>
+                                        <div class="exam-actions">
+                                            <button class="btn btn-secondary btn-xs" onclick="viewExam('quality-assurance')">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-outline btn-xs" onclick="editExam('quality-assurance')">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-warning btn-xs" onclick="viewResults('quality-assurance')">
+                                                <i class="fas fa-chart-bar"></i>
+                                                Results
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Exam management functions
+        function viewExam(examId) {
+            console.log(`Viewing exam: ${examId}`);
+            // Navigate to exam details/preview page
+        }
+
+        function editExam(examId) {
+            console.log(`Editing exam: ${examId}`);
+            // Navigate to exam editor
+        }
+
+        function viewResults(examId) {
+            console.log(`Viewing results for exam: ${examId}`);
+            // Navigate to exam results/analytics page
+        }
+
+        function publishExam(examId) {
+            console.log(`Publishing exam: ${examId}`);
+            // Update exam status to active
+            const row = document.querySelector(`[onclick*="${examId}"]`).closest('tr');
+            const statusBadge = row.querySelector('.status-badge');
+            statusBadge.className = 'status-badge status-active';
+            statusBadge.textContent = 'Active';
+            
+            // Update action buttons
+            const actionsCell = row.querySelector('.exam-actions');
+            actionsCell.innerHTML = `
+                <button class="btn btn-secondary btn-xs" onclick="viewExam('${examId}')">
+                    <i class="fas fa-eye"></i>
+                    View
+                </button>
+                <button class="btn btn-outline btn-xs" onclick="editExam('${examId}')">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
+                <button class="btn btn-warning btn-xs" onclick="viewResults('${examId}')">
+                    <i class="fas fa-chart-bar"></i>
+                    Results
+                </button>
+            `;
+        }
+
+        function activateExam(examId) {
+            console.log(`Activating exam: ${examId}`);
+            publishExam(examId);
+        }
+
+        function createExam() {
+            console.log('Creating new exam');
+            // Navigate to exam creation page
+            window.location.href = '/create-exam';
+        }
+
+        function importExam() {
+            console.log('Importing exam');
+            // Open file upload dialog
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json,.csv,.xlsx';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    console.log(`Importing exam file: ${file.name}`);
+                    // Process file import
+                }
+            };
+            input.click();
+        }
+
+        // Filter functions
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = ['statusFilter', 'positionFilter', 'durationFilter'];
+            
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', function() {
+                        console.log(`Filter ${filterId} changed to: ${this.value}`);
+                        applyFilters();
+                    });
+                }
+            });
+
+            console.log('Exams page loaded successfully');
+        });
+
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const positionFilter = document.getElementById('positionFilter').value;
+            const durationFilter = document.getElementById('durationFilter').value;
+            
+            console.log('Applying filters:', { statusFilter, positionFilter, durationFilter });
+            
+            // In a real application, this would filter the exam table
+            // For demo, we'll just log the filters
+        }
+
+        // Animate counters on page load
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+        }
+
+        // Start animations when page loads
+        window.addEventListener('load', function() {
+            setTimeout(animateCounters, 500);
+            navbar.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>"""
+

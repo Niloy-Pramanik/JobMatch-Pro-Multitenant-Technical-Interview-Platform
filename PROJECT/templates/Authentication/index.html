@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Industrial Job Matching System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Find Your Perfect Industrial Career Match</h1>
+                <p class="lead mb-4">Connect with top industrial companies through our intelligent matching system. Take skill assessments, showcase your expertise, and land your dream job.</p>
+                <div class="d-flex gap-3">
+                    {% if not session.user_id %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="{{ url_for('browse_jobs') }}" class="btn btn-outline-light btn-lg">Browse Jobs</a>
+                    {% else %}
+                        {% if session.user_type == 'candidate' %}
+                            <a href="{{ url_for('candidate_dashboard') }}" class="btn btn-primary btn-lg">My Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('employer_dashboard') }}" class="btn btn-primary btn-lg">Employer Dashboard</a>
+                        {% endif %}
+                        <a href="{{ url_for('browse_jobs') }}" class="btn btn-outline-light btn-lg">Browse Jobs</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="stats-card">
+                            <div class="stats-number">{{ total_jobs }}</div>
+                            <div class="text-muted">Active Jobs</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card">
+                            <div class="stats-number">{{ total_companies }}</div>
+                            <div class="text-muted">Companies</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card">
+                            <div class="stats-number">{{ total_candidates }}</div>
+                            <div class="text-muted">Candidates</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card">
+                            <div class="stats-number">{{ total_applications }}</div>
+                            <div class="text-muted">Applications</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Why Choose JobMatch Pro?</h2>
+            <p class="lead text-muted">Advanced features designed for industrial recruitment</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5 class="card-title">Skill Assessment</h5>
+                        <p class="card-text">Take comprehensive MCQ exams to showcase your technical skills and knowledge in your field.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h5 class="card-title">Smart Matching</h5>
+                        <p class="card-text">Our algorithm matches candidates with jobs based on skills, experience, and test scores.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="card-title">Progress Tracking</h5>
+                        <p class="card-text">Track your applications, view feedback, and monitor your career progress in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Jobs Section -->
+{% if recent_jobs %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Latest Job Opportunities</h2>
+            <p class="lead text-muted">Discover exciting career opportunities from top industrial companies</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for job, company in recent_jobs %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <span class="badge bg-primary">{{ job.job_type }}</span>
+                        </div>
+                        <h6 class="text-primary mb-2">{{ company.company_name }}</h6>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-map-marker-alt"></i> {{ job.location or 'Remote' }}
+                        </p>
+                        <p class="card-text">{{ job.description[:100] }}...</p>
+                        {% if job.salary_min and job.salary_max %}
+                        <p class="text-success fw-bold">
+                            ${{ "{:,.0f}".format(job.salary_min) }} - ${{ "{:,.0f}".format(job.salary_max) }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ url_for('job_details', job_id=job.id) }}" class="btn btn-outline-primary w-100">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('browse_jobs') }}" class="btn btn-primary btn-lg">View All Jobs</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-6 fw-bold mb-4">Ready to Start Your Journey?</h2>
+                <p class="lead mb-4">Join thousands of professionals who have found their perfect industrial career match.</p>
+                {% if not session.user_id %}
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('register') }}?user_type=candidate" class="btn btn-primary btn-lg">Join as Candidate</a>
+                    <a href="{{ url_for('register') }}?user_type=employer" class="btn btn-outline-primary btn-lg">Post Jobs</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

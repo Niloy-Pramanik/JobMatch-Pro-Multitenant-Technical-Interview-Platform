@@ -1,0 +1,592 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Logs - JobMatch Pro{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar">
+            <div class="p-3">
+                <h5 class="text-center mb-4">
+                    <i class="fas fa-cogs me-2"></i>Admin Panel
+                </h5>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="{{ url_for('admin_users') }}">
+                        <i class="fas fa-users me-2"></i>User Management
+                    </a>
+                    <a class="nav-link" href="{{ url_for('admin_skills') }}">
+                        <i class="fas fa-cogs me-2"></i>Skills Management
+                    </a>
+                    <a class="nav-link active" href="{{ url_for('admin_activity_logs') }}">
+                        <i class="fas fa-history me-2"></i>Activity Logs
+                    </a>
+                    <a class="nav-link" href="{{ url_for('admin_reports') }}">
+                        <i class="fas fa-chart-bar me-2"></i>Reports & Analytics
+                    </a>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 main-content">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-history me-2"></i>System Activity Logs</h2>
+                            <p class="text-muted">Monitor all system operations and user activities</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-primary me-2" onclick="exportLogs()">
+                                <i class="fas fa-download me-1"></i>Export Logs
+                            </button>
+                            <button class="btn btn-outline-warning me-2" onclick="clearOldLogs()">
+                                <i class="fas fa-trash me-1"></i>Clear Old Logs
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshLogs()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="GET" class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="table_filter" class="form-label">Table</label>
+                                    <select class="form-select" id="table_filter" name="table">
+                                        <option value="">All Tables</option>
+                                        {% for table in tables %}
+                                        <option value="{{ table }}" {{ 'selected' if table_filter == table }}>{{ table }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="operation_filter" class="form-label">Operation</label>
+                                    <select class="form-select" id="operation_filter" name="operation">
+                                        <option value="">All Operations</option>
+                                        {% for operation in operations %}
+                                        <option value="{{ operation }}" {{ 'selected' if operation_filter == operation }}>{{ operation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="user_filter" class="form-label">User ID</label>
+                                    <input type="number" class="form-control" id="user_filter" name="user_id" 
+                                           value="{{ request.args.get('user_id', '') }}" placeholder="User ID...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="date_filter" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="date_filter" name="date" 
+                                           value="{{ request.args.get('date', '') }}">
+                                </div>
+                            </form>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary" onclick="applyFilters()">
+                                        <i class="fas fa-search me-1"></i>Apply Filters
+                                    </button>
+                                    <a href="{{ url_for('admin_activity_logs') }}" class="btn btn-outline-secondary ms-2">
+                                        <i class="fas fa-times me-1"></i>Clear Filters
+                                    </a>
+                                    <button type="button" class="btn btn-outline-info ms-2" onclick="toggleAutoRefresh()">
+                                        <i class="fas fa-play me-1"></i><span id="autoRefreshText">Start Auto-Refresh</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Statistics -->
+            <div class="row mb-4">
+                {% set total_logs = logs.total %}
+                {% set insert_count = logs.items|selectattr('operation_type', 'equalto', 'INSERT')|list|length %}
+                {% set update_count = logs.items|selectattr('operation_type', 'equalto', 'UPDATE')|list|length %}
+                {% set delete_count = logs.items|selectattr('operation_type', 'equalto', 'DELETE')|list|length %}
+                
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ total_logs }}</h3>
+                                <p class="mb-0">Total Logs</p>
+                            </div>
+                            <i class="fas fa-list fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #27ae60, #58d68d);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ insert_count }}</h3>
+                                <p class="mb-0">Inserts</p>
+                            </div>
+                            <i class="fas fa-plus fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #f39c12, #f7dc6f);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ update_count }}</h3>
+                                <p class="mb-0">Updates</p>
+                            </div>
+                            <i class="fas fa-edit fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #e74c3c, #ec7063);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>{{ delete_count }}</h3>
+                                <p class="mb-0">Deletes</p>
+                            </div>
+                            <i class="fas fa-trash fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-table me-2"></i>Activity Logs
+                                <span class="badge bg-primary ms-2">{{ logs.total }} total</span>
+                            </h5>
+                            <div>
+                                <span class="badge bg-success me-2" id="liveIndicator" style="display: none;">
+                                    <i class="fas fa-circle me-1"></i>Live
+                                </span>
+                                <small class="text-muted">Last updated: <span id="lastUpdated">{{ moment().format('HH:mm:ss') }}</span></small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if logs.items %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Timestamp</th>
+                                                <th>Operation</th>
+                                                <th>Table</th>
+                                                <th>Record ID</th>
+                                                <th>User</th>
+                                                <th>Changes</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="logsTableBody">
+                                            {% for log in logs.items %}
+                                            <tr class="log-row" data-log-id="{{ log.id }}">
+                                                <td>
+                                                    <div class="timestamp-cell">
+                                                        <strong>{{ log.timestamp.strftime('%b %d, %Y') }}</strong>
+                                                        <br><small class="text-muted">{{ log.timestamp.strftime('%H:%M:%S') }}</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-{{ 'success' if log.operation_type == 'INSERT' else 'warning' if log.operation_type == 'UPDATE' else 'danger' }}">
+                                                        <i class="fas fa-{{ 'plus' if log.operation_type == 'INSERT' else 'edit' if log.operation_type == 'UPDATE' else 'trash' }} me-1"></i>
+                                                        {{ log.operation_type }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="table-name">{{ log.table_name }}</span>
+                                                </td>
+                                                <td>
+                                                    <code class="record-id">{{ log.record_id }}</code>
+                                                </td>
+                                                <td>
+                                                    {% if log.user_id %}
+                                                        <span class="user-info">
+                                                            <i class="fas fa-user me-1"></i>{{ log.user_id }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="text-muted">System</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div class="changes-cell">
+                                                        {% if log.old_values or log.new_values %}
+                                                            <button class="btn btn-sm btn-outline-info" onclick="viewChanges({{ log.id }})">
+                                                                <i class="fas fa-eye me-1"></i>View Changes
+                                                            </button>
+                                                        {% else %}
+                                                            <span class="text-muted">No details</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm btn-outline-primary" onclick="viewLogDetails({{ log.id }})">
+                                                            <i class="fas fa-info-circle"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-secondary" onclick="copyLogId({{ log.id }})">
+                                                            <i class="fas fa-copy"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                {% if logs.pages > 1 %}
+                                <nav aria-label="Activity logs pagination" class="mt-4">
+                                    <ul class="pagination justify-content-center">
+                                        {% if logs.has_prev %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('admin_activity_logs', page=logs.prev_num, table=table_filter, operation=operation_filter) }}">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        
+                                        {% for page_num in logs.iter_pages() %}
+                                            {% if page_num %}
+                                                {% if page_num != logs.page %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="{{ url_for('admin_activity_logs', page=page_num, table=table_filter, operation=operation_filter) }}">
+                                                            {{ page_num }}
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item active">
+                                                        <span class="page-link">{{ page_num }}</span>
+                                                    </li>
+                                                {% endif %}
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% if logs.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('admin_activity_logs', page=logs.next_num, table=table_filter, operation=operation_filter) }}">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="fas fa-history fa-4x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No Activity Logs Found</h5>
+                                    <p class="text-muted">
+                                        {% if table_filter or operation_filter %}
+                                            No logs match your current filters. Try adjusting your search criteria.
+                                        {% else %}
+                                            No activity has been logged yet.
+                                        {% endif %}
+                                    </p>
+                                    {% if table_filter or operation_filter %}
+                                    <a href="{{ url_for('admin_activity_logs') }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-times me-2"></i>Clear Filters
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log Details Modal -->
+<div class="modal fade" id="logDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Activity Log Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="logDetailsBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Changes Modal -->
+<div class="modal fade" id="changesModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Data Changes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="changesModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.log-row {
+    transition: background-color 0.3s ease;
+}
+
+.log-row:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.timestamp-cell {
+    min-width: 120px;
+}
+
+.table-name {
+    font-family: 'Courier New', monospace;
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+.record-id {
+    background-color: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+.user-info {
+    font-size: 0.9rem;
+}
+
+.changes-cell {
+    min-width: 120px;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.new-log {
+    animation: highlightNew 2s ease-in-out;
+}
+
+@keyframes highlightNew {
+    0% { background-color: rgba(40, 167, 69, 0.3); }
+    100% { background-color: transparent; }
+}
+
+#liveIndicator {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+</style>
+
+<script>
+let autoRefreshInterval;
+let isAutoRefreshActive = false;
+
+function applyFilters() {
+    const form = document.querySelector('form');
+    form.submit();
+}
+
+function exportLogs() {
+    const params = new URLSearchParams(window.location.search);
+    window.location.href = `/admin/export/activity_logs?${params.toString()}`;
+}
+
+function clearOldLogs() {
+    if (confirm('Are you sure you want to clear logs older than 30 days? This action cannot be undone.')) {
+        alert('Clear old logs feature coming soon!');
+    }
+}
+
+function refreshLogs() {
+    location.reload();
+}
+
+function toggleAutoRefresh() {
+    const button = document.querySelector('[onclick="toggleAutoRefresh()"]');
+    const text = document.getElementById('autoRefreshText');
+    const indicator = document.getElementById('liveIndicator');
+    
+    if (isAutoRefreshActive) {
+        clearInterval(autoRefreshInterval);
+        isAutoRefreshActive = false;
+        button.innerHTML = '<i class="fas fa-play me-1"></i><span id="autoRefreshText">Start Auto-Refresh</span>';
+        button.className = 'btn btn-outline-info ms-2';
+        indicator.style.display = 'none';
+    } else {
+        autoRefreshInterval = setInterval(loadNewLogs, 5000); // Refresh every 5 seconds
+        isAutoRefreshActive = true;
+        button.innerHTML = '<i class="fas fa-stop me-1"></i><span id="autoRefreshText">Stop Auto-Refresh</span>';
+        button.className = 'btn btn-outline-danger ms-2';
+        indicator.style.display = 'inline';
+    }
+}
+
+function loadNewLogs() {
+    // This would fetch new logs via AJAX
+    fetch('/admin/activity_logs/latest')
+        .then(response => response.json())
+        .then(data => {
+            if (data.new_logs && data.new_logs.length > 0) {
+                // Add new logs to the top of the table
+                const tbody = document.getElementById('logsTableBody');
+                data.new_logs.forEach(log => {
+                    const row = createLogRow(log);
+                    row.classList.add('new-log');
+                    tbody.insertBefore(row, tbody.firstChild);
+                });
+                
+                // Update timestamp
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+            }
+        })
+        .catch(error => console.error('Error loading new logs:', error));
+}
+
+function createLogRow(log) {
+    // This would create a new table row for a log entry
+    // Implementation would depend on the log data structure
+    const row = document.createElement('tr');
+    row.className = 'log-row';
+    row.dataset.logId = log.id;
+    // Add row content here
+    return row;
+}
+
+function viewLogDetails(logId) {
+    // Load log details in modal
+    document.getElementById('logDetailsBody').innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
+    modal.show();
+    
+    // Simulate loading log details
+    setTimeout(() => {
+        document.getElementById('logDetailsBody').innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Log Information</h6>
+                    <table class="table table-sm">
+                        <tr><td><strong>Log ID:</strong></td><td>${logId}</td></tr>
+                        <tr><td><strong>Timestamp:</strong></td><td>Loading...</td></tr>
+                        <tr><td><strong>Operation:</strong></td><td>Loading...</td></tr>
+                        <tr><td><strong>Table:</strong></td><td>Loading...</td></tr>
+                        <tr><td><strong>Record ID:</strong></td><td>Loading...</td></tr>
+                        <tr><td><strong>User ID:</strong></td><td>Loading...</td></tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h6>Additional Details</h6>
+                    <p class="text-muted">Detailed log information would be loaded here...</p>
+                    <p class="text-muted">This feature is coming soon!</p>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function viewChanges(logId) {
+    // Load changes in modal
+    document.getElementById('changesModalBody').innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('changesModal'));
+    modal.show();
+    
+    // Simulate loading changes
+    setTimeout(() => {
+        document.getElementById('changesModalBody').innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-danger">Old Values</h6>
+                    <pre class="bg-light p-3 rounded"><code>Loading old values...</code></pre>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-success">New Values</h6>
+                    <pre class="bg-light p-3 rounded"><code>Loading new values...</code></pre>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="text-muted">Detailed change comparison would be shown here...</p>
+                <p class="text-muted">This feature is coming soon!</p>
+            </div>
+        `;
+    }, 1000);
+}
+
+function copyLogId(logId) {
+    navigator.clipboard.writeText(logId.toString()).then(() => {
+        // Show temporary success message
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i>';
+        button.classList.add('btn-success');
+        
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('btn-success');
+        }, 1000);
+    });
+}
+
+// Update timestamp every second
+setInterval(() => {
+    if (!isAutoRefreshActive) {
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+    }
+}, 1000);
+
+// Cleanup auto-refresh on page unload
+window.addEventListener('beforeunload', () => {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+});
+</script>
+{% endblock %}

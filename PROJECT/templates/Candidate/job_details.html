@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndustrialConnect - Smart Industrial Recruitment Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar with Auto-Hide */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* File Upload Styles */
+        .file-upload-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .file-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin: 24px 0;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-area.drag-over {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .file-info {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .file-meta {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .remove-file {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-file:hover {
+            background: #c53030;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 32px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px;
+            width: 400px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .demo-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .demo-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .demo-user-info h4 {
+            color: #1a202c;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .demo-user-info p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .demo-match {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 32px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .demo-company {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .demo-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .demo-tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Upload Section in Hero */
+        .upload-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            animation: float 3s ease-in-out infinite;
+            font-size: 14px;
+        }
+
+        .floating-1 {
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-2 {
+            bottom: 30%;
+            left: 5%;
+            animation-delay: 1.5s;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 64px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: #1a202c;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            background: #f8fafc;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-card.featured {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border-color: #667eea;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a202c;
+        }
+
+        .feature-description {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Text Center Utility */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 48px;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .demo-card {
+                width: 350px;
+                max-width: 90vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .demo-card {
+                padding: 24px;
+            }
+
+            .feature-card {
+                padding: 24px;
+            }
+        }
+
+        /* Basic fade-in for initial content */
+        .fade-in-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: #48bb78;
+        }
+
+        .notification.error {
+            border-left-color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="#" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#upload">Upload CV</a></li>
+                    <li><a href="#jobs">Jobs</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="#" class="btn btn-secondary">Sign In</a>
+                    <a href="#" class="btn btn-primary">Get Started</a>
+                </div>
+
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-container">
+                <div class="hero-content fade-in-up">
+                    <div class="hero-badge">
+                        <i class="fas fa-rocket"></i>
+                        AI-Powered Matching System
+                    </div>
+
+                    <h1 class="hero-title">
+                        Connect with Top Industrial Companies Worldwide
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Take skill assessments, showcase your expertise, and land your dream job. 
+                        Discover opportunities from leading industrial companies with our modern recruitment platform.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#upload" class="btn btn-primary btn-lg">
+                            <i class="fas fa-upload"></i>
+                            Upload Your CV
+                        </a>
+                        <a href="#" class="btn btn-ghost btn-lg">
+                            <i class="fas fa-building"></i>
+                            For Employers
+                        </a>
+                    </div>
+
+                    <!-- Upload Section in Hero -->
+                    <div class="upload-section">
+                        <h3 class="upload-title">Quick Upload</h3>
+
+                        <!-- File Upload Area -->
+                        <div class="file-upload-area" onclick="document.getElementById('heroFileInput').click()" 
+                             ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'hero')" ondragleave="handleDragLeave(event)">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <div class="upload-text">Upload Your Resume/CV</div>
+                            <div class="upload-subtext">Drag and drop or click to browse files</div>
+                            <div class="upload-subtext">Supported formats: PDF, DOC, DOCX (Max 10MB)</div>
+
+                            <!-- Hidden File Input -->
+                            <input type="file" id="heroFileInput" class="file-input" 
+                                   accept=".pdf,.doc,.docx" 
+                                   onchange="handleFileSelect(event, 'hero')" />
+                        </div>
+
+                        <!-- File Info Display -->
+                        <div id="heroFileInfo" class="file-info">
+                            <div class="file-details">
+                                <div class="file-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="file-meta">
+                                    <div class="file-name" id="heroFileName">No file selected</div>
+                                    <div class="file-size" id="heroFileSize">0 KB</div>
+                                </div>
+                                <button class="remove-file" onclick="removeFile('hero')">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="hero-stat-number">50K+</span>
+                            <span class="hero-stat-label">Active Candidates</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number">2K+</span>
+                            <span class="hero-stat-label">Partner Companies</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number">95%</span>
+                            <span class="hero-stat-label">Match Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <div class="demo-user">
+                                <div class="demo-avatar">SC</div>
+                                <div class="demo-user-info">
+                                    <h4>Sarah Chen</h4>
+                                    <p>Process Engineer</p>
+                                </div>
+                            </div>
+                            <div class="demo-match">
+                                <i class="fas fa-star"></i>
+                                98% Match
+                            </div>
+                        </div>
+
+                        <h3 class="demo-title">Senior Manufacturing Engineer</h3>
+                        <p class="demo-company">Tesla Manufacturing</p>
+
+                        <div class="demo-tags">
+                            <span class="demo-tag">Remote</span>
+                            <span class="demo-tag">Full-time</span>
+                            <span class="demo-tag">$95K-$120K</span>
+                        </div>
+
+                        <div class="demo-actions">
+                            <a href="#" class="btn btn-success">
+                                <i class="fas fa-paper-plane"></i>
+                                Apply Now
+                            </a>
+                            <a href="#" class="btn btn-outline">
+                                <i class="fas fa-bookmark"></i>
+                                Save Job
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="floating-element floating-1">
+                        <i class="fas fa-chart-line"></i>
+                        Career Growth +127%
+                    </div>
+                    <div class="floating-element floating-2">
+                        <i class="fas fa-users"></i>
+                        1,247 New Jobs Today
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Upload Your Resume/CV</h2>
+                <p class="section-subtitle">
+                    Share your professional profile with top industrial companies. 
+                    Our AI will analyze your skills and match you with perfect job opportunities.
+                </p>
+            </div>
+
+            <div style="max-width: 600px; margin: 0 auto;">
+                <!-- File Upload Area -->
+                <div class="file-upload-area" onclick="document.getElementById('mainFileInput').click()" 
+                     ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'main')" ondragleave="handleDragLeave(event)">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="upload-text">Choose Your Resume/CV File</div>
+                    <div class="upload-subtext">Drag and drop your file here or click to browse</div>
+                    <div class="upload-subtext">Supported formats: PDF, DOC, DOCX • Maximum size: 10MB</div>
+
+                    <button class="file-upload-btn" type="button">
+                        <i class="fas fa-upload"></i>
+                        Browse Files
+                    </button>
+
+                    <!-- Hidden File Input -->
+                    <input type="file" id="mainFileInput" class="file-input" 
+                           accept=".pdf,.doc,.docx" 
+                           onchange="handleFileSelect(event, 'main')" />
+                </div>
+
+                <!-- File Info Display -->
+                <div id="mainFileInfo" class="file-info">
+                    <div class="file-details">
+                        <div class="file-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-name" id="mainFileName">No file selected</div>
+                            <div class="file-size" id="mainFileSize">0 KB</div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile('main')">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Progress -->
+                <div id="uploadProgress" style="margin-top: 20px; display: none;">
+                    <div style="background: #e2e8f0; border-radius: 8px; overflow: hidden;">
+                        <div id="progressBar" style="height: 8px; background: linear-gradient(135deg, #48bb78, #38a169); width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 12px; font-size: 14px; color: #4a5568;">
+                        <span id="progressText">Uploading...</span>
+                    </div>
+                </div>
+
+                <!-- Upload Button -->
+                <div class="text-center" style="margin-top: 32px;">
+                    <button id="uploadButton" class="btn btn-primary btn-lg" onclick="uploadFile()" style="display: none;">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Upload Resume
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Upload Your CV?</h2>
+                <p class="section-subtitle">
+                    Discover the benefits of sharing your professional profile with our AI-powered platform.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Analysis</h3>
+                    <p class="feature-description">
+                        Our advanced AI analyzes your CV to identify key skills, experience level, 
+                        and career preferences for perfect job matching.
+                    </p>
+                </div>
+
+                <div class="feature-card featured">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Job Matching</h3>
+                    <p class="feature-description">
+                        Get matched with relevant industrial job opportunities based on your 
+                        skills, experience, and career goals automatically.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure & Private</h3>
+                    <p class="feature-description">
+                        Your CV is encrypted and stored securely. Only you control who can 
+                        access your profile and personal information.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Auto-hide navbar on scroll
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Smooth scrolling navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    navbar.classList.remove('hidden');
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // File Upload Functionality
+        function handleFileSelect(event, section) {
+            const file = event.target.files[0];
+            if (file) {
+                displayFileInfo(file, section);
+                showNotification('File selected successfully!', 'success');
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(event, section) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['.pdf', '.doc', '.docx'];
+                const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+                if (!allowedTypes.includes(fileExtension)) {
+                    showNotification('Please upload a PDF, DOC, or DOCX file.', 'error');
+                    return;
+                }
+
+                // Validate file size (10MB max)
+                if (file.size > 10 * 1024 * 1024) {
+                    showNotification('File size must be less than 10MB.', 'error');
+                    return;
+                }
+
+                displayFileInfo(file, section);
+                showNotification('File uploaded successfully!', 'success');
+            }
+        }
+
+        function displayFileInfo(file, section) {
+            const fileInfo = document.getElementById(section + 'FileInfo');
+            const fileName = document.getElementById(section + 'FileName');
+            const fileSize = document.getElementById(section + 'FileSize');
+            const uploadButton = document.getElementById('uploadButton');
+
+            // Format file size
+            const size = file.size;
+            const sizeText = size > 1024 * 1024 
+                ? (size / (1024 * 1024)).toFixed(1) + ' MB'
+                : (size / 1024).toFixed(1) + ' KB';
+
+            // Update file icon based on type
+            const fileIcon = fileInfo.querySelector('.file-icon i');
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            switch (extension) {
+                case 'pdf':
+                    fileIcon.className = 'fas fa-file-pdf';
+                    break;
+                case 'doc':
+                case 'docx':
+                    fileIcon.className = 'fas fa-file-word';
+                    break;
+                default:
+                    fileIcon.className = 'fas fa-file-alt';
+            }
+
+            // Update file information
+            fileName.textContent = file.name;
+            fileSize.textContent = sizeText;
+            fileInfo.classList.add('show');
+
+            // Show upload button for main section
+            if (section === 'main' && uploadButton) {
+                uploadButton.style.display = 'inline-flex';
+            }
+        }
+
+        function removeFile(section) {
+            const fileInfo = document.getElementById(section + 'FileInfo');
+            const fileInput = document.getElementById(section + 'FileInput');
+            const uploadButton = document.getElementById('uploadButton');
+
+            // Clear file input
+            if (fileInput) {
+                fileInput.value = '';
+            }
+
+            // Hide file info
+            fileInfo.classList.remove('show');
+
+            // Hide upload button for main section
+            if (section === 'main' && uploadButton) {
+                uploadButton.style.display = 'none';
+            }
+
+            showNotification('File removed.', 'success');
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById('mainFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showNotification('Please select a file first.', 'error');
+                return;
+            }
+
+            // Show progress bar
+            const progressContainer = document.getElementById('uploadProgress');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const uploadButton = document.getElementById('uploadButton');
+
+            progressContainer.style.display = 'block';
+            uploadButton.disabled = true;
+            uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+            // Simulate upload progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+
+                    // Upload complete
+                    progressText.textContent = 'Upload Complete!';
+                    uploadButton.innerHTML = '<i class="fas fa-check"></i> Upload Successful';
+                    uploadButton.style.background = 'linear-gradient(135deg, #48bb78, #38a169)';
+
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        uploadButton.disabled = false;
+                        uploadButton.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Resume';
+                        uploadButton.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                        showNotification('CV uploaded successfully! We will analyze it and find matching jobs.', 'success');
+                    }, 2000);
+                } else {
+                    progressText.textContent = `Uploading... ${Math.round(progress)}%`;
+                }
+
+                progressBar.style.width = progress + '%';
+            }, 200);
+        }
+
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" 
+                       style="color: ${type === 'success' ? '#48bb78' : '#e53e3e'}; font-size: 18px;"></i>
+                    <span style="font-weight: 500;">${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Hide notification after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('IndustrialConnect with file upload loaded');
+            navbar.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

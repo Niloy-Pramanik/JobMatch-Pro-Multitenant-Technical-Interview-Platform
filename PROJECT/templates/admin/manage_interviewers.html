@@ -1,0 +1,1382 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Interviewers - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar - Manager Dashboard Style */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            height: 80px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-brand .manager-badge {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(159, 122, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9f7aea;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(159, 122, 234, 0.3);
+        }
+
+        .btn-purple:hover {
+            box-shadow: 0 6px 20px rgba(159, 122, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header - Landing Page Design */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.total {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-icon.active {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-icon.interviews {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-icon.rating {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: #48bb78;
+        }
+
+        .stat-change.negative {
+            color: #e53e3e;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .filter-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .filter-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        /* Interviewers Table */
+        .interviewers-section {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .interviewers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .interviewers-table th {
+            background: #f8fafc;
+            padding: 16px 24px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a202c;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .interviewers-table td {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .interviewers-table tr:hover {
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .interviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .interviewer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .interviewer-details {
+            flex: 1;
+        }
+
+        .interviewer-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .interviewer-email {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .phone-number {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .department {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .status-inactive {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .status-busy {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: #f7fafc;
+            color: #718096;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .action-btn.view:hover {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        /* Performance Metrics */
+        .performance-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .filter-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .interviewers-section {
+                margin: 0 16px 32px;
+            }
+            
+            .section-header {
+                padding: 24px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            
+            .section-actions {
+                justify-content: center;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .interviewers-table {
+                font-size: 14px;
+            }
+            
+            .interviewers-table th,
+            .interviewers-table td {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .interviewers-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Manager Dashboard Style -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                    <span class="manager-badge">Manager</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/manager-dashboard">Dashboard</a></li>
+                    <li><a href="/manage-applications">Applications</a></li>
+                    <li><a href="/interview-rooms">Interview Rooms</a></li>
+                    <li><a href="/interviewers" class="active">Interviewers</a></li>
+                    <li><a href="/reports">Reports</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">7</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">MJ</div>
+                        <div class="user-info">
+                            <div class="user-name">Manager Johnson</div>
+                            <div class="user-role">HR Manager</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Landing Page Design -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/manager-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Manage Interviewers</span>
+                        </div>
+                        <h1 class="page-title">Manage Interviewers</h1>
+                        <p class="page-subtitle">Oversee and coordinate your interview team with comprehensive management tools</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/add-interviewer" class="btn btn-ghost">
+                            <i class="fas fa-user-plus"></i>
+                            Add Interviewer
+                        </a>
+                        <a href="/interviewer-training" class="btn btn-ghost">
+                            <i class="fas fa-graduation-cap"></i>
+                            Training Resources
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Total Interviewers</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +3 this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">Active Interviewers</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        83% availability
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon interviews">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Interviews This Month</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +24% vs last month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon rating">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value">4.7</div>
+                    <div class="stat-label">Average Rating</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +0.3 improvement
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-header">
+                    <h3 class="filter-title">
+                        <div class="filter-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        Filter Interviewers
+                    </h3>
+                    <button class="btn btn-secondary btn-sm" onclick="clearFilters()">
+                        <i class="fas fa-times"></i>
+                        Clear Filters
+                    </button>
+                </div>
+
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label" for="statusFilter">Status</label>
+                        <select id="statusFilter" class="filter-input filter-select" onchange="applyFilters()">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="busy">Busy</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="departmentFilter">Department</label>
+                        <select id="departmentFilter" class="filter-input filter-select" onchange="applyFilters()">
+                            <option value="">All Departments</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="quality">Quality Assurance</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="experienceFilter">Experience Level</label>
+                        <select id="experienceFilter" class="filter-input filter-select" onchange="applyFilters()">
+                            <option value="">All Levels</option>
+                            <option value="junior">Junior (0-2 years)</option>
+                            <option value="mid">Mid-level (3-5 years)</option>
+                            <option value="senior">Senior (5+ years)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="searchFilter">Search</label>
+                        <input type="text" id="searchFilter" class="filter-input" placeholder="Search by name or email..." onkeyup="applyFilters()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interviewers Table Section -->
+            <div class="interviewers-section">
+                <div class="section-header">
+                    <h3 class="section-title">Interview Team</h3>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="exportInterviewers()">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                        <button class="btn btn-purple btn-sm" onclick="bulkActions()">
+                            <i class="fas fa-tasks"></i>
+                            Bulk Actions
+                        </button>
+                        <a href="/add-interviewer" class="btn btn-primary btn-sm">
+                            <i class="fas fa-user-plus"></i>
+                            Add Interviewer
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="interviewers-table">
+                        <thead>
+                            <tr>
+                                <th>Interviewer</th>
+                                <th>Contact Info</th>
+                                <th>Department</th>
+                                <th>Experience</th>
+                                <th>Performance</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="interviewer-info">
+                                        <div class="interviewer-avatar">DS</div>
+                                        <div class="interviewer-details">
+                                            <div class="interviewer-name">Dr. Sarah Mitchell</div>
+                                            <div class="interviewer-email">s.mitchell@industrialconnect.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="phone-number">+1 (555) 123-4567</div>
+                                        <div class="department">ext. 1234</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="department">Engineering</div>
+                                </td>
+                                <td>
+                                    <div class="department">8 years</div>
+                                </td>
+                                <td>
+                                    <div class="performance-metric">
+                                        <div class="metric-value">4.9/5.0</div>
+                                        <div class="metric-label">32 interviews</div>
+                                    </div>
+                                </td>
+                                <td>2022-03-15</td>
+                                <td>
+                                    <span class="status-badge status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="Edit Details">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="interviewer-info">
+                                        <div class="interviewer-avatar">MR</div>
+                                        <div class="interviewer-details">
+                                            <div class="interviewer-name">Michael Rodriguez</div>
+                                            <div class="interviewer-email">m.rodriguez@industrialconnect.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="phone-number">+1 (555) 987-6543</div>
+                                        <div class="department">ext. 5678</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="department">Manufacturing</div>
+                                </td>
+                                <td>
+                                    <div class="department">12 years</div>
+                                </td>
+                                <td>
+                                    <div class="performance-metric">
+                                        <div class="metric-value">4.7/5.0</div>
+                                        <div class="metric-label">45 interviews</div>
+                                    </div>
+                                </td>
+                                <td>2021-08-22</td>
+                                <td>
+                                    <span class="status-badge status-busy">Busy</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="Edit Details">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="interviewer-info">
+                                        <div class="interviewer-avatar">EJ</div>
+                                        <div class="interviewer-details">
+                                            <div class="interviewer-name">Emily Johnson</div>
+                                            <div class="interviewer-email">e.johnson@industrialconnect.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="phone-number">+1 (555) 456-7890</div>
+                                        <div class="department">ext. 9012</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="department">Human Resources</div>
+                                </td>
+                                <td>
+                                    <div class="department">6 years</div>
+                                </td>
+                                <td>
+                                    <div class="performance-metric">
+                                        <div class="metric-value">4.8/5.0</div>
+                                        <div class="metric-label">28 interviews</div>
+                                    </div>
+                                </td>
+                                <td>2023-01-10</td>
+                                <td>
+                                    <span class="status-badge status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="Edit Details">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="interviewer-info">
+                                        <div class="interviewer-avatar">DT</div>
+                                        <div class="interviewer-details">
+                                            <div class="interviewer-name">David Thompson</div>
+                                            <div class="interviewer-email">d.thompson@industrialconnect.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="phone-number">+1 (555) 234-5678</div>
+                                        <div class="department">ext. 3456</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="department">Quality Assurance</div>
+                                </td>
+                                <td>
+                                    <div class="department">10 years</div>
+                                </td>
+                                <td>
+                                    <div class="performance-metric">
+                                        <div class="metric-value">4.6/5.0</div>
+                                        <div class="metric-label">38 interviews</div>
+                                    </div>
+                                </td>
+                                <td>2020-11-05</td>
+                                <td>
+                                    <span class="status-badge status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="Edit Details">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="interviewer-info">
+                                        <div class="interviewer-avatar">LW</div>
+                                        <div class="interviewer-details">
+                                            <div class="interviewer-name">Lisa Wang</div>
+                                            <div class="interviewer-email">l.wang@industrialconnect.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="phone-number">+1 (555) 678-9012</div>
+                                        <div class="department">ext. 7890</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="department">Engineering</div>
+                                </td>
+                                <td>
+                                    <div class="department">4 years</div>
+                                </td>
+                                <td>
+                                    <div class="performance-metric">
+                                        <div class="metric-value">4.5/5.0</div>
+                                        <div class="metric-label">22 interviews</div>
+                                    </div>
+                                </td>
+                                <td>2024-02-20</td>
+                                <td>
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="Edit Details">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Filter functionality
+        function applyFilters() {
+            const status = document.getElementById('statusFilter').value;
+            const department = document.getElementById('departmentFilter').value;
+            const experience = document.getElementById('experienceFilter').value;
+            const search = document.getElementById('searchFilter').value.toLowerCase();
+            
+            console.log('Applying filters:', { status, department, experience, search });
+            // Implement filter logic here
+        }
+
+        function clearFilters() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('searchFilter').value = '';
+            applyFilters();
+        }
+
+        function exportInterviewers() {
+            console.log('Exporting interviewers data...');
+            // Implement export functionality
+        }
+
+        function bulkActions() {
+            console.log('Opening bulk actions menu...');
+            // Implement bulk actions
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Manage interviewers page loaded successfully');
+        });
+    </script>
+</body>
+</html>"""

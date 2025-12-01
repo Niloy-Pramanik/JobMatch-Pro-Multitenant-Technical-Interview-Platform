@@ -1,0 +1,1317 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exam Question - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar - Matching Employer Dashboard */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            height: 80px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        /* Minimal hover effects */
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        /* Button Styles - Minimal hover effects */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header - Landing Page Design */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Question Form Container */
+        .question-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Main Form Section */
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-header {
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-title-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .form-description {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Exam Info Sidebar */
+        .exam-info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .exam-icon-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .exam-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .exam-position {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .info-section {
+            margin-bottom: 24px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-icon {
+            width: 20px;
+            height: 20px;
+            color: #667eea;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #e53e3e;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-help {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* Answer Options Section */
+        .answer-options {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .answer-options.hidden {
+            display: none;
+        }
+
+        .option-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .option-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 8px 0;
+            background: transparent;
+        }
+
+        .option-correct {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .correct-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .correct-checkbox.checked {
+            background: #48bb78;
+            border-color: #48bb78;
+            color: white;
+        }
+
+        .add-option-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            background: none;
+            color: #4a5568;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            margin-top: 16px;
+        }
+
+        .add-option-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .save-draft {
+            color: #718096;
+            background: none;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .save-draft:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .status-draft {
+            background: rgba(113, 128, 150, 0.1);
+            color: #718096;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .question-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .exam-info-card {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-container {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .exam-info-card {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Proper Alignment -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/employer-dashboard">Dashboard</a></li>
+                    <li><a href="/post-job">Post Job</a></li>
+                    <li><a href="/manage-jobs">Manage Jobs</a></li>
+                    <li><a href="/applications">Applications</a></li>
+                    <li><a href="/analytics">Analytics</a></li>
+                    <li><a href="/exams" class="active">Exams</a></li>
+                    <li><a href="/candidates">Find Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-company">Tesla Inc.</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Landing Page Design -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <a href="/exams">Exams</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <a href="/edit-exam">Manufacturing Engineering Exam</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Add Question</span>
+                        </div>
+                        <h1 class="page-title">Add Exam Question</h1>
+                        <p class="page-subtitle">Create comprehensive assessment questions to evaluate candidate knowledge and skills</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/edit-exam" class="btn btn-ghost">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Exam
+                        </a>
+                        <a href="/preview-question" class="btn btn-ghost">
+                            <i class="fas fa-eye"></i>
+                            Preview Question
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Question Container -->
+            <div class="question-container">
+                <!-- Main Form Section -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title">
+                            <div class="form-title-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            Create New Question
+                        </h2>
+                        <p class="form-description">Design engaging questions that effectively assess candidate competency and technical knowledge</p>
+                    </div>
+
+                    <form id="questionForm" action="/add-question" method="POST">
+                        <!-- Question Details -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                Question Details
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required" for="questionType">Question Type</label>
+                                    <select id="questionType" name="question_type" class="form-input form-select" required onchange="toggleAnswerOptions()">
+                                        <option value="">Select Type</option>
+                                        <option value="multiple_choice">Multiple Choice</option>
+                                        <option value="true_false">True/False</option>
+                                        <option value="short_answer">Short Answer</option>
+                                        <option value="essay">Essay</option>
+                                        <option value="numerical">Numerical</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="difficulty">Difficulty Level</label>
+                                    <select id="difficulty" name="difficulty" class="form-input form-select" required>
+                                        <option value="">Select Difficulty</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="points">Points</label>
+                                    <input type="number" id="points" name="points" class="form-input" value="10" min="1" max="100" required>
+                                    <div class="form-help">Points awarded for correct answer</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="timeLimit">Time Limit (seconds)</label>
+                                    <input type="number" id="timeLimit" name="time_limit" class="form-input" placeholder="120" min="30" max="600">
+                                    <div class="form-help">Optional time limit for this question</div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label class="form-label required" for="questionText">Question Text</label>
+                                    <textarea id="questionText" name="question_text" class="form-input form-textarea" placeholder="Enter your question here..." required></textarea>
+                                    <div class="form-help">Write a clear, concise question that tests the specific knowledge or skill</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Answer Options Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                Answer Options
+                            </h3>
+                            
+                            <div id="answerOptions" class="answer-options hidden">
+                                <div class="option-list">
+                                    <div class="option-item">
+                                        <div class="option-letter">A</div>
+                                        <input type="text" class="option-input" name="option_a" placeholder="Enter option A...">
+                                        <div class="option-correct">
+                                            <div class="correct-checkbox" onclick="toggleCorrect(this, 'a')"></div>
+                                            <span>Correct</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="option-item">
+                                        <div class="option-letter">B</div>
+                                        <input type="text" class="option-input" name="option_b" placeholder="Enter option B...">
+                                        <div class="option-correct">
+                                            <div class="correct-checkbox" onclick="toggleCorrect(this, 'b')"></div>
+                                            <span>Correct</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="option-item">
+                                        <div class="option-letter">C</div>
+                                        <input type="text" class="option-input" name="option_c" placeholder="Enter option C...">
+                                        <div class="option-correct">
+                                            <div class="correct-checkbox" onclick="toggleCorrect(this, 'c')"></div>
+                                            <span>Correct</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="option-item">
+                                        <div class="option-letter">D</div>
+                                        <input type="text" class="option-input" name="option_d" placeholder="Enter option D...">
+                                        <div class="option-correct">
+                                            <div class="correct-checkbox" onclick="toggleCorrect(this, 'd')"></div>
+                                            <span>Correct</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button type="button" class="add-option-btn" onclick="addOption()">
+                                    <i class="fas fa-plus"></i>
+                                    Add Another Option
+                                </button>
+                            </div>
+
+                            <div id="correctAnswer" class="answer-options hidden">
+                                <div class="form-group">
+                                    <label class="form-label required" for="correctAnswerText">Correct Answer</label>
+                                    <textarea id="correctAnswerText" name="correct_answer" class="form-input form-textarea" placeholder="Enter the correct answer..."></textarea>
+                                    <div class="form-help">Provide the expected answer for grading reference</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Settings -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                Additional Settings
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="category">Category/Topic</label>
+                                    <input type="text" id="category" name="category" class="form-input" placeholder="e.g., Lean Manufacturing">
+                                    <div class="form-help">Categorize this question for organization</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="tags">Tags</label>
+                                    <input type="text" id="tags" name="tags" class="form-input" placeholder="manufacturing, process, quality">
+                                    <div class="form-help">Comma-separated tags for better searchability</div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label class="form-label" for="explanation">Explanation (Optional)</label>
+                                    <textarea id="explanation" name="explanation" class="form-input form-textarea" placeholder="Provide additional context or explanation for the answer..."></textarea>
+                                    <div class="form-help">Help candidates understand the reasoning behind the correct answer</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="save-draft">
+                                <i class="fas fa-save"></i>
+                                Save as Draft
+                            </button>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary" onclick="previewQuestion()">
+                                    <i class="fas fa-eye"></i>
+                                    Preview Question
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Add Question
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Exam Information Sidebar -->
+                <div class="exam-info-card">
+                    <div class="card-header">
+                        <div class="exam-icon-large">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="exam-name">Manufacturing Engineering Fundamentals</div>
+                        <div class="exam-position">Senior Manufacturing Engineer</div>
+                        <div class="status-badge status-active">Active</div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-chart-bar info-icon"></i>
+                            Exam Statistics
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Current Questions</span>
+                            <span class="info-value">18</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Duration</span>
+                            <span class="info-value">45 minutes</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Passing Score</span>
+                            <span class="info-value">75%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Difficulty</span>
+                            <span class="info-value">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-question-circle info-icon"></i>
+                            Question Types
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Multiple Choice</span>
+                            <span class="info-value">12</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Essay</span>
+                            <span class="info-value">4</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Numerical</span>
+                            <span class="info-value">2</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-lightbulb info-icon"></i>
+                            Tips
+                        </div>
+                        <ul style="font-size: 14px; color: #4a5568; line-height: 1.6; list-style: none; padding: 0;">
+                            <li style="margin-bottom: 8px;">• Keep questions clear and concise</li>
+                            <li style="margin-bottom: 8px;">• Use realistic scenarios</li>
+                            <li style="margin-bottom: 8px;">• Avoid trick questions</li>
+                            <li>• Test practical knowledge</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-buttons" style="margin-top: 24px;">
+                        <button class="btn btn-outline btn-sm" style="width: 100%;" onclick="viewExamPreview()">
+                            <i class="fas fa-eye"></i>
+                            View Full Exam
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let correctAnswers = new Set();
+
+        function toggleAnswerOptions() {
+            const questionType = document.getElementById('questionType').value;
+            const answerOptions = document.getElementById('answerOptions');
+            const correctAnswer = document.getElementById('correctAnswer');
+            
+            if (questionType === 'multiple_choice' || questionType === 'true_false') {
+                answerOptions.classList.remove('hidden');
+                correctAnswer.classList.add('hidden');
+                
+                if (questionType === 'true_false') {
+                    // Show only True/False options
+                    const options = answerOptions.querySelectorAll('.option-item');
+                    options.forEach((option, index) => {
+                        if (index < 2) {
+                            option.style.display = 'flex';
+                            const input = option.querySelector('.option-input');
+                            const letter = option.querySelector('.option-letter');
+                            if (index === 0) {
+                                input.value = 'True';
+                                letter.textContent = 'T';
+                            } else {
+                                input.value = 'False';
+                                letter.textContent = 'F';
+                            }
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    });
+                } else {
+                    // Show all options for multiple choice
+                    const options = answerOptions.querySelectorAll('.option-item');
+                    options.forEach((option, index) => {
+                        option.style.display = 'flex';
+                        const input = option.querySelector('.option-input');
+                        const letter = option.querySelector('.option-letter');
+                        input.value = '';
+                        letter.textContent = String.fromCharCode(65 + index);
+                    });
+                }
+            } else if (questionType === 'short_answer' || questionType === 'essay' || questionType === 'numerical') {
+                answerOptions.classList.add('hidden');
+                correctAnswer.classList.remove('hidden');
+            } else {
+                answerOptions.classList.add('hidden');
+                correctAnswer.classList.add('hidden');
+            }
+        }
+
+        function toggleCorrect(checkbox, option) {
+            const questionType = document.getElementById('questionType').value;
+            
+            if (questionType === 'multiple_choice') {
+                // Multiple choice can have multiple correct answers
+                if (checkbox.classList.contains('checked')) {
+                    checkbox.classList.remove('checked');
+                    checkbox.innerHTML = '';
+                    correctAnswers.delete(option);
+                } else {
+                    checkbox.classList.add('checked');
+                    checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                    correctAnswers.add(option);
+                }
+            } else if (questionType === 'true_false') {
+                // True/False can only have one correct answer
+                document.querySelectorAll('.correct-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                    cb.innerHTML = '';
+                });
+                correctAnswers.clear();
+                
+                checkbox.classList.add('checked');
+                checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                correctAnswers.add(option);
+            }
+        }
+
+        function addOption() {
+            const optionList = document.querySelector('.option-list');
+            const currentOptions = optionList.querySelectorAll('.option-item');
+            const newIndex = currentOptions.length;
+            const letter = String.fromCharCode(65 + newIndex);
+            
+            const newOption = document.createElement('div');
+            newOption.className = 'option-item';
+            newOption.innerHTML = `
+                <div class="option-letter">${letter}</div>
+                <input type="text" class="option-input" name="option_${letter.toLowerCase()}" placeholder="Enter option ${letter}...">
+                <div class="option-correct">
+                    <div class="correct-checkbox" onclick="toggleCorrect(this, '${letter.toLowerCase()}')"></div>
+                    <span>Correct</span>
+                </div>
+            `;
+            
+            optionList.appendChild(newOption);
+        }
+
+        function previewQuestion() {
+            console.log('Opening question preview...');
+            // Implement preview functionality
+        }
+
+        function viewExamPreview() {
+            console.log('Opening full exam preview...');
+            window.open('/exam-preview', '_blank');
+        }
+
+        // Form submission
+        document.getElementById('questionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const questionType = document.getElementById('questionType').value;
+            const questionText = document.getElementById('questionText').value;
+            
+            if (!questionText.trim()) {
+                alert('Please enter the question text');
+                return;
+            }
+            
+            if ((questionType === 'multiple_choice' || questionType === 'true_false') && correctAnswers.size === 0) {
+                alert('Please select at least one correct answer');
+                return;
+            }
+            
+            console.log('Adding question...');
+            
+            // Simulate form submission
+            setTimeout(() => {
+                alert('Question added successfully!');
+                window.location.href = '/edit-exam';
+            }, 1000);
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Add question page loaded successfully');
+        });
+    </script>
+</body>
+</html>"""
+

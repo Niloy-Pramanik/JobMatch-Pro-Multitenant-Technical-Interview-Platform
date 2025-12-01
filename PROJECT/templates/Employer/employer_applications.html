@@ -1,0 +1,1366 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Applications - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-card.total::before {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-card.review::before {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .stat-card.shortlisted::before {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .stat-card.hired::before {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card.total .stat-icon {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-card.review .stat-icon {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-card.shortlisted .stat-icon {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-card.hired .stat-icon {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .trend-up {
+            color: #48bb78;
+        }
+
+        .trend-down {
+            color: #e53e3e;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .filters-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Applications Grid */
+        .applications-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .applications-count {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .applications-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        /* Application Card */
+        .application-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
+        .application-card:hover {
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .applicant-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .applicant-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .applicant-details h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .job-applied {
+            font-size: 16px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .application-date {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .status-under-review {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+            border: 2px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .status-shortlisted {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            border: 2px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .status-hired {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+            border: 2px solid rgba(159, 122, 234, 0.2);
+        }
+
+        .status-rejected {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+            border: 2px solid rgba(229, 62, 62, 0.2);
+        }
+
+        .application-content {
+            margin-bottom: 20px;
+        }
+
+        .cover-letter-preview {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .cover-letter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .cover-letter-text {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .application-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .application-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .application-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .page-header {
+                padding: 40px 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-section,
+            .applications-section {
+                padding: 20px;
+                margin: 0 16px 32px;
+            }
+            
+            .stat-card {
+                padding: 24px;
+            }
+            
+            .application-card {
+                padding: 20px;
+            }
+            
+            .user-info {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Figma Design Container */
+        .figma-container {
+            background: #f6f8fa;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 20px;
+            position: relative;
+        }
+
+        .figma-title {
+            position: absolute;
+            top: 12px;
+            left: 24px;
+            font-size: 14px;
+            color: #656d76;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="figma-container">
+        <div class="figma-title">IndustrialConnect Applications - Ready for Figma</div>
+        
+        <!-- Navigation with Fixed Alignment -->
+        <nav class="navbar" id="navbar">
+            <div class="container">
+                <div class="nav-container">
+                    <a href="/" class="nav-brand">
+                        <i class="fas fa-industry"></i>
+                        IndustrialConnect
+                    </a>
+                    
+                    <ul class="nav-links">
+                        <li><a href="/employer-dashboard">Dashboard</a></li>
+                        <li><a href="/post-job">Post Job</a></li>
+                        <li><a href="/manage-jobs">Manage Jobs</a></li>
+                        <li><a href="/applications" class="active">Applications</a></li>
+                        <li><a href="/analytics">Analytics</a></li>
+                        <li><a href="/candidates">Find Candidates</a></li>
+                    </ul>
+                    
+                    <div class="nav-actions">
+                        <div class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge">3</div>
+                        </div>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar">JD</div>
+                            <div class="user-info">
+                                <div class="user-name">John Doe</div>
+                                <div class="user-company">Tesla Inc.</div>
+                            </div>
+                            <i class="fas fa-chevron-down user-dropdown"></i>
+                        </div>
+                    </div>
+                    
+                    <button class="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="page-header fade-in-up">
+                    <div class="header-content">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Applications</span>
+                        </div>
+                        <h1 class="page-title">Job Applications</h1>
+                        <p class="page-subtitle">Review and manage candidate applications</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid fade-in-up">
+                    <div class="stat-card total">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <span class="stat-value">147</span>
+                        <div class="stat-label">Total Applications</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+23 this week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card review">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <span class="stat-value">32</span>
+                        <div class="stat-label">Under Review</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending review</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card shortlisted">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="stat-value">18</span>
+                        <div class="stat-label">Shortlisted</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+5 this week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card hired">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <span class="stat-value">8</span>
+                        <div class="stat-label">Hired</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+3 this month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="filters-section fade-in-up">
+                    <div class="filters-header">
+                        <h3 class="filters-title">Filter Applications</h3>
+                        <div class="filter-actions">
+                            <button class="btn btn-outline btn-sm" onclick="clearFilters()">
+                                <i class="fas fa-times"></i>
+                                Clear Filters
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="exportApplications()">
+                                <i class="fas fa-download"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="new">New</option>
+                                <option value="under-review">Under Review</option>
+                                <option value="shortlisted">Shortlisted</option>
+                                <option value="hired">Hired</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Job Position</label>
+                            <select class="filter-select" id="jobFilter">
+                                <option value="">All Positions</option>
+                                <option value="manufacturing-engineer">Manufacturing Engineer</option>
+                                <option value="aerospace-engineer">Aerospace Engineer</option>
+                                <option value="process-engineer">Process Engineer</option>
+                                <option value="automation-engineer">Automation Engineer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <input type="date" class="filter-input" id="dateFilter">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Search Candidate</label>
+                            <input type="text" class="filter-input" placeholder="Search by name or email..." id="searchFilter">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applications Section -->
+                <div class="applications-section fade-in-up">
+                    <div class="section-header">
+                        <h3 class="section-title">Recent Applications</h3>
+                        <div class="applications-count">Showing 8 of 147 applications</div>
+                    </div>
+
+                    <div class="applications-grid" id="applicationsGrid">
+                        <!-- Application Card 1 -->
+                        <div class="application-card" onclick="viewApplication('sarah-martinez')">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    <div class="applicant-avatar">SM</div>
+                                    <div class="applicant-details">
+                                        <h3>Sarah Martinez</h3>
+                                        <div class="job-applied">Applied for: Senior Manufacturing Engineer</div>
+                                        <div class="application-date">Applied Sep 14, 2025 at 14:30</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge status-new">New</div>
+                            </div>
+                            
+                            <div class="application-content">
+                                <div class="cover-letter-preview">
+                                    <div class="cover-letter-title">Cover Letter Preview:</div>
+                                    <div class="cover-letter-text">
+                                        I am excited to apply for the Senior Manufacturing Engineer position at Tesla. With over 8 years of experience in automotive manufacturing and a proven track record of implementing lean manufacturing principles...
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="application-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewResume('sarah-martinez')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    View Resume
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); changeStatus('sarah-martinez', 'under-review')">
+                                    <i class="fas fa-eye"></i>
+                                    Review
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); changeStatus('sarah-martinez', 'shortlisted')">
+                                    <i class="fas fa-star"></i>
+                                    Shortlist
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Application Card 2 -->
+                        <div class="application-card" onclick="viewApplication('michael-johnson')">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    <div class="applicant-avatar">MJ</div>
+                                    <div class="applicant-details">
+                                        <h3>Michael Johnson</h3>
+                                        <div class="job-applied">Applied for: Aerospace Systems Engineer</div>
+                                        <div class="application-date">Applied Sep 13, 2025 at 09:15</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge status-under-review">Under Review</div>
+                            </div>
+                            
+                            <div class="application-content">
+                                <div class="cover-letter-preview">
+                                    <div class="cover-letter-title">Cover Letter Preview:</div>
+                                    <div class="cover-letter-text">
+                                        As an experienced aerospace engineer with 12 years in the industry, I am thrilled to submit my application for the Aerospace Systems Engineer role. My expertise in aircraft systems design and certification processes...
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="application-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewResume('michael-johnson')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    View Resume
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); changeStatus('michael-johnson', 'shortlisted')">
+                                    <i class="fas fa-star"></i>
+                                    Shortlist
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); scheduleInterview('michael-johnson')">
+                                    <i class="fas fa-calendar"></i>
+                                    Interview
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Application Card 3 -->
+                        <div class="application-card" onclick="viewApplication('emily-rodriguez')">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    <div class="applicant-avatar">ER</div>
+                                    <div class="applicant-details">
+                                        <h3>Emily Rodriguez</h3>
+                                        <div class="job-applied">Applied for: Process Development Engineer</div>
+                                        <div class="application-date">Applied Sep 12, 2025 at 16:45</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge status-shortlisted">Shortlisted</div>
+                            </div>
+                            
+                            <div class="application-content">
+                                <div class="cover-letter-preview">
+                                    <div class="cover-letter-title">Cover Letter Preview:</div>
+                                    <div class="cover-letter-text">
+                                        I am writing to express my strong interest in the Process Development Engineer position. With my background in chemical engineering and 6 years of experience in process optimization at manufacturing companies...
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="application-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewResume('emily-rodriguez')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    View Resume
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); scheduleInterview('emily-rodriguez')">
+                                    <i class="fas fa-calendar"></i>
+                                    Schedule Interview
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); makeOffer('emily-rodriguez')">
+                                    <i class="fas fa-handshake"></i>
+                                    Make Offer
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Application Card 4 -->
+                        <div class="application-card" onclick="viewApplication('david-wilson')">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    <div class="applicant-avatar">DW</div>
+                                    <div class="applicant-details">
+                                        <h3>David Wilson</h3>
+                                        <div class="job-applied">Applied for: Industrial Automation Engineer</div>
+                                        <div class="application-date">Applied Sep 11, 2025 at 11:20</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge status-hired">Hired</div>
+                            </div>
+                            
+                            <div class="application-content">
+                                <div class="cover-letter-preview">
+                                    <div class="cover-letter-title">Cover Letter Preview:</div>
+                                    <div class="cover-letter-text">
+                                        I am excited to apply for the Industrial Automation Engineer position at Tesla. My 10 years of experience in PLC programming, SCADA systems, and industrial robotics make me an ideal candidate...
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="application-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewResume('david-wilson')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    View Resume
+                                </button>
+                                <button class="btn btn-success btn-sm" disabled>
+                                    <i class="fas fa-check"></i>
+                                    Hired
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); viewContract('david-wilson')">
+                                    <i class="fas fa-file-contract"></i>
+                                    Contract
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Application management functions
+        function viewApplication(applicantId) {
+            console.log(`Viewing application details for: ${applicantId}`);
+            // Navigate to application details page
+        }
+
+        function viewResume(applicantId) {
+            console.log(`Opening resume for: ${applicantId}`);
+            // Open resume in new tab or modal
+        }
+
+        function changeStatus(applicantId, newStatus) {
+            console.log(`Changing status for ${applicantId} to: ${newStatus}`);
+            // Update application status
+            
+            // Find the application card and update status badge
+            const cards = document.querySelectorAll('.application-card');
+            cards.forEach(card => {
+                const nameElement = card.querySelector('h3');
+                if (nameElement && nameElement.textContent.toLowerCase().includes(applicantId.split('-')[0])) {
+                    const statusBadge = card.querySelector('.status-badge');
+                    statusBadge.className = `status-badge status-${newStatus}`;
+                    statusBadge.textContent = newStatus.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                }
+            });
+        }
+
+        function scheduleInterview(applicantId) {
+            console.log(`Scheduling interview for: ${applicantId}`);
+            // Open interview scheduling modal
+            alert(`Interview scheduling modal would open for ${applicantId}`);
+        }
+
+        function makeOffer(applicantId) {
+            console.log(`Making offer to: ${applicantId}`);
+            // Open offer creation modal
+            alert(`Offer creation modal would open for ${applicantId}`);
+        }
+
+        function viewContract(applicantId) {
+            console.log(`Viewing contract for: ${applicantId}`);
+            // Open contract document
+        }
+
+        // Filter functions
+        function clearFilters() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('jobFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('searchFilter').value = '';
+            console.log('Filters cleared');
+        }
+
+        function exportApplications() {
+            console.log('Exporting applications data');
+            // Implement export functionality
+            alert('Export functionality would download CSV/Excel file');
+        }
+
+        // Filter event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = ['statusFilter', 'jobFilter', 'dateFilter', 'searchFilter'];
+            
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', function() {
+                        console.log(`Filter ${filterId} changed to: ${this.value}`);
+                        // Apply filters to applications grid
+                        applyFilters();
+                    });
+                }
+            });
+
+            // Search filter with debounce
+            const searchFilter = document.getElementById('searchFilter');
+            if (searchFilter) {
+                let searchTimeout;
+                searchFilter.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        console.log(`Search filter: ${this.value}`);
+                        applyFilters();
+                    }, 500);
+                });
+            }
+
+            console.log('Applications page loaded successfully');
+        });
+
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const jobFilter = document.getElementById('jobFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+            
+            // In a real application, this would filter the applications
+            console.log('Applying filters:', { statusFilter, jobFilter, dateFilter, searchFilter });
+            
+            // Update applications count
+            document.querySelector('.applications-count').textContent = 'Filtering applications...';
+            
+            setTimeout(() => {
+                document.querySelector('.applications-count').textContent = 'Showing filtered results';
+            }, 1000);
+        }
+
+        // Animate counters on page load
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+        }
+
+        // Start animations when page loads
+        window.addEventListener('load', function() {
+            setTimeout(animateCounters, 500);
+            navbar.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>"""
+

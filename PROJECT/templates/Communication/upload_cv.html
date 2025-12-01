@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS File Browser - Figma Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Finder Window */
+        .finder-window {
+            width: 900px;
+            height: 600px;
+            background: #2d2d2d;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Title Bar */
+        .title-bar {
+            height: 44px;
+            background: #3c3c3c;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid #4a4a4a;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            height: 52px;
+            background: #383838;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+            border-bottom: 1px solid #4a4a4a;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-btn {
+            width: 24px;
+            height: 24px;
+            background: #4a4a4a;
+            border: none;
+            border-radius: 4px;
+            color: #999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .nav-btn:hover {
+            background: #5a5a5a;
+            color: #fff;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .view-btn {
+            width: 28px;
+            height: 28px;
+            background: #4a4a4a;
+            border: none;
+            border-radius: 4px;
+            color: #999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .view-btn.active {
+            background: #007aff;
+            color: white;
+        }
+
+        .view-btn:hover:not(.active) {
+            background: #5a5a5a;
+            color: #fff;
+        }
+
+        .search-container {
+            margin-left: auto;
+            position: relative;
+        }
+
+        .search-box {
+            width: 200px;
+            height: 28px;
+            background: #4a4a4a;
+            border: none;
+            border-radius: 6px;
+            padding: 0 32px 0 12px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .search-box::placeholder {
+            color: #999;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #2d2d2d;
+            border-right: 1px solid #4a4a4a;
+            padding: 16px 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-header {
+            padding: 0 16px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-item.active {
+            background: #007aff;
+            color: white;
+        }
+
+        .sidebar-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sidebar-item .fa-clock {
+            color: #007aff;
+        }
+        .sidebar-item .fa-star {
+            color: #ffbd2e;
+        }
+        .sidebar-item .fa-folder {
+            color: #007aff;
+        }
+        .sidebar-item .fa-desktop {
+            color: #888;
+        }
+        .sidebar-item .fa-file-alt {
+            color: #007aff;
+        }
+        .sidebar-item .fa-download {
+            color: #28ca42;
+        }
+        .sidebar-item .fa-home {
+            color: #ff9500;
+        }
+        .sidebar-item .fa-film {
+            color: #ff3b30;
+        }
+        .sidebar-item .fa-music {
+            color: #ff2d92;
+        }
+        .sidebar-item .fa-image {
+            color: #30d158;
+        }
+        .sidebar-item .fa-camera {
+            color: #007aff;
+        }
+        .sidebar-item .fa-screenshot {
+            color: #888;
+        }
+        .sidebar-item .fa-network-wired {
+            color: #888;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #2d2d2d;
+        }
+
+        /* Section Headers */
+        .section-header {
+            padding: 16px 20px 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #888;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+        }
+
+        /* File Grid */
+        .file-grid {
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .file-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .file-icon i {
+            font-size: 32px;
+        }
+
+        /* Specific File Icons */
+        .jupyter-file .file-icon {
+            background: #666;
+            color: #ff6b35;
+        }
+
+        .applications-folder .file-icon {
+            background: linear-gradient(135deg, #007aff, #0051d8);
+            color: white;
+        }
+
+        .icloud-folder .file-icon {
+            background: linear-gradient(135deg, #007aff, #0051d8);
+            color: white;
+        }
+
+        .folder-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: #007aff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: white;
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: #ccc;
+            font-weight: 400;
+        }
+
+        .file-count {
+            font-size: 10px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Bottom Action Bar */
+        .bottom-bar {
+            height: 44px;
+            background: #383838;
+            border-top: 1px solid #4a4a4a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .show-options-btn {
+            background: #4a4a4a;
+            border: none;
+            border-radius: 6px;
+            color: #ccc;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .show-options-btn:hover {
+            background: #5a5a5a;
+            color: #fff;
+        }
+
+        .bottom-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .bottom-btn {
+            background: #4a4a4a;
+            border: none;
+            border-radius: 6px;
+            color: #ccc;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-btn:hover {
+            background: #5a5a5a;
+            color: #fff;
+        }
+
+        .bottom-btn.primary {
+            background: #007aff;
+            color: white;
+        }
+
+        .bottom-btn.primary:hover {
+            background: #0056d3;
+        }
+
+        /* Scrollbar Styling */
+        .content-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+            background: #5a5a5a;
+            border-radius: 4px;
+        }
+
+        .content-area::-webkit-scrollbar-thumb:hover {
+            background: #6a6a6a;
+        }
+
+        /* Figma Design Adjustments */
+        .figma-container {
+            position: relative;
+            background: #f0f0f0;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .figma-title {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Media Queries for Figma Responsiveness */
+        @media (max-width: 1024px) {
+            .finder-window {
+                width: 95vw;
+                height: 85vh;
+            }
+
+            .sidebar {
+                width: 180px;
+            }
+
+            .file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .finder-window {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .sidebar {
+                width: 160px;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="figma-container">
+        <div class="figma-title">macOS File Browser Component - Ready for Figma</div>
+
+        <div class="finder-window">
+            <!-- Title Bar -->
+            <div class="title-bar">
+                <div class="traffic-lights">
+                    <div class="traffic-light close"></div>
+                    <div class="traffic-light minimize"></div>
+                    <div class="traffic-light maximize"></div>
+                </div>
+                <div class="window-title">niloypramanik</div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="nav-buttons">
+                    <button class="nav-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="nav-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="view-options">
+                    <button class="view-btn active">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="niloypramanik" value="niloypramanik">
+                    <i class="fas fa-times search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-header">Favourites</div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Recents</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-star"></i>
+                            <span>Applications</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-desktop"></i>
+                            <span>Desktop</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Documents</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-download"></i>
+                            <span>Downloads</span>
+                        </div>
+                        <div class="sidebar-item active">
+                            <i class="fas fa-home"></i>
+                            <span>niloypramanik</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-film"></i>
+                            <span>Movies</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-music"></i>
+                            <span>Music</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-image"></i>
+                            <span>Pictures</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-camera"></i>
+                            <span>Photos</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-screenshot"></i>
+                            <span>Screenshot</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-header">Locations</div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Network</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="sidebar-header">Media</div>
+                        <div class="sidebar-item">
+                            <i class="fas fa-camera"></i>
+                            <span>Photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="content-area">
+                    <!-- Previous 30 Days Section -->
+                    <div class="section-header">Previous 30 Days</div>
+                    <div class="file-grid">
+                        <div class="file-item jupyter-file">
+                            <div class="file-icon">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-name">Untitled.ipynb</div>
+                        </div>
+                    </div>
+
+                    <!-- August Section -->
+                    <div class="section-header">August</div>
+                    <div class="file-grid">
+                        <div class="file-item applications-folder">
+                            <div class="file-icon">
+                                <i class="fas fa-folder"></i>
+                                <div class="folder-badge">1</div>
+                            </div>
+                            <div class="file-name">Applications</div>
+                            <div class="file-count">1 item</div>
+                        </div>
+
+                        <div class="file-item icloud-folder">
+                            <div class="file-icon">
+                                <i class="fas fa-cloud"></i>
+                                <div class="folder-badge">4</div>
+                            </div>
+                            <div class="file-name">iCloud Drive (Archive)</div>
+                            <div class="file-count">4 items</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="bottom-bar">
+                <button class="show-options-btn">Show Options</button>
+                <div class="bottom-actions">
+                    <button class="bottom-btn">Cancel</button>
+                    <button class="bottom-btn primary">Open</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive functionality for the dummy browser
+        document.addEventListener('DOMContentLoaded', function() {
+            // File item selection
+            const fileItems = document.querySelectorAll('.file-item');
+            fileItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove previous selection
+                    fileItems.forEach(f => f.classList.remove('selected'));
+                    // Add selection to clicked item
+                    this.classList.add('selected');
+
+                    // Update button states
+                    const openBtn = document.querySelector('.bottom-btn.primary');
+                    openBtn.style.opacity = '1';
+                    openBtn.style.pointerEvents = 'auto';
+                });
+            });
+
+            // Sidebar navigation
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    sidebarItems.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // View buttons
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewBtns.forEach(v => v.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Search functionality
+            const searchBox = document.querySelector('.search-box');
+            const clearSearch = document.querySelector('.search-icon');
+
+            clearSearch.addEventListener('click', function() {
+                searchBox.value = '';
+                searchBox.focus();
+            });
+
+            // Button interactions
+            const cancelBtn = document.querySelector('.bottom-btn:not(.primary)');
+            const openBtn = document.querySelector('.bottom-btn.primary');
+
+            cancelBtn.addEventListener('click', function() {
+                console.log('Cancel clicked - Close file browser');
+            });
+
+            openBtn.addEventListener('click', function() {
+                console.log('Open clicked - Open selected file/folder');
+            });
+
+            // Double-click to open folders
+            fileItems.forEach(item => {
+                item.addEventListener('dblclick', function() {
+                    const fileName = this.querySelector('.file-name').textContent;
+                    console.log(`Opening: ${fileName}`);
+                });
+            });
+
+            console.log('macOS File Browser component loaded and ready for Figma');
+        });
+
+        // Add selection styling
+        const style = document.createElement('style');
+        style.textContent = `
+            .file-item.selected {
+                background: #007aff !important;
+                color: white;
+            }
+
+            .file-item.selected .file-name,
+            .file-item.selected .file-count {
+                color: white !important;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar with Auto-Hide */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .page-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 32px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Search and Filter Section */
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .search-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .results-count {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-select {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Filter Tags */
+        .filter-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tag:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .filter-tag .remove {
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .filter-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .clear-filters {
+            color: #e53e3e;
+            background: rgba(229, 62, 62, 0.1);
+            border: 1px solid rgba(229, 62, 62, 0.2);
+        }
+
+        .clear-filters:hover {
+            background: rgba(229, 62, 62, 0.2);
+        }
+
+        /* Jobs Grid */
+        .jobs-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 32px;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+        }
+
+        .filter-group-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .filter-option label {
+            flex: 1;
+            cursor: pointer;
+            color: #4a5568;
+        }
+
+        .filter-count {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        /* Jobs List */
+        .jobs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: #667eea;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .job-info {
+            flex: 1;
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+
+        .job-title:hover {
+            color: #667eea;
+        }
+
+        .job-company {
+            font-size: 16px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .job-location {
+            color: #718096;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .meta-item i {
+            color: #667eea;
+        }
+
+        .job-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .job-tag {
+            background: #f0f4f8;
+            color: #4a5568;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .job-salary {
+            font-size: 18px;
+            font-weight: 700;
+            color: #48bb78;
+        }
+
+        .job-date {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .save-job {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #cbd5e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-job:hover, .save-job.saved {
+            color: #667eea;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .page-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #4a5568;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .no-results-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .no-results-text {
+            color: #718096;
+            margin-bottom: 24px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .jobs-section {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                margin-bottom: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .header-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .save-job {
+                position: static;
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+
+            .page-header {
+                padding: 40px 0;
+            }
+
+            .search-section,
+            .sidebar,
+            .job-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/jobs" class="active">Browse Jobs</a></li>
+                    <li><a href="/assessments">Assessments</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="/profile" class="btn btn-secondary">Profile</a>
+                    <a href="/dashboard" class="btn btn-primary">Dashboard</a>
+                </div>
+
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="page-title">Browse Industrial Jobs</h1>
+                    <p class="page-subtitle">
+                        Discover thousands of opportunities from leading industrial companies worldwide. 
+                        Find your perfect match with our AI-powered job recommendations.
+                    </p>
+
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">2,847</span>
+                            <span class="stat-label">Active Jobs</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">156</span>
+                            <span class="stat-label">Companies</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">89%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Search and Filter Section -->
+            <div class="search-section">
+                <div class="search-header">
+                    <h2 class="search-title">Find Your Perfect Job</h2>
+                    <div class="results-count">2,847 jobs found</div>
+                </div>
+
+                <form class="search-form" onsubmit="searchJobs(event)">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="Search jobs, companies, or keywords..."
+                        id="searchQuery"
+                    />
+                    <select class="search-select" id="locationFilter">
+                        <option value="">All Locations</option>
+                        <option value="remote">Remote</option>
+                        <option value="usa">United States</option>
+                        <option value="canada">Canada</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                    </select>
+                    <select class="search-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="aerospace">Aerospace</option>
+                        <option value="automotive">Automotive</option>
+                        <option value="energy">Energy</option>
+                        <option value="chemical">Chemical</option>
+                    </select>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+                </form>
+
+                <div class="filter-tags" id="activeFilters">
+                    <div class="filter-tag">
+                        Remote <span class="remove" onclick="removeFilter('remote')">×</span>
+                    </div>
+                    <div class="filter-tag">
+                        Full-time <span class="remove" onclick="removeFilter('fulltime')">×</span>
+                    </div>
+                    <div class="filter-tag clear-filters" onclick="clearAllFilters()">
+                        <i class="fas fa-times"></i> Clear All Filters
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jobs Section -->
+            <div class="jobs-section">
+                <!-- Sidebar Filters -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-filter"></i>
+                        Filters
+                    </h3>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Job Type</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="fulltime" checked>
+                            <label for="fulltime">Full-time</label>
+                            <span class="filter-count">(1,823)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="parttime">
+                            <label for="parttime">Part-time</label>
+                            <span class="filter-count">(456)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="contract">
+                            <label for="contract">Contract</label>
+                            <span class="filter-count">(568)</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Experience Level</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="entry">
+                            <label for="entry">Entry Level</label>
+                            <span class="filter-count">(672)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="mid">
+                            <label for="mid">Mid Level</label>
+                            <span class="filter-count">(1,234)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="senior">
+                            <label for="senior">Senior Level</label>
+                            <span class="filter-count">(941)</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Salary Range</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="salary1">
+                            <label for="salary1">$40K - $60K</label>
+                            <span class="filter-count">(423)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="salary2">
+                            <label for="salary2">$60K - $80K</label>
+                            <span class="filter-count">(789)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="salary3">
+                            <label for="salary3">$80K - $100K</label>
+                            <span class="filter-count">(654)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="salary4">
+                            <label for="salary4">$100K+</label>
+                            <span class="filter-count">(981)</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Company Size</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="startup">
+                            <label for="startup">Startup (1-50)</label>
+                            <span class="filter-count">(234)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="medium">
+                            <label for="medium">Medium (51-500)</label>
+                            <span class="filter-count">(567)</span>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="large">
+                            <label for="large">Large (500+)</label>
+                            <span class="filter-count">(2,046)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jobs List -->
+                <div class="jobs-list" id="jobsList">
+                    <!-- Job Card 1 -->
+                    <div class="job-card" onclick="viewJob('senior-manufacturing-engineer')">
+                        <button class="save-job" onclick="event.stopPropagation(); toggleSave(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <div class="job-header">
+                            <div class="job-info">
+                                <a href="/jobs/senior-manufacturing-engineer" class="job-title">Senior Manufacturing Engineer</a>
+                                <div class="job-company">Tesla</div>
+                                <div class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Austin, TX
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>5+ years</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>500+ employees</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description">
+                            Lead process optimization and automation initiatives for next-generation electric vehicle production lines. Drive continuous improvement and implement lean manufacturing principles...
+                        </div>
+
+                        <div class="job-tags">
+                            <span class="job-tag">Automation</span>
+                            <span class="job-tag">Lean Manufacturing</span>
+                            <span class="job-tag">Process Improvement</span>
+                            <span class="job-tag">Production</span>
+                        </div>
+
+                        <div class="job-footer">
+                            <div class="job-salary">$110K - $140K</div>
+                            <div class="job-date">3 days ago</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 2 -->
+                    <div class="job-card" onclick="viewJob('aerospace-systems-engineer')">
+                        <button class="save-job saved" onclick="event.stopPropagation(); toggleSave(this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+
+                        <div class="job-header">
+                            <div class="job-info">
+                                <a href="/jobs/aerospace-systems-engineer" class="job-title">Aerospace Systems Engineer</a>
+                                <div class="job-company">Boeing</div>
+                                <div class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Seattle, WA
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>3+ years</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>500+ employees</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description">
+                            Design and develop critical aerospace systems for commercial aircraft. Work with cutting-edge technology and innovative solutions in aerospace engineering. Collaborate with cross-functional teams...
+                        </div>
+
+                        <div class="job-tags">
+                            <span class="job-tag">Aerospace</span>
+                            <span class="job-tag">Systems Design</span>
+                            <span class="job-tag">Aircraft</span>
+                            <span class="job-tag">Engineering</span>
+                        </div>
+
+                        <div class="job-footer">
+                            <div class="job-salary">$125K - $160K</div>
+                            <div class="job-date">1 week ago</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 3 -->
+                    <div class="job-card" onclick="viewJob('power-systems-engineer')">
+                        <button class="save-job" onclick="event.stopPropagation(); toggleSave(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <div class="job-header">
+                            <div class="job-info">
+                                <a href="/jobs/power-systems-engineer" class="job-title">Power Systems Engineer</a>
+                                <div class="job-company">General Electric</div>
+                                <div class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Boston, MA
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>4+ years</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>500+ employees</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description">
+                            Develop sustainable energy solutions and power generation systems. Focus on renewable energy integration and grid modernization projects. Drive innovation in clean energy technologies...
+                        </div>
+
+                        <div class="job-tags">
+                            <span class="job-tag">Power Systems</span>
+                            <span class="job-tag">Renewable Energy</span>
+                            <span class="job-tag">Grid Systems</span>
+                            <span class="job-tag">Clean Energy</span>
+                        </div>
+
+                        <div class="job-footer">
+                            <div class="job-salary">$95K - $125K</div>
+                            <div class="job-date">5 days ago</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 4 -->
+                    <div class="job-card" onclick="viewJob('industrial-automation-engineer')">
+                        <button class="save-job" onclick="event.stopPropagation(); toggleSave(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <div class="job-header">
+                            <div class="job-info">
+                                <a href="/jobs/industrial-automation-engineer" class="job-title">Industrial Automation Engineer</a>
+                                <div class="job-company">Siemens</div>
+                                <div class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Remote
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>3+ years</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>500+ employees</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description">
+                            Lead automation projects for industrial manufacturing systems. Design and implement PLC programming and SCADA systems for global clients. Work with cutting-edge automation technologies...
+                        </div>
+
+                        <div class="job-tags">
+                            <span class="job-tag">PLC Programming</span>
+                            <span class="job-tag">SCADA</span>
+                            <span class="job-tag">Automation</span>
+                            <span class="job-tag">Manufacturing</span>
+                        </div>
+
+                        <div class="job-footer">
+                            <div class="job-salary">€75K - €95K</div>
+                            <div class="job-date">2 days ago</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 5 -->
+                    <div class="job-card" onclick="viewJob('process-development-engineer')">
+                        <button class="save-job" onclick="event.stopPropagation(); toggleSave(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <div class="job-header">
+                            <div class="job-info">
+                                <a href="/jobs/process-development-engineer" class="job-title">Process Development Engineer</a>
+                                <div class="job-company">3M</div>
+                                <div class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Minneapolis, MN
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Full-time</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>2+ years</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>500+ employees</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description">
+                            Develop and optimize manufacturing processes for innovative industrial products. Focus on quality improvement and cost reduction initiatives. Collaborate with R&D teams on new product development...
+                        </div>
+
+                        <div class="job-tags">
+                            <span class="job-tag">Process Optimization</span>
+                            <span class="job-tag">Quality Control</span>
+                            <span class="job-tag">Manufacturing</span>
+                            <span class="job-tag">R&D</span>
+                        </div>
+
+                        <div class="job-footer">
+                            <div class="job-salary">$85K - $110K</div>
+                            <div class="job-date">1 week ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <span style="padding: 0 12px; color: #718096;">...</span>
+                <button class="page-btn">28</button>
+                <button class="page-btn">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Job search functionality
+        function searchJobs(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchQuery').value;
+            const location = document.getElementById('locationFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+
+            console.log('Searching jobs:', { query, location, category });
+            // Here you would implement actual search logic
+
+            // Simulate search results update
+            document.querySelector('.results-count').textContent = 
+                Math.floor(Math.random() * 1000) + ' jobs found';
+        }
+
+        // Filter management
+        function removeFilter(filterType) {
+            const filterTag = event.target.parentElement;
+            filterTag.remove();
+            console.log('Removed filter:', filterType);
+            // Update search results
+        }
+
+        function clearAllFilters() {
+            const filtersContainer = document.getElementById('activeFilters');
+            // Keep only the clear filters button
+            filtersContainer.innerHTML = `
+                <div class="filter-tag clear-filters" onclick="clearAllFilters()">
+                    <i class="fas fa-times"></i> Clear All Filters
+                </div>
+            `;
+
+            // Reset all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+            console.log('All filters cleared');
+        }
+
+        // Job card interactions
+        function viewJob(jobId) {
+            window.location.href = `/jobs/${jobId}`;
+        }
+
+        function toggleSave(button) {
+            button.classList.toggle('saved');
+            const icon = button.querySelector('i');
+
+            if (button.classList.contains('saved')) {
+                icon.className = 'fas fa-heart';
+                console.log('Job saved');
+            } else {
+                icon.className = 'far fa-heart';
+                console.log('Job unsaved');
+            }
+        }
+
+        // Filter checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                console.log(`Filter ${this.id} ${this.checked ? 'enabled' : 'disabled'}`);
+                // Update search results based on filters
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Browse jobs page loaded');
+            navbar.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

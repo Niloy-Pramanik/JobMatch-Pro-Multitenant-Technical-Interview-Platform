@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JobMatch Pro{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+    
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            min-width: 18px;
+            text-align: center;
+        }
+        .navbar-nav .nav-link {
+            position: relative;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            margin-top: auto;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-briefcase me-2"></i>JobMatch Pro
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('browse_jobs') }}">
+                            <i class="fas fa-search me-1"></i>Browse Jobs
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    {% if session.user_id %}
+                        <!-- Notifications -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('notifications') }}">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge">3</span>
+                            </a>
+                        </li>
+                        
+                        <!-- User Menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ session.user_name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                {% if session.user_type == 'candidate' %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('candidate_dashboard') }}">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('candidate_profile') }}">
+                                            <i class="fas fa-user-edit me-2"></i>Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('candidate_applications') }}">
+                                            <i class="fas fa-file-alt me-2"></i>My Applications
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('candidate_interviews') }}">
+                                            <i class="fas fa-video me-2"></i>My Interviews
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('candidate_recommendations') }}">
+                                            <i class="fas fa-star me-2"></i>Recommendations
+                                        </a>
+                                    </li>
+                                
+                                {% elif session.user_type == 'employer' %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('employer_dashboard') }}">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('employer_jobs') }}">
+                                            <i class="fas fa-briefcase me-2"></i>My Jobs
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('create_job') }}">
+                                            <i class="fas fa-plus me-2"></i>Post Job
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('employer_applications') }}">
+                                            <i class="fas fa-users me-2"></i>Applications
+                                        </a>
+                                    </li>
+                                
+                                {% elif session.user_type == 'admin' %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">
+                                            <i class="fas fa-cogs me-2"></i>Admin Panel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_users') }}">
+                                            <i class="fas fa-users me-2"></i>Users
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_skills') }}">
+                                            <i class="fas fa-list me-2"></i>Skills
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_reports') }}">
+                                            <i class="fas fa-chart-bar me-2"></i>Reports
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('manage_interviewers') }}">
+                                            <i class="fas fa-user-tie me-2"></i>Interviewers
+                                        </a>
+                                    </li>
+                                
+                                {% elif session.user_type == 'interviewer' %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('interviewer_dashboard') }}">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                
+                                {% elif session.user_type == 'manager' %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('manager_dashboard') }}">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('manage_interviewers') }}">
+                                            <i class="fas fa-user-tie me-2"></i>Manage Interviewers
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_users') }}">
+                                            <i class="fas fa-users me-2"></i>Users
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('messages') }}">
+                                        <i class="fas fa-envelope me-2"></i>Messages
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('notifications') }}">
+                                        <i class="fas fa-bell me-2"></i>View All Notifications
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register') }}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'primary' if category == 'info' else category }} alert-dismissible fade show" role="alert">
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                            {% elif category == 'error' %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% elif category == 'info' %}
+                                <i class="fas fa-info-circle me-2"></i>
+                            {% elif category == 'warning' %}
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Page Content -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>JobMatch Pro</h5>
+                    <p class="text-muted">Connect with top industrial companies through intelligent matching.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('browse_jobs') }}" class="text-decoration-none">Browse Jobs</a></li>
+                        <li><a href="{{ url_for('index') }}" class="text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Support</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Help Center</a></li>
+                        <li><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted mb-0">&copy; 2025 JobMatch Pro. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

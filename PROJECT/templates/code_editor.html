@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room.name }} - Code Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .navbar {
+            background: #2d2d30;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3e3e42;
+        }
+        
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .room-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #d4d4d4;
+        }
+        
+        .back-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #005a9e;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary { 
+            background: #007acc; 
+            color: white; 
+        }
+        .btn-primary:hover { 
+            background: #005a9e; 
+        }
+        .btn-secondary { 
+            background: #3c3c3c; 
+            color: #d4d4d4; 
+        }
+        .btn-secondary:hover { 
+            background: #4c4c4c; 
+        }
+        .btn-success { 
+            background: #28a745; 
+            color: white; 
+        }
+        .btn-success:hover { 
+            background: #218838; 
+        }
+        
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #252526;
+            border-right: 1px solid #3e3e42;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #3e3e42;
+            background: #2d2d30;
+        }
+        
+        .sidebar-header h3 {
+            color: #d4d4d4;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .language-selector {
+            width: 100%;
+            padding: 0.5rem;
+            background: #3c3c3c;
+            border: 1px solid #5a5a5a;
+            color: #d4d4d4;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .file-explorer {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .file-item {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            transition: background 0.2s;
+        }
+        
+        .file-item:hover {
+            background: #3c3c3c;
+        }
+        
+        .file-item.active {
+            background: #094771;
+        }
+        
+        .file-item .file-icon {
+            margin-right: 0.5rem;
+            color: #007acc;
+        }
+        
+        .editor-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #monaco-editor {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .output-panel {
+            height: 200px;
+            min-height: 200px;
+            background: #1e1e1e;
+            border-top: 1px solid #3e3e42;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        
+        .output-header {
+            padding: 0.5rem 1rem;
+            background: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .output-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .output-content pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .status-bar {
+            height: 25px;
+            background: #007acc;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .collaborators {
+            padding: 1rem;
+            border-top: 1px solid #3e3e42;
+        }
+        
+        .collaborator-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .collaborator-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #007acc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .collaborator-name {
+            font-size: 0.9rem;
+            color: #d4d4d4;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #007acc;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #3e3e42;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="room-info">
+            <a href="/room/{{ room.id }}" class="back-btn">← Back to Call</a>
+            <span class="room-name">{{ room.name }} - Code Editor</span>
+        </div>
+        <div class="controls">
+            <button id="runBtn" class="btn btn-success">
+                <span>▶️</span> Run Code
+            </button>
+            <button id="saveBtn" class="btn btn-primary">
+                <span>💾</span> Save
+            </button>
+            <button id="testBtn" class="btn btn-secondary">
+                <span>🧪</span> Test Output
+            </button>
+        </div>
+    </nav>
+    
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Language</h3>
+                <select id="languageSelector" class="language-selector">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="c">C</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="rust">Rust</option>
+                    <option value="swift">Swift</option>
+                </select>
+            </div>
+            
+            <div class="file-explorer">
+                <h4 style="margin-bottom: 1rem; color: #d4d4d4;">Files</h4>
+                <div class="file-item active" data-file="main">
+                    <span class="file-icon">📄</span>
+                    main.js
+                </div>
+                <div class="file-item" data-file="test">
+                    <span class="file-icon">🧪</span>
+                    test.js
+                </div>
+            </div>
+            
+            <div class="collaborators">
+                <h4 style="margin-bottom: 1rem; color: #d4d4d4;">Collaborators</h4>
+                <div class="collaborators-list">
+                    <div class="collaborator-item">
+                        <div class="collaborator-avatar">U</div>
+                        <span class="collaborator-name">You ({{ current_user.username }})</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editor-container">
+            <div id="monaco-editor"></div>
+            <div class="output-panel">
+                <div class="output-header">
+                    <span>Output</span>
+                    <button id="clearOutputBtn" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                        Clear
+                    </button>
+                </div>
+                <div class="output-content" id="outputContent">
+                    <pre>// Welcome to the collaborative code editor!
+// Select a language and start coding with your team.</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="status-bar">
+        <span id="statusText">Ready</span>
+    </div>
+    
+    <script>
+        // Monaco Editor configuration
+        require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
+        
+        let editor;
+        let currentLanguage = 'javascript';
+        let currentFile = 'main';
+        let socket;
+        let roomId = '{{ room.id }}';
+        let collaborators = new Map();
+        let isUpdatingFromRemote = false;
+        
+        // Sample code templates
+        const codeTemplates = {
+            javascript: `// JavaScript Code
+console.log("Hello, World!");
+
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log("Fibonacci of 10:", fibonacci(10));`,
+            
+            python: `# Python Code
+print("Hello, World!")
+
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+print("Fibonacci of 10:", fibonacci(10))`,
+            
+            java: `// Java Code
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        
+        int result = fibonacci(10);
+        System.out.println("Fibonacci of 10: " + result);
+    }
+    
+    public static int fibonacci(int n) {
+        if (n <= 1) return n;
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}`,
+            
+            cpp: `// C++ Code
+#include <iostream>
+using namespace std;
+
+int fibonacci(int n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main() {
+    cout << "Hello, World!" << endl;
+    cout << "Fibonacci of 10: " << fibonacci(10) << endl;
+    return 0;
+}`,
+            
+            csharp: `// C# Code
+using System;
+
+class Program {
+    static int Fibonacci(int n) {
+        if (n <= 1) return n;
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+    
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+        Console.WriteLine($"Fibonacci of 10: {Fibonacci(10)}");
+    }
+}`,
+            
+            php: `<?php
+// PHP Code
+echo "Hello, World!\n";
+
+function fibonacci($n) {
+    if ($n <= 1) return $n;
+    return fibonacci($n - 1) + fibonacci($n - 2);
+}
+
+echo "Fibonacci of 10: " . fibonacci(10) . "\n";
+?>`,
+            
+            ruby: `# Ruby Code
+puts "Hello, World!"
+
+def fibonacci(n)
+  return n if n <= 1
+  fibonacci(n - 1) + fibonacci(n - 2)
+end
+
+puts "Fibonacci of 10: #{fibonacci(10)}"`,
+            
+            go: `package main
+
+import "fmt"
+
+func fibonacci(n int) int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n-1) + fibonacci(n-2)
+}
+
+func main() {
+    fmt.Println("Hello, World!")
+    fmt.Printf("Fibonacci of 10: %d\n", fibonacci(10))
+}`,
+            
+            rust: `// Rust Code
+fn fibonacci(n: u32) -> u32 {
+    if n <= 1 {
+        return n;
+    }
+    fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+fn main() {
+    println!("Hello, World!");
+    println!("Fibonacci of 10: {}", fibonacci(10));
+}`,
+            
+            swift: `// Swift Code
+func fibonacci(_ n: Int) -> Int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+print("Hello, World!")
+print("Fibonacci of 10: \(fibonacci(10))")`
+        };
+        
+        // Initialize Socket.IO connection
+        function initializeSocket() {
+            socket = io();
+            
+            // Join code room
+            socket.emit('join_code_room', { room: roomId });
+            
+            // Handle user joined code room
+            socket.on('user_joined_code', (data) => {
+                console.log('User joined code room:', data.username);
+                addCollaborator(data.sid, data.username);
+                showNotification(`${data.username} joined the code editor`, 'info');
+            });
+            
+            // Handle user left code room
+            socket.on('user_left_code', (data) => {
+                console.log('User left code room:', data.username);
+                removeCollaborator(data.sid);
+                showNotification(`${data.username} left the code editor`, 'info');
+            });
+            
+            // Handle code updates from other users
+            socket.on('code_updated', (data) => {
+                if (data.from !== socket.id) {
+                    console.log('Code updated by:', data.username);
+                    isUpdatingFromRemote = true;
+                    editor.setValue(data.code);
+                    if (data.language !== currentLanguage) {
+                        updateLanguage(data.language);
+                    }
+                    isUpdatingFromRemote = false;
+                    
+                    // Show typing indicator
+                    showTypingIndicator(data.username);
+                }
+            });
+            
+            // Handle cursor updates from other users
+            socket.on('cursor_updated', (data) => {
+                if (data.from !== socket.id) {
+                    // In a full implementation, you'd show other users' cursors
+                    console.log('Cursor moved by:', data.username);
+                }
+            });
+        }
+        
+        // Initialize Monaco Editor
+        require(['vs/editor/editor.main'], function() {
+            console.log('Monaco Editor loaded successfully');
+            
+            const editorElement = document.getElementById('monaco-editor');
+            console.log('Editor element:', editorElement);
+            
+            editor = monaco.editor.create(editorElement, {
+                value: codeTemplates.javascript,
+                language: 'javascript',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                lineNumbers: 'on',
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                readOnly: false,
+                cursorStyle: 'line',
+                minimap: {
+                    enabled: true
+                },
+                scrollbar: {
+                    vertical: 'visible',
+                    horizontal: 'visible'
+                }
+            });
+            
+            console.log('Editor created:', editor);
+            
+            // Set initial language
+            updateLanguage('javascript');
+            
+            // Initialize socket connection
+            initializeSocket();
+            
+            // Add change listener for real-time collaboration
+            editor.onDidChangeModelContent((e) => {
+                if (!isUpdatingFromRemote && socket) {
+                    socket.emit('code_change', {
+                        room: roomId,
+                        code: editor.getValue(),
+                        language: currentLanguage,
+                        file: currentFile
+                    });
+                }
+            });
+            
+            // Add keyboard shortcuts
+            editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+                runCode();
+            });
+            
+            editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+                saveCode();
+            });
+        });
+        
+        // Language selector change
+        document.getElementById('languageSelector').addEventListener('change', function(e) {
+            const language = e.target.value;
+            updateLanguage(language);
+        });
+        
+        // File selector
+        document.querySelectorAll('.file-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.file-item').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                currentFile = this.dataset.file;
+                updateStatus(`Editing ${this.textContent.trim()}`);
+            });
+        });
+        
+        // Run button
+        document.getElementById('runBtn').addEventListener('click', function() {
+            console.log('Run button clicked');
+            runCode();
+        });
+        
+        // Save button
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            saveCode();
+        });
+        
+        // Clear output button
+        document.getElementById('clearOutputBtn').addEventListener('click', function() {
+            document.getElementById('outputContent').innerHTML = '<pre>Output cleared.</pre>';
+        });
+        
+        // Test output button
+        document.getElementById('testBtn').addEventListener('click', function() {
+            const output = document.getElementById('outputContent');
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML = `<pre>Test output at ${timestamp}:
+✅ Output panel is working!
+✅ Monaco Editor is loaded: ${editor ? 'Yes' : 'No'}
+✅ Current language: ${currentLanguage}
+✅ Current file: ${currentFile}</pre>`;
+        });
+        
+        function updateLanguage(language) {
+            currentLanguage = language;
+            const languageMap = {
+                'javascript': 'javascript',
+                'python': 'python',
+                'java': 'java',
+                'cpp': 'cpp',
+                'csharp': 'csharp',
+                'php': 'php',
+                'ruby': 'ruby',
+                'go': 'go',
+                'rust': 'rust',
+                'swift': 'swift'
+            };
+            
+            const fileExtensions = {
+                'javascript': 'js',
+                'python': 'py',
+                'java': 'java',
+                'cpp': 'cpp',
+                'csharp': 'cs',
+                'php': 'php',
+                'ruby': 'rb',
+                'go': 'go',
+                'rust': 'rs',
+                'swift': 'swift'
+            };
+            
+            monaco.editor.setModelLanguage(editor.getModel(), languageMap[language]);
+            
+            // Update file names in the file explorer
+            const fileItems = document.querySelectorAll('.file-item');
+            fileItems.forEach(item => {
+                const fileType = item.dataset.file;
+                const extension = fileExtensions[language];
+                if (fileType === 'main') {
+                    item.innerHTML = `<span class="file-icon">📄</span>main.${extension}`;
+                } else if (fileType === 'test') {
+                    item.innerHTML = `<span class="file-icon">🧪</span>test.${extension}`;
+                }
+            });
+            
+            // Only change code if it's the default template
+            const currentCode = editor.getValue();
+            const isDefaultTemplate = Object.values(codeTemplates).includes(currentCode);
+            if (isDefaultTemplate) {
+                editor.setValue(codeTemplates[language] || codeTemplates.javascript);
+            }
+            
+            updateStatus(`Language changed to ${language}`);
+        }
+        
+        function runCode() {
+            const code = editor.getValue();
+            const output = document.getElementById('outputContent');
+            
+            console.log('Running code:', code);
+            console.log('Output element:', output);
+            
+            updateStatus('Running code...');
+            
+            // Show loading indicator
+            output.innerHTML = '<pre>🔄 Executing code...</pre>';
+            
+            // Send code to backend for execution
+            fetch('/api/execute_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: code,
+                    language: currentLanguage
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    output.innerHTML = `<pre>❌ Error: ${data.error}</pre>`;
+                    updateStatus('Code execution failed');
+                    showNotification('Code execution failed!', 'error');
+                } else {
+                    const executionInfo = `⏱️ Execution time: ${data.execution_time}s\n\n`;
+                    output.innerHTML = `<pre>${executionInfo}${data.output}</pre>`;
+                    updateStatus('Code executed successfully');
+                    showNotification('Code executed successfully!', 'success');
+                }
+            })
+            .catch(error => {
+                console.error('Execution error:', error);
+                output.innerHTML = `<pre>❌ Network Error: ${error.message}</pre>`;
+                updateStatus('Code execution failed');
+                showNotification('Code execution failed!', 'error');
+            });
+        }
+        
+        function saveCode() {
+            const code = editor.getValue();
+            // In a real app, you'd save to backend/database
+            localStorage.setItem(`code_${currentFile}_${currentLanguage}`, code);
+            updateStatus('Code saved locally');
+            // No notification for manual saves
+        }
+        
+        function updateStatus(message) {
+            document.getElementById('statusText').textContent = message;
+        }
+        
+        function addCollaborator(sid, username) {
+            collaborators.set(sid, username);
+            updateCollaboratorsList();
+        }
+        
+        function removeCollaborator(sid) {
+            collaborators.delete(sid);
+            updateCollaboratorsList();
+        }
+        
+        function updateCollaboratorsList() {
+            const collaboratorsContainer = document.querySelector('.collaborators');
+            const existingList = collaboratorsContainer.querySelector('.collaborators-list');
+            if (existingList) {
+                existingList.remove();
+            }
+            
+            const list = document.createElement('div');
+            list.className = 'collaborators-list';
+            
+            // Add current user
+            const currentUserItem = document.createElement('div');
+            currentUserItem.className = 'collaborator-item';
+            currentUserItem.innerHTML = `
+                <div class="collaborator-avatar">U</div>
+                <span class="collaborator-name">You ({{ current_user.username }})</span>
+            `;
+            list.appendChild(currentUserItem);
+            
+            // Add other collaborators
+            collaborators.forEach((username, sid) => {
+                const item = document.createElement('div');
+                item.className = 'collaborator-item';
+                item.innerHTML = `
+                    <div class="collaborator-avatar">${username.charAt(0).toUpperCase()}</div>
+                    <span class="collaborator-name">${username}</span>
+                `;
+                list.appendChild(item);
+            });
+            
+            collaboratorsContainer.appendChild(list);
+            
+            // Update status bar with collaborator count
+            const totalCollaborators = collaborators.size + 1; // +1 for current user
+            updateStatus(`Ready - ${totalCollaborators} collaborator${totalCollaborators > 1 ? 's' : ''} online`);
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        function showTypingIndicator(username) {
+            const statusText = document.getElementById('statusText');
+            const originalText = statusText.textContent;
+            statusText.textContent = `${username} is typing...`;
+            
+            // Clear typing indicator after 2 seconds
+            setTimeout(() => {
+                statusText.textContent = originalText;
+            }, 2000);
+        }
+        
+        // Auto-save disabled
+        
+        // Load saved code on page load
+        window.addEventListener('load', () => {
+            const savedCode = localStorage.getItem(`code_${currentFile}_${currentLanguage}`);
+            if (savedCode && editor) {
+                editor.setValue(savedCode);
+            }
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (socket) {
+                socket.emit('leave_code_room', { room: roomId });
+            }
+        });
+    </script>
+</body>
+</html>

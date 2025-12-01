@@ -1,0 +1,1308 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Exam - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar - Exact Match with Employer Dashboard */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            height: 80px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        /* Minimal hover effects for Figma compatibility */
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        /* Button Styles - Minimal animations for Figma */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header - Landing Page Design */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Exam Container */
+        .exam-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Main Form Section */
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-header {
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-title-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .form-description {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Exam Info Sidebar */
+        .exam-info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .exam-icon-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .exam-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .exam-position {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .info-section {
+            margin-bottom: 24px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-icon {
+            width: 20px;
+            height: 20px;
+            color: #667eea;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #e53e3e;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-help {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            width: 65%;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .progress-label {
+            color: #718096;
+        }
+
+        .progress-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Questions Management */
+        .questions-section {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .questions-list {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .question-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .question-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: #f7fafc;
+            color: #718096;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .question-type {
+            font-size: 12px;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .add-question-btn {
+            width: 100%;
+            padding: 20px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            background: none;
+            color: #4a5568;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .add-question-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .save-draft {
+            color: #718096;
+            background: none;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .save-draft:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .status-draft {
+            background: rgba(113, 128, 150, 0.1);
+            color: #718096;
+        }
+
+        .status-inactive {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .exam-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .exam-info-card {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-container {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .exam-info-card {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Perfect Alignment -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/employer-dashboard">Dashboard</a></li>
+                    <li><a href="/post-job">Post Job</a></li>
+                    <li><a href="/manage-jobs">Manage Jobs</a></li>
+                    <li><a href="/applications">Applications</a></li>
+                    <li><a href="/analytics">Analytics</a></li>
+                    <li><a href="/exams" class="active">Exams</a></li>
+                    <li><a href="/candidates">Find Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-company">Tesla Inc.</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header - Landing Page Design -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <a href="/exams">Exams</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Edit Exam</span>
+                        </div>
+                        <h1 class="page-title">Edit Exam</h1>
+                        <p class="page-subtitle">Modify exam details, questions, and assessment criteria for optimal candidate evaluation</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/exams" class="btn btn-ghost">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Exams
+                        </a>
+                        <a href="/exam-preview" class="btn btn-ghost">
+                            <i class="fas fa-eye"></i>
+                            Preview Exam
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span class="progress-label">Exam Completion</span>
+                    <span class="progress-value">65% Complete</span>
+                </div>
+            </div>
+
+            <!-- Exam Container -->
+            <div class="exam-container">
+                <!-- Main Form Section -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title">
+                            <div class="form-title-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            Manufacturing Engineering Fundamentals
+                        </h2>
+                        <p class="form-description">Comprehensive assessment covering lean manufacturing, process optimization, and quality control principles</p>
+                    </div>
+
+                    <form id="examForm" action="/update-exam" method="POST">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                Exam Information
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label class="form-label required" for="examTitle">Exam Title</label>
+                                    <input type="text" id="examTitle" name="exam_title" class="form-input" value="Manufacturing Engineering Fundamentals" required>
+                                    <div class="form-help">Clear, descriptive title for the assessment</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="jobPosition">Associated Job Position</label>
+                                    <select id="jobPosition" name="job_position" class="form-input form-select" required>
+                                        <option value="">Select Position</option>
+                                        <option value="senior-manufacturing-engineer" selected>Senior Manufacturing Engineer</option>
+                                        <option value="process-engineer">Process Engineer</option>
+                                        <option value="quality-engineer">Quality Engineer</option>
+                                        <option value="operations-manager">Operations Manager</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="duration">Duration (minutes)</label>
+                                    <select id="duration" name="duration" class="form-input form-select" required>
+                                        <option value="">Select Duration</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="45" selected>45 minutes</option>
+                                        <option value="60">60 minutes</option>
+                                        <option value="90">90 minutes</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="passingScore">Passing Score (%)</label>
+                                    <input type="number" id="passingScore" name="passing_score" class="form-input" value="75" min="0" max="100" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label required" for="difficulty">Difficulty Level</label>
+                                    <select id="difficulty" name="difficulty" class="form-input form-select" required>
+                                        <option value="">Select Difficulty</option>
+                                        <option value="beginner">Beginner</option>
+                                        <option value="intermediate" selected>Intermediate</option>
+                                        <option value="advanced">Advanced</option>
+                                        <option value="expert">Expert</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label class="form-label" for="examDescription">Exam Description</label>
+                                    <textarea id="examDescription" name="exam_description" class="form-input form-textarea" placeholder="Detailed description of what this exam covers and its purpose...">Comprehensive assessment covering lean manufacturing principles, process optimization techniques, quality control methodologies, and industrial engineering best practices. Designed to evaluate candidates' technical knowledge and problem-solving abilities in manufacturing environments.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Exam Settings -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                Exam Settings
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="attempts">Maximum Attempts</label>
+                                    <select id="attempts" name="max_attempts" class="form-input form-select">
+                                        <option value="1">1 attempt</option>
+                                        <option value="2" selected>2 attempts</option>
+                                        <option value="3">3 attempts</option>
+                                        <option value="unlimited">Unlimited</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="questionOrder">Question Order</label>
+                                    <select id="questionOrder" name="question_order" class="form-input form-select">
+                                        <option value="fixed" selected>Fixed Order</option>
+                                        <option value="random">Random Order</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="showResults">Show Results</label>
+                                    <select id="showResults" name="show_results" class="form-input form-select">
+                                        <option value="immediate" selected>Immediately</option>
+                                        <option value="after_deadline">After Deadline</option>
+                                        <option value="manual">Manual Review</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="examStatus">Exam Status</label>
+                                    <select id="examStatus" name="status" class="form-input form-select">
+                                        <option value="draft">Draft</option>
+                                        <option value="active" selected>Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="archived">Archived</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Questions Management -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <div class="section-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                Questions Management
+                            </h3>
+                            
+                            <div class="questions-section">
+                                <div class="questions-list">
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <div class="question-number">1</div>
+                                            <div class="question-actions">
+                                                <button type="button" class="action-btn edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="action-btn delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="question-text">What is the primary principle behind lean manufacturing methodology?</div>
+                                        <div class="question-type">Multiple Choice</div>
+                                    </div>
+
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <div class="question-number">2</div>
+                                            <div class="question-actions">
+                                                <button type="button" class="action-btn edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="action-btn delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="question-text">Explain the difference between Six Sigma and Total Quality Management approaches.</div>
+                                        <div class="question-type">Essay</div>
+                                    </div>
+
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <div class="question-number">3</div>
+                                            <div class="question-actions">
+                                                <button type="button" class="action-btn edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="action-btn delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="question-text">Calculate the overall equipment effectiveness (OEE) given the following data: Availability 85%, Performance 92%, Quality 88%</div>
+                                        <div class="question-type">Numerical</div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="add-question-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Add New Question
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="save-draft">
+                                <i class="fas fa-save"></i>
+                                Save as Draft
+                            </button>
+                            
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="fas fa-eye"></i>
+                                    Preview Exam
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check"></i>
+                                    Update Exam
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Exam Information Sidebar -->
+                <div class="exam-info-card">
+                    <div class="card-header">
+                        <div class="exam-icon-large">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="exam-name">Manufacturing Engineering Fundamentals</div>
+                        <div class="exam-position">Senior Manufacturing Engineer</div>
+                        <div class="status-badge status-active">Active</div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-chart-bar info-icon"></i>
+                            Exam Statistics
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Questions</span>
+                            <span class="info-value">25</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Duration</span>
+                            <span class="info-value">45 minutes</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Passing Score</span>
+                            <span class="info-value">75%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Difficulty</span>
+                            <span class="info-value">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-users info-icon"></i>
+                            Usage Statistics
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Attempts</span>
+                            <span class="info-value">156</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Pass Rate</span>
+                            <span class="info-value">73%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Average Score</span>
+                            <span class="info-value">78.2%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Updated</span>
+                            <span class="info-value">2 days ago</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-cog info-icon"></i>
+                            Exam Settings
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Max Attempts</span>
+                            <span class="info-value">2</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Question Order</span>
+                            <span class="info-value">Fixed</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Show Results</span>
+                            <span class="info-value">Immediately</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons" style="margin-top: 24px;">
+                        <button class="btn btn-outline btn-sm" style="width: 100%;">
+                            <i class="fas fa-chart-line"></i>
+                            View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        console.log('Edit exam page loaded successfully');
+        
+        // Basic form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page initialized');
+        });
+    </script>
+</body>
+</html>"""
+

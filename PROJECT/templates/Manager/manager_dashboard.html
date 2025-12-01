@@ -1,0 +1,1159 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar - Landing Page Design */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            height: 80px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-brand .manager-badge {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(159, 122, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9f7aea;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(159, 122, 234, 0.3);
+        }
+
+        .btn-purple:hover {
+            box-shadow: 0 6px 20px rgba(159, 122, 234, 0.4);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header - Landing Page Design */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.interviews {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-icon.scheduled {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-icon.completed {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-icon.interviewers {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: #48bb78;
+        }
+
+        .stat-change.negative {
+            color: #e53e3e;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        /* Applications Table */
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .applications-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a202c;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .applications-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .applications-table tr:hover {
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .candidate-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .candidate-details {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .candidate-email {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .company-name {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-applied {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .status-shortlisted {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .status-interviewed {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .status-hired {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .status-rejected {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        /* Interview Rooms */
+        .room-code {
+            font-family: 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            gap: 16px;
+        }
+
+        .quick-action-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .action-info {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .action-description {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .action-count {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 16px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-section {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .applications-table {
+                font-size: 14px;
+            }
+            
+            .applications-table th,
+            .applications-table td {
+                padding: 12px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .applications-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Landing Page Design -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                    <span class="manager-badge">Manager</span>
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/manager-dashboard" class="active">Dashboard</a></li>
+                    <li><a href="/manage-applications">Applications</a></li>
+                    <li><a href="/interview-rooms">Interview Rooms</a></li>
+                    <li><a href="/interviewers">Interviewers</a></li>
+                    <li><a href="/reports">Reports</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">7</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">MJ</div>
+                        <div class="user-info">
+                            <div class="user-name">Manager Johnson</div>
+                            <div class="user-role">HR Manager</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Landing Page Design -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <h1 class="page-title">Manager Dashboard</h1>
+                        <p class="page-subtitle">Oversee interview processes and manage the recruitment workflow with comprehensive tools</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/create-interview-room" class="btn btn-ghost">
+                            <i class="fas fa-plus"></i>
+                            Create Room
+                        </a>
+                        <a href="/schedule-interviews" class="btn btn-ghost">
+                            <i class="fas fa-calendar-alt"></i>
+                            Schedule Interviews
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon interviews">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Total Interviews</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +24% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon scheduled">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Scheduled</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +12% this week
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-value">138</div>
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +18% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon interviewers">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Total Interviewers</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +2 new this month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Applications Pending Interview -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            Applications Pending Interview
+                        </h3>
+                        <a href="/manage-applications" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View All
+                        </a>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="applications-table">
+                            <thead>
+                                <tr>
+                                    <th>Candidate</th>
+                                    <th>Job Title</th>
+                                    <th>Company</th>
+                                    <th>Applied Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="candidate-info">
+                                            <div class="candidate-avatar">SM</div>
+                                            <div class="candidate-details">
+                                                <div class="candidate-name">Sarah Martinez</div>
+                                                <div class="candidate-email">sarah.martinez@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="job-title">Senior Manufacturing Engineer</div>
+                                        <div class="company-name">Engineering Department</div>
+                                    </td>
+                                    <td>
+                                        <div class="company-name">Tesla Inc.</div>
+                                    </td>
+                                    <td>2025-09-15</td>
+                                    <td>
+                                        <span class="status-badge status-shortlisted">Shortlisted</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-purple btn-xs">
+                                            <i class="fas fa-calendar-plus"></i>
+                                            Schedule
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="candidate-info">
+                                            <div class="candidate-avatar">MJ</div>
+                                            <div class="candidate-details">
+                                                <div class="candidate-name">Michael Johnson</div>
+                                                <div class="candidate-email">michael.johnson@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="job-title">Aerospace Systems Engineer</div>
+                                        <div class="company-name">Systems Department</div>
+                                    </td>
+                                    <td>
+                                        <div class="company-name">Tesla Inc.</div>
+                                    </td>
+                                    <td>2025-09-14</td>
+                                    <td>
+                                        <span class="status-badge status-shortlisted">Shortlisted</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-purple btn-xs">
+                                            <i class="fas fa-calendar-plus"></i>
+                                            Schedule
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="candidate-info">
+                                            <div class="candidate-avatar">ER</div>
+                                            <div class="candidate-details">
+                                                <div class="candidate-name">Emily Rodriguez</div>
+                                                <div class="candidate-email">emily.rodriguez@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="job-title">Process Development Engineer</div>
+                                        <div class="company-name">R&D Department</div>
+                                    </td>
+                                    <td>
+                                        <div class="company-name">Tesla Inc.</div>
+                                    </td>
+                                    <td>2025-09-13</td>
+                                    <td>
+                                        <span class="status-badge status-applied">Applied</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-purple btn-xs">
+                                            <i class="fas fa-calendar-plus"></i>
+                                            Schedule
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="candidate-info">
+                                            <div class="candidate-avatar">DW</div>
+                                            <div class="candidate-details">
+                                                <div class="candidate-name">David Wilson</div>
+                                                <div class="candidate-email">david.wilson@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="job-title">Quality Engineer</div>
+                                        <div class="company-name">Quality Assurance</div>
+                                    </td>
+                                    <td>
+                                        <div class="company-name">Tesla Inc.</div>
+                                    </td>
+                                    <td>2025-09-12</td>
+                                    <td>
+                                        <span class="status-badge status-interviewed">Interviewed</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-xs">
+                                            <i class="fas fa-eye"></i>
+                                            Review
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Sidebar -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            Quick Actions
+                        </h3>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="action-title">Interview Rooms</div>
+                                <div class="action-description">Active interview sessions</div>
+                            </div>
+                            <div class="action-count">5</div>
+                        </div>
+
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="action-title">Pending Reviews</div>
+                                <div class="action-description">Completed interviews</div>
+                            </div>
+                            <div class="action-count">12</div>
+                        </div>
+
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="action-title">New Applications</div>
+                                <div class="action-description">Awaiting screening</div>
+                            </div>
+                            <div class="action-count">28</div>
+                        </div>
+
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="action-title">Feedback Due</div>
+                                <div class="action-description">Interviewer reports</div>
+                            </div>
+                            <div class="action-count">7</div>
+                        </div>
+                    </div>
+
+                    <div class="section-header" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; border-bottom: none; margin-bottom: 16px; padding-bottom: 0;">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            Interview Rooms
+                        </h3>
+                    </div>
+
+                    <div class="interview-rooms">
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="room-code">INT-2025-001</div>
+                                <div class="action-description">Manufacturing Engineer - Live</div>
+                            </div>
+                            <button class="btn btn-success btn-xs">
+                                <i class="fas fa-video"></i>
+                                Join
+                            </button>
+                        </div>
+
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="room-code">INT-2025-002</div>
+                                <div class="action-description">Systems Engineer - Starting Soon</div>
+                            </div>
+                            <button class="btn btn-secondary btn-xs">
+                                <i class="fas fa-clock"></i>
+                                Scheduled
+                            </button>
+                        </div>
+
+                        <div class="quick-action-item">
+                            <div class="action-info">
+                                <div class="room-code">INT-2025-003</div>
+                                <div class="action-description">Process Engineer - Tomorrow</div>
+                            </div>
+                            <button class="btn btn-secondary btn-xs">
+                                <i class="fas fa-calendar"></i>
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Manager dashboard loaded successfully');
+        });
+    </script>
+</body>
+</html>"""
+

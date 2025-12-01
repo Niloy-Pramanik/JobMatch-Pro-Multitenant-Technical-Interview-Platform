@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Assessment - IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Landing Page Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 220px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            margin-right: 15px;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        /* Exam Topbar */
+        .exam-topbar {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 20px 0;
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-topbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exam-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .exam-company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .exam-details h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .exam-meta {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .exam-progress {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .progress-info {
+            text-align: center;
+        }
+
+        .progress-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #667eea;
+            display: block;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            color: #c53030;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(197, 48, 48, 0.2);
+        }
+
+        .timer-display.warning {
+            background: linear-gradient(135deg, #feebc8, #fbd38d);
+            color: #c05621;
+        }
+
+        .timer-display.danger {
+            background: linear-gradient(135deg, #fed7d7, #fc8181);
+            color: #e53e3e;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            min-height: calc(100vh - 160px);
+        }
+
+        /* Exam Container */
+        .exam-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .exam-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px 40px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .exam-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .exam-description {
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Question Section */
+        .question-section {
+            padding: 40px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .question-difficulty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-easy {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            color: #2f855a;
+        }
+
+        .difficulty-medium {
+            background: linear-gradient(135deg, #feebc8, #fbd38d);
+            color: #c05621;
+        }
+
+        .difficulty-hard {
+            background: linear-gradient(135deg, #fed7d7, #fc8181);
+            color: #e53e3e;
+        }
+
+        .question-content {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 24px;
+            border-radius: 16px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid #334155;
+        }
+
+        .code-block .comment {
+            color: #94a3b8;
+        }
+
+        .code-block .keyword {
+            color: #a78bfa;
+        }
+
+        .code-block .string {
+            color: #34d399;
+        }
+
+        .code-block .function {
+            color: #60a5fa;
+        }
+
+        /* Answer Options */
+        .answer-options {
+            margin-bottom: 40px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-label {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-label {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .option-code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+
+        /* Navigation Buttons */
+        .exam-navigation {
+            background: #f8fafc;
+            padding: 30px 40px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-disabled {
+            background: #f7fafc;
+            color: #a0aec0;
+            border: 2px solid #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        /* Question Navigation Sidebar */
+        .question-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 998;
+        }
+
+        .question-nav h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .question-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-nav-btn:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .question-nav-btn.current {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .question-nav-btn.answered {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border-color: transparent;
+        }
+
+        .question-nav-btn.flagged {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Flag Button */
+        .flag-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #718096;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .flag-btn:hover,
+        .flag-btn.flagged {
+            border-color: #ed8936;
+            color: #ed8936;
+            background: rgba(237, 137, 54, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .question-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container,
+            .exam-topbar-container {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                padding: 30px 20px;
+            }
+
+            .exam-header {
+                padding: 24px;
+            }
+
+            .exam-title {
+                font-size: 1.5rem;
+            }
+
+            .question-section {
+                padding: 24px;
+            }
+
+            .exam-navigation {
+                padding: 20px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .exam-topbar-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .exam-progress {
+                gap: 20px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .exam-header {
+                padding: 20px;
+            }
+
+            .question-section {
+                padding: 20px;
+            }
+
+            .exam-navigation {
+                padding: 16px 20px;
+            }
+
+            .option {
+                padding: 16px;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link">Browse Jobs</a></li>
+                <li><a href="/applications" class="nav-link">My Applications</a></li>
+                <li><a href="/exams" class="nav-link active">Skill Tests</a></li>
+                <li><a href="/profile" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Account Settings
+                    </a>
+                    <a href="/exams" class="dropdown-item">
+                        <i class="fas fa-list"></i> All Exams
+                    </a>
+                    <a href="/help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i> Help Center
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Exam Topbar -->
+    <div class="exam-topbar">
+        <div class="exam-topbar-container">
+            <div class="exam-info">
+                <div class="exam-company-logo">TC</div>
+                <div class="exam-details">
+                    <h1>Python Programming Assessment</h1>
+                    <div class="exam-meta">TechCorp Solutions • Senior Software Engineer Position</div>
+                </div>
+            </div>
+
+            <div class="exam-progress">
+                <div class="progress-info">
+                    <span class="progress-number">5</span>
+                    <span class="progress-label">of 25</span>
+                </div>
+                <div class="progress-info">
+                    <span class="progress-number">20%</span>
+                    <span class="progress-label">Complete</span>
+                </div>
+                <div class="timer-display" id="timerDisplay">
+                    <i class="fas fa-clock"></i>
+                    <span id="timeRemaining">85:42</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="exam-container fade-in">
+            <!-- Exam Header -->
+            <div class="exam-header">
+                <h2 class="exam-title">Question 5 of 25</h2>
+                <p class="exam-description">
+                    Choose the best answer for each question. You can navigate between questions and review your answers before submitting.
+                </p>
+            </div>
+
+            <!-- Question Section -->
+            <div class="question-section">
+                <!-- Flag Button -->
+                <button class="flag-btn" onclick="toggleFlag()" id="flagBtn">
+                    <i class="fas fa-flag"></i>
+                </button>
+
+                <!-- Question Header -->
+                <div class="question-header">
+                    <div class="question-number">Question 5</div>
+                    <div class="question-difficulty difficulty-medium">
+                        <i class="fas fa-star"></i>
+                        <span>Medium</span>
+                    </div>
+                </div>
+
+                <!-- Question Content -->
+                <div class="question-content">
+                    <div class="question-text">
+                        What will be the output of the following Python code?
+                    </div>
+
+                    <div class="code-block">
+<span class="keyword">def</span> <span class="function">fibonacci</span>(n):
+    <span class="keyword">if</span> n <= 1:
+        <span class="keyword">return</span> n
+    <span class="keyword">return</span> <span class="function">fibonacci</span>(n-1) + <span class="function">fibonacci</span>(n-2)
+
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(5):
+    <span class="function">print</span>(<span class="function">fibonacci</span>(i), end=<span class="string">" "</span>)
+                    </div>
+                </div>
+
+                <!-- Answer Options -->
+                <div class="answer-options">
+                    <div class="option" onclick="selectOption(this, 'A')">
+                        <div class="option-label">A</div>
+                        <div class="option-text">
+                            0 1 1 2 3
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(this, 'B')">
+                        <div class="option-label">B</div>
+                        <div class="option-text">
+                            1 1 2 3 5
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(this, 'C')">
+                        <div class="option-label">C</div>
+                        <div class="option-text">
+                            0 1 2 3 4
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(this, 'D')">
+                        <div class="option-label">D</div>
+                        <div class="option-text">
+                            The code will throw an error
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="exam-navigation">
+                <button class="nav-btn btn-secondary" onclick="previousQuestion()">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+
+                <div style="display: flex; gap: 16px;">
+                    <button class="nav-btn btn-secondary" onclick="saveAndExit()">
+                        <i class="fas fa-save"></i>
+                        Save & Exit
+                    </button>
+                    <button class="nav-btn btn-primary" onclick="nextQuestion()">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Question Navigation Sidebar -->
+    <div class="question-nav">
+        <h3>Questions</h3>
+        <div class="question-grid">
+            <button class="question-nav-btn answered" onclick="goToQuestion(1)">1</button>
+            <button class="question-nav-btn answered" onclick="goToQuestion(2)">2</button>
+            <button class="question-nav-btn answered" onclick="goToQuestion(3)">3</button>
+            <button class="question-nav-btn flagged" onclick="goToQuestion(4)">4</button>
+            <button class="question-nav-btn current" onclick="goToQuestion(5)">5</button>
+            <button class="question-nav-btn" onclick="goToQuestion(6)">6</button>
+            <button class="question-nav-btn" onclick="goToQuestion(7)">7</button>
+            <button class="question-nav-btn" onclick="goToQuestion(8)">8</button>
+            <button class="question-nav-btn" onclick="goToQuestion(9)">9</button>
+            <button class="question-nav-btn" onclick="goToQuestion(10)">10</button>
+            <button class="question-nav-btn" onclick="goToQuestion(11)">11</button>
+            <button class="question-nav-btn" onclick="goToQuestion(12)">12</button>
+            <button class="question-nav-btn" onclick="goToQuestion(13)">13</button>
+            <button class="question-nav-btn" onclick="goToQuestion(14)">14</button>
+            <button class="question-nav-btn" onclick="goToQuestion(15)">15</button>
+            <button class="question-nav-btn" onclick="goToQuestion(16)">16</button>
+            <button class="question-nav-btn" onclick="goToQuestion(17)">17</button>
+            <button class="question-nav-btn" onclick="goToQuestion(18)">18</button>
+            <button class="question-nav-btn" onclick="goToQuestion(19)">19</button>
+            <button class="question-nav-btn" onclick="goToQuestion(20)">20</button>
+            <button class="question-nav-btn" onclick="goToQuestion(21)">21</button>
+            <button class="question-nav-btn" onclick="goToQuestion(22)">22</button>
+            <button class="question-nav-btn" onclick="goToQuestion(23)">23</button>
+            <button class="question-nav-btn" onclick="goToQuestion(24)">24</button>
+            <button class="question-nav-btn" onclick="goToQuestion(25)">25</button>
+        </div>
+    </div>
+
+    <script>
+        // Timer functionality
+        let timeRemaining = 85 * 60 + 42; // 85:42 in seconds
+        let selectedAnswer = null;
+        let flaggedQuestions = new Set([4]); // Question 4 is flagged
+        let currentQuestion = 5;
+
+        function updateTimer() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timerElement = document.getElementById('timeRemaining');
+            const timerDisplay = document.getElementById('timerDisplay');
+
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Change timer color based on remaining time
+            if (timeRemaining < 300) { // Less than 5 minutes
+                timerDisplay.className = 'timer-display danger';
+            } else if (timeRemaining < 600) { // Less than 10 minutes
+                timerDisplay.className = 'timer-display warning';
+            }
+
+            timeRemaining--;
+
+            if (timeRemaining < 0) {
+                clearInterval(timerInterval);
+                autoSubmitExam();
+            }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Option selection
+        function selectOption(element, answer) {
+            // Remove selection from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Select clicked option
+            element.classList.add('selected');
+            selectedAnswer = answer;
+
+            // Update question navigation to show answered
+            updateQuestionNavigation();
+
+            showNotification(`Answer ${answer} selected`, 'info');
+        }
+
+        // Question navigation
+        function nextQuestion() {
+            if (!selectedAnswer) {
+                if (confirm('You haven\'t selected an answer. Do you want to continue to the next question?')) {
+                    navigateToQuestion(currentQuestion + 1);
+                }
+            } else {
+                navigateToQuestion(currentQuestion + 1);
+            }
+        }
+
+        function previousQuestion() {
+            navigateToQuestion(currentQuestion - 1);
+        }
+
+        function goToQuestion(questionNum) {
+            navigateToQuestion(questionNum);
+        }
+
+        function navigateToQuestion(questionNum) {
+            if (questionNum < 1 || questionNum > 25) return;
+
+            showNotification(`Loading question ${questionNum}...`, 'info');
+
+            // In a real app, this would load the question data
+            setTimeout(() => {
+                currentQuestion = questionNum;
+                updateQuestionDisplay();
+                updateQuestionNavigation();
+                showNotification(`Question ${questionNum} loaded`, 'success');
+            }, 500);
+        }
+
+        function updateQuestionDisplay() {
+            // Update question number displays
+            document.querySelector('.exam-title').textContent = `Question ${currentQuestion} of 25`;
+            document.querySelector('.question-number').textContent = `Question ${currentQuestion}`;
+
+            // Update progress
+            const percentage = Math.round((currentQuestion / 25) * 100);
+            document.querySelector('.progress-number').textContent = percentage + '%';
+
+            // Clear selected answer for new question
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            selectedAnswer = null;
+        }
+
+        function updateQuestionNavigation() {
+            document.querySelectorAll('.question-nav-btn').forEach((btn, index) => {
+                const questionNum = index + 1;
+                btn.classList.remove('current', 'answered');
+
+                if (questionNum === currentQuestion) {
+                    btn.classList.add('current');
+                } else if (questionNum < currentQuestion || selectedAnswer) {
+                    btn.classList.add('answered');
+                }
+
+                if (flaggedQuestions.has(questionNum)) {
+                    btn.classList.add('flagged');
+                }
+            });
+        }
+
+        // Flag functionality
+        function toggleFlag() {
+            const flagBtn = document.getElementById('flagBtn');
+
+            if (flaggedQuestions.has(currentQuestion)) {
+                flaggedQuestions.delete(currentQuestion);
+                flagBtn.classList.remove('flagged');
+                showNotification('Question unflagged', 'info');
+            } else {
+                flaggedQuestions.add(currentQuestion);
+                flagBtn.classList.add('flagged');
+                showNotification('Question flagged for review', 'warning');
+            }
+
+            updateQuestionNavigation();
+        }
+
+        // Exam actions
+        function saveAndExit() {
+            if (confirm('Are you sure you want to save and exit? You can resume the exam later.')) {
+                showNotification('Saving your progress...', 'info');
+
+                setTimeout(() => {
+                    showNotification('Progress saved! You can resume later.', 'success');
+                    // In real app, redirect to exams list
+                    window.location.href = '/exams';
+                }, 2000);
+            }
+        }
+
+        function autoSubmitExam() {
+            showNotification('Time expired! Submitting exam automatically...', 'warning');
+
+            setTimeout(() => {
+                showNotification('Exam submitted successfully!', 'success');
+                // In real app, redirect to results
+                window.location.href = '/exam-results';
+            }, 3000);
+        }
+
+        function submitExam() {
+            const unansweredCount = 25 - document.querySelectorAll('.question-nav-btn.answered').length;
+
+            if (unansweredCount > 0) {
+                if (!confirm(`You have ${unansweredCount} unanswered questions. Are you sure you want to submit?`)) {
+                    return;
+                }
+            }
+
+            showNotification('Submitting exam...', 'info');
+
+            setTimeout(() => {
+                showNotification('Exam submitted successfully!', 'success');
+                // In real app, redirect to results
+                window.location.href = '/exam-results';
+            }, 2000);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="closeNotification(this.parentElement)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; margin-left: 15px;">&times;</button>
+            `;
+
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '100px',
+                right: '30px',
+                background: 'white',
+                borderLeft: `5px solid ${getNotificationColor(type)}`,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                borderRadius: '12px',
+                padding: '20px 25px',
+                zIndex: '10000',
+                maxWidth: '400px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.4s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                fontWeight: '500'
+            });
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    closeNotification(notification);
+                }
+            }, 4000);
+        }
+
+        function closeNotification(notification) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: '#38a169',
+                error: '#e53e3e',
+                warning: '#dd6b20',
+                info: '#667eea'
+            };
+            return colors[type] || colors.info;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                previousQuestion();
+            } else if (e.key === 'ArrowRight') {
+                nextQuestion();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFlag();
+            } else if (e.key >= '1' && e.key <= '4') {
+                const options = document.querySelectorAll('.option');
+                if (options[e.key - 1]) {
+                    const letters = ['A', 'B', 'C', 'D'];
+                    selectOption(options[e.key - 1], letters[e.key - 1]);
+                }
+            }
+        });
+
+        // Prevent page refresh
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = 'Are you sure you want to leave? Your progress will be lost.';
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateQuestionNavigation();
+            showNotification('Exam loaded successfully. Good luck!', 'success');
+
+            // Check if question 4 is flagged (from initial state)
+            if (flaggedQuestions.has(4)) {
+                updateQuestionNavigation();
+            }
+        });
+    </script>
+</body>
+</html>

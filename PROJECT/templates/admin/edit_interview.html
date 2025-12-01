@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Interview - JobMatch Pro{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-edit me-2"></i>Edit Interview - 24/7 Scheduling</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Current Interview Info -->
+                    <div class="alert alert-info mb-4">
+                        <h6>Current Interview Details:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Room Code:</strong> {{ interview_room.room_code }}</p>
+                                <p class="mb-1"><strong>Position:</strong> {{ interview_room.application.job.title }}</p>
+                                <p class="mb-1"><strong>Company:</strong> {{ interview_room.application.job.company.company_name }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Candidate:</strong> {{ interview_room.application.candidate.user.first_name }} {{ interview_room.application.candidate.user.last_name }}</p>
+                                <p class="mb-1"><strong>Current Status:</strong> 
+                                    <span class="badge bg-{{ 'success' if interview_room.status == 'scheduled' else 'warning' if interview_room.status == 'active' else 'secondary' }}">
+                                        {{ interview_room.status.title() }}
+                                    </span>
+                                </p>
+                                <p class="mb-0"><strong>Current Time:</strong> {{ interview_room.scheduled_time.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        <!-- Date and Time Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="scheduled_time" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>New Date & Time
+                                    <small class="text-success">(24/7 Available)</small>
+                                </label>
+                                <input type="datetime-local" 
+                                       id="scheduled_time" 
+                                       name="scheduled_time" 
+                                       class="form-control" 
+                                       value="{{ interview_room.scheduled_time.strftime('%Y-%m-%dT%H:%M') }}"
+                                       required>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-success"></i>
+                                    Schedule at any time, any day of the week.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="duration_minutes" class="form-label">
+                                    <i class="fas fa-hourglass-half me-1"></i>Duration (Minutes)
+                                </label>
+                                <select id="duration_minutes" name="duration_minutes" class="form-select">
+                                    <option value="30" {{ 'selected' if interview_room.duration_minutes == 30 }}>30 minutes</option>
+                                    <option value="45" {{ 'selected' if interview_room.duration_minutes == 45 }}>45 minutes</option>
+                                    <option value="60" {{ 'selected' if interview_room.duration_minutes == 60 }}>1 hour</option>
+                                    <option value="90" {{ 'selected' if interview_room.duration_minutes == 90 }}>1.5 hours</option>
+                                    <option value="120" {{ 'selected' if interview_room.duration_minutes == 120 }}>2 hours</option>
+                                    <option value="180" {{ 'selected' if interview_room.duration_minutes == 180 }}>3 hours</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="status" class="form-label">
+                                    <i class="fas fa-flag me-1"></i>Interview Status
+                                </label>
+                                <select id="status" name="status" class="form-select">
+                                    <option value="scheduled" {{ 'selected' if interview_room.status == 'scheduled' }}>Scheduled</option>
+                                    <option value="active" {{ 'selected' if interview_room.status == 'active' }}>Active</option>
+                                    <option value="completed" {{ 'selected' if interview_room.status == 'completed' }}>Completed</option>
+                                    <option value="cancelled" {{ 'selected' if interview_room.status == 'cancelled' }}>Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Current Participants -->
+                        <div class="mb-4">
+                            <h6><i class="fas fa-users me-2"></i>Current Participants</h6>
+                            <div class="row">
+                                {% for participant, user in participants %}
+                                <div class="col-md-6 mb-2">
+                                    <div class="card bg-light">
+                                        <div class="card-body py-2">
+                                            <span class="badge bg-{{ 'primary' if participant.role == 'candidate' else 'success' if participant.role == 'interviewer' else 'secondary' }} me-2">
+                                                {{ participant.role.title() }}
+                                            </span>
+                                            {{ user.first_name }} {{ user.last_name }}
+                                            <br><small class="text-muted">{{ user.email }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Update Interviewers -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-user-tie me-1"></i>Update Interviewers
+                            </label>
+                            <div class="row">
+                                {% for interviewer in all_interviewers %}
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" 
+                                               type="checkbox" 
+                                               id="interviewer_{{ interviewer.id }}" 
+                                               name="interviewer_ids[]" 
+                                               value="{{ interviewer.id }}"
+                                               {{ 'checked' if interviewer.id in current_interviewer_ids }}>
+                                        <label class="form-check-label" for="interviewer_{{ interviewer.id }}">
+                                            {{ interviewer.first_name }} {{ interviewer.last_name }}
+                                            <br><small class="text-muted">{{ interviewer.email }}</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if not all_interviewers %}
+                                <p class="text-muted">No interviewers available.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Warning for Updates -->
+                        <div class="alert alert-warning mb-4">
+                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Update Notice</h6>
+                            <ul class="mb-0">
+                                <li>All participants will be notified of any changes</li>
+                                <li>Changing time will send new calendar invites</li>
+                                <li>Removing interviewers will notify them of cancellation</li>
+                                <li>Status changes affect interview availability</li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a href="{{ url_for('manage_interviews') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Back to Interviews
+                                </a>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-warning me-2" onclick="confirmCancel()">
+                                    <i class="fas fa-ban me-1"></i>Cancel Interview
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Update Interview
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Interview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this interview?</p>
+                <p class="text-muted">This will:</p>
+                <ul class="text-muted">
+                    <li>Set the interview status to "Cancelled"</li>
+                    <li>Notify all participants</li>
+                    <li>Keep the interview record for audit purposes</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Interview</button>
+                <form method="POST" action="{{ url_for('cancel_interview', interview_id=interview_room.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-warning">Cancel Interview</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Set minimum datetime to current time
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const currentDateTime = now.getFullYear() + '-' + 
+        String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+        String(now.getDate()).padStart(2, '0') + 'T' + 
+        String(now.getHours()).padStart(2, '0') + ':' + 
+        String(now.getMinutes()).padStart(2, '0');
+    
+    // Optional: Set minimum to prevent scheduling in the past
+    // Remove this line for complete 24/7 flexibility including past times
+    document.getElementById('scheduled_time').min = currentDateTime;
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const selectedInterviewers = document.querySelectorAll('input[name="interviewer_ids[]"]:checked');
+    
+    if (selectedInterviewers.length === 0) {
+        e.preventDefault();
+        alert('Please select at least one interviewer.');
+        return false;
+    }
+    
+    return true;
+});
+
+// Cancel confirmation
+function confirmCancel() {
+    const modal = new bootstrap.Modal(document.getElementById('cancelModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

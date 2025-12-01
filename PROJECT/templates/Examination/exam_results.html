@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Results - {{ exam.exam_title }} - JobMatch Pro{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Results Header -->
+            <div class="card mb-4">
+                <div class="card-header bg-{{ 'success' if attempt.score >= exam.passing_score else 'warning' if attempt.score >= exam.passing_score * 0.7 else 'danger' }} text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="mb-1">{{ exam.exam_title }} - Results</h4>
+                            <p class="mb-0">
+                                {% if attempt.score >= exam.passing_score %}
+                                <i class="fas fa-check-circle me-2"></i>Congratulations! You passed the exam.
+                                {% else %}
+                                <i class="fas fa-times-circle me-2"></i>You did not meet the passing score this time.
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="score-display">
+                                <h2 class="mb-0">{{ "%.1f"|format(attempt.score) }}%</h2>
+                                <small>Your Score</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h5 class="text-success">{{ attempt.correct_answers }}</h5>
+                                <small class="text-muted">Correct Answers</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h5 class="text-danger">{{ attempt.total_questions - attempt.correct_answers }}</h5>
+                                <small class="text-muted">Incorrect Answers</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h5 class="text-info">{{ "%.1f"|format(exam.passing_score) }}%</h5>
+                                <small class="text-muted">Passing Score</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h5 class="text-primary">{{ "%.0f"|format(attempt.time_spent / 60) }} min</h5>
+                                <small class="text-muted">Time Taken</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Breakdown -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Score Breakdown
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="score-chart-container">
+                                <canvas id="scoreChart" width="300" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="performance-metrics">
+                                <h6 class="mb-3">Performance Analysis</h6>
+                                
+                                <div class="metric-item mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span>Overall Performance</span>
+                                        <span class="badge bg-{{ 'success' if attempt.score >= 80 else 'warning' if attempt.score >= 60 else 'danger' }}">
+                                            {% if attempt.score >= 80 %}Excellent{% elif attempt.score >= 60 %}Good{% else %}Needs Improvement{% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-{{ 'success' if attempt.score >= 80 else 'warning' if attempt.score >= 60 else 'danger' }}" 
+                                             style="width: {{ attempt.score }}%"></div>
+                                    </div>
+                                </div>
+                                
+                                {% set accuracy = (attempt.correct_answers / attempt.total_questions) * 100 %}
+                                <div class="metric-item mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span>Accuracy Rate</span>
+                                        <span>{{ "%.1f"|format(accuracy) }}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" style="width: {{ accuracy }}%"></div>
+                                    </div>
+                                </div>
+                                
+                                {% set time_efficiency = (attempt.time_spent / (exam.duration_minutes * 60)) * 100 %}
+                                <div class="metric-item mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span>Time Efficiency</span>
+                                        <span>{{ "%.1f"|format(time_efficiency) }}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" style="width: {{ time_efficiency }}%"></div>
+                                    </div>
+                                    <small class="text-muted">Time used vs. total time available</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Performance -->
+            {% set categories = {} %}
+            {% for answer, question in answers %}
+                {% if question.category %}
+                    {% if question.category not in categories %}
+                        {% set _ = categories.update({question.category: {'total': 0, 'correct': 0}}) %}
+                    {% endif %}
+                    {% set _ = categories[question.category].update({'total': categories[question.category]['total'] + 1}) %}
+                    {% if answer.is_correct %}
+                        {% set _ = categories[question.category].update({'correct': categories[question.category]['correct'] + 1}) %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if categories %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tags me-2"></i>Performance by Category
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for category, stats in categories.items() %}
+                        {% set category_score = (stats.correct / stats.total) * 100 %}
+                        <div class="col-md-6 mb-3">
+                            <div class="category-performance">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">{{ category }}</h6>
+                                    <span class="badge bg-{{ 'success' if category_score >= 70 else 'warning' if category_score >= 50 else 'danger' }}">
+                                        {{ "%.0f"|format(category_score) }}%
+                                    <span class="badge bg-{{ 'success' if category_score >= 70 else 'warning' if category_score >= 50 else 'danger' }}">
+                                        {{ "%.0f"|format(category_score) }}%
+                                    </span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-{{ 'success' if category_score >= 70 else 'warning' if category_score >= 50 else 'danger' }}" 
+                                         style="width: {{ category_score }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ stats.correct }}/{{ stats.total }} correct</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Detailed Question Review -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-alt me-2"></i>Question Review
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for answer, question in answers %}
+                    <div class="question-review mb-4 p-3 border rounded {{ 'border-success' if answer.is_correct else 'border-danger' }}">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h6 class="mb-0">Question {{ loop.index }}</h6>
+                            <div class="text-end">
+                                {% if answer.is_correct %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Correct
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times me-1"></i>Incorrect
+                                </span>
+                                {% endif %}
+                                {% if question.category %}
+                                <span class="badge bg-info ms-2">{{ question.category }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="question-text mb-3">
+                            <p class="fw-bold">{{ question.question_text }}</p>
+                        </div>
+                        
+                        <div class="options">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="option-item {{ 'correct-answer' if question.correct_answer == 'A' else 'selected-answer' if answer.selected_answer == 'A' else '' }}">
+                                        <strong>A.</strong> {{ question.option_a }}
+                                        {% if question.correct_answer == 'A' %}
+                                        <i class="fas fa-check text-success ms-2"></i>
+                                        {% elif answer.selected_answer == 'A' %}
+                                        <i class="fas fa-times text-danger ms-2"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="option-item {{ 'correct-answer' if question.correct_answer == 'B' else 'selected-answer' if answer.selected_answer == 'B' else '' }}">
+                                        <strong>B.</strong> {{ question.option_b }}
+                                        {% if question.correct_answer == 'B' %}
+                                        <i class="fas fa-check text-success ms-2"></i>
+                                        {% elif answer.selected_answer == 'B' %}
+                                        <i class="fas fa-times text-danger ms-2"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="option-item {{ 'correct-answer' if question.correct_answer == 'C' else 'selected-answer' if answer.selected_answer == 'C' else '' }}">
+                                        <strong>C.</strong> {{ question.option_c }}
+                                        {% if question.correct_answer == 'C' %}
+                                        <i class="fas fa-check text-success ms-2"></i>
+                                        {% elif answer.selected_answer == 'C' %}
+                                        <i class="fas fa-times text-danger ms-2"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="option-item {{ 'correct-answer' if question.correct_answer == 'D' else 'selected-answer' if answer.selected_answer == 'D' else '' }}">
+                                        <strong>D.</strong> {{ question.option_d }}
+                                        {% if question.correct_answer == 'D' %}
+                                        <i class="fas fa-check text-success ms-2"></i>
+                                        {% elif answer.selected_answer == 'D' %}
+                                        <i class="fas fa-times text-danger ms-2"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('candidate_dashboard') }}" class="btn btn-primary me-3">
+                    <i class="fas fa-home me-2"></i>Back to Dashboard
+                </a>
+                <button class="btn btn-outline-primary me-3" onclick="printResults()">
+                    <i class="fas fa-print me-2"></i>Print Results
+                </button>
+                <button class="btn btn-outline-secondary" onclick="shareResults()">
+                    <i class="fas fa-share me-2"></i>Share Results
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.score-chart-container {
+    position: relative;
+    height: 300px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 10px;
+}
+
+.metric-item .progress {
+    height: 8px;
+}
+
+.category-performance {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.question-review.border-success {
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.question-review.border-danger {
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.option-item {
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.option-item.correct-answer {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid #28a745;
+}
+
+.option-item.selected-answer {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+}
+</style>
+
+<script>
+// Create score chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('scoreChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Correct', 'Incorrect'],
+                datasets: [{
+                    data: [{{ attempt.correct_answers }}, {{ attempt.total_questions - attempt.correct_answers }}],
+                    backgroundColor: [
+                        '{{ "#28a745" if attempt.score >= exam.passing_score else "#ffc107" }}',
+                        '#dc3545'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+});
+
+function printResults() {
+    window.print();
+}
+
+function shareResults() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Exam Results',
+            text: `I scored {{ "%.1f"|format(attempt.score) }}% on {{ exam.exam_title }}!`,
+            url: window.location.href
+        });
+    } else {
+        alert('Results sharing feature coming soon!');
+    }
+}
+</script>
+{% endblock %}

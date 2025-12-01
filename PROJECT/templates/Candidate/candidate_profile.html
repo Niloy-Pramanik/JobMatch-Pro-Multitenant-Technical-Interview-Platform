@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syed Thuha - Profile | IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 12px;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            color: #667eea;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 16px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .profile-header-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            position: relative;
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .profile-info h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .profile-info .position {
+            font-size: 1.25rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .profile-info .location {
+            display: flex;
+            align-items: center;
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        .profile-info .location i {
+            margin-right: 8px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .edit-profile-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Profile Content Grid */
+        .profile-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Profile Cards */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f7fafc;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 12px;
+            font-size: 1.25rem;
+            color: #667eea;
+        }
+
+        /* About Section */
+        .about-text {
+            line-height: 1.8;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        /* Contact Info */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 2px;
+        }
+
+        .contact-details p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-item {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .skill-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .skill-level {
+            font-size: 0.875rem;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        /* Experience Timeline */
+        .experience-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .experience-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            margin-left: 15px;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -37px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .experience-title {
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 1.125rem;
+        }
+
+        .experience-company {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .experience-period {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .experience-description {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* Applications Table */
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .applications-table th,
+        .applications-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .applications-table th {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-badge.applied {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .status-badge.shortlisted {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .status-badge.interview-scheduled {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-badge.under-review {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .profile-header {
+                padding: 25px;
+            }
+
+            .profile-info h1 {
+                font-size: 2rem;
+            }
+
+            .card-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+
+            .experience-timeline {
+                padding-left: 20px;
+            }
+
+            .experience-item {
+                margin-left: 10px;
+                padding: 15px;
+            }
+
+            .experience-item::before {
+                left: -27px;
+            }
+
+            .applications-table {
+                font-size: 0.875rem;
+            }
+
+            .applications-table th,
+            .applications-table td {
+                padding: 10px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-header-content {
+                gap: 15px;
+            }
+
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .profile-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link"><i class="fas fa-briefcase"></i> Jobs</a></li>
+                <li><a href="/applications" class="nav-link"><i class="fas fa-file-alt"></i> Applications</a></li>
+                <li><a href="/profile" class="nav-link active"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="/messages" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="/help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i> Help Center
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Header -->
+        <div class="profile-header fade-in">
+            <div class="profile-header-content">
+                <div class="profile-avatar">ST</div>
+
+                <div class="profile-info">
+                    <h1>Syed Thuha</h1>
+                    <div class="position">Software Engineer</div>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Dhaka, Bangladesh
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <small style="color: #718096;">Profile Completion: 85%</small>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Years Exp</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Applications</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Skills</span>
+                    </div>
+                </div>
+
+                <button class="edit-profile-btn" onclick="toggleEditMode()">
+                    <i class="fas fa-edit"></i>
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- About Section -->
+                <div class="profile-card slide-up" style="animation-delay: 0.1s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user"></i> About Me</h2>
+                    </div>
+                    <div class="about-text">
+                        Passionate software engineer with 3+ years of experience in full-stack development. 
+                        Specialized in Python, JavaScript, and cloud technologies. I have a strong background 
+                        in building scalable web applications and have worked with various frameworks including 
+                        Django, React, and Node.js. Always eager to learn new technologies and contribute to 
+                        innovative projects that make a difference.
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="profile-card slide-up" style="animation-delay: 0.2s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-code"></i> Skills & Expertise</h2>
+                    </div>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <div class="skill-name">Python</div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">JavaScript</div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">React</div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">Django</div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">Node.js</div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">SQL</div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">AWS</div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">Docker</div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">Git</div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">MongoDB</div>
+                            <div class="skill-level">Intermediate</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">REST APIs</div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">Machine Learning</div>
+                            <div class="skill-level">Beginner</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience Section -->
+                <div class="profile-card slide-up" style="animation-delay: 0.3s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-briefcase"></i> Work Experience</h2>
+                    </div>
+                    <div class="experience-timeline">
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div>
+                                    <div class="experience-title">Software Engineer</div>
+                                    <div class="experience-company">TechCorp Solutions</div>
+                                </div>
+                                <div class="experience-period">2022 - Present</div>
+                            </div>
+                            <div class="experience-description">
+                                Developed and maintained multiple web applications using Python Django and React.js. 
+                                Collaborated with cross-functional teams to deliver high-quality software solutions. 
+                                Implemented CI/CD pipelines and optimized database queries resulting in 40% performance improvement.
+                            </div>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div>
+                                    <div class="experience-title">Junior Developer</div>
+                                    <div class="experience-company">StartupTech Inc</div>
+                                </div>
+                                <div class="experience-period">2021 - 2022</div>
+                            </div>
+                            <div class="experience-description">
+                                Built responsive web applications and RESTful APIs. Worked closely with senior developers 
+                                to implement best practices and coding standards. Contributed to reducing bug reports by 25% 
+                                through comprehensive testing and code reviews.
+                            </div>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div>
+                                    <div class="experience-title">Intern Developer</div>
+                                    <div class="experience-company">Innovation Labs</div>
+                                </div>
+                                <div class="experience-period">2020 - 2021</div>
+                            </div>
+                            <div class="experience-description">
+                                Gained hands-on experience in full-stack development. Assisted in developing internal tools 
+                                and learned modern web technologies. Successfully completed 3 major projects during internship period.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Applications -->
+                <div class="profile-card slide-up" style="animation-delay: 0.4s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-file-alt"></i> Recent Applications</h2>
+                    </div>
+                    <table class="applications-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Status</th>
+                                <th>Applied Date</th>
+                                <th>Exam Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Software Engineer</td>
+                                <td><span class="status-badge shortlisted">Shortlisted</span></td>
+                                <td>2025-09-10</td>
+                                <td>85%</td>
+                            </tr>
+                            <tr>
+                                <td>Full Stack Developer</td>
+                                <td><span class="status-badge interview-scheduled">Interview Scheduled</span></td>
+                                <td>2025-09-08</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Python Developer</td>
+                                <td><span class="status-badge under-review">Under Review</span></td>
+                                <td>2025-09-05</td>
+                                <td>92%</td>
+                            </tr>
+                            <tr>
+                                <td>Backend Developer</td>
+                                <td><span class="status-badge applied">Applied</span></td>
+                                <td>2025-09-02</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Contact Information -->
+                <div class="profile-card slide-up" style="animation-delay: 0.2s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-address-card"></i> Contact Information</h2>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>thuha@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>+880 1478-964-25</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>LinkedIn</h4>
+                            <p>linkedin.com/in/syed-thuha</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>GitHub</h4>
+                            <p>github.com/syedthuha</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="profile-card slide-up" style="animation-delay: 0.3s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+                    </div>
+
+                    <div class="experience-timeline">
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div>
+                                    <div class="experience-title">Bachelor of Computer Science</div>
+                                    <div class="experience-company">University of Dhaka</div>
+                                </div>
+                                <div class="experience-period">2017 - 2021</div>
+                            </div>
+                            <div class="experience-description">
+                                CGPA: 3.75/4.00. Specialized in Software Engineering and Database Management Systems. 
+                                Active member of Programming Club and participated in multiple hackathons.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salary Expectations -->
+                <div class="profile-card slide-up" style="animation-delay: 0.4s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-dollar-sign"></i> Salary Expectations</h2>
+                    </div>
+
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #667eea; margin-bottom: 10px;">
+                            $45,000
+                        </div>
+                        <div style="color: #718096; font-size: 0.9rem;">
+                            Expected Annual Salary
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="profile-card slide-up" style="animation-delay: 0.5s">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lightning-bolt"></i> Quick Actions</h2>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <button class="edit-profile-btn" style="width: 100%; justify-content: center;" onclick="downloadCV()">
+                            <i class="fas fa-download"></i>
+                            Download CV
+                        </button>
+                        <button class="edit-profile-btn" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #48bb78, #38a169);" onclick="shareProfile()">
+                            <i class="fas fa-share"></i>
+                            Share Profile
+                        </button>
+                        <button class="edit-profile-btn" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #ed8936, #dd6b20);" onclick="viewPublicProfile()">
+                            <i class="fas fa-eye"></i>
+                            Public View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.slide-up');
+
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('slide-up');
+                }
+            });
+        }
+
+        // Edit mode toggle
+        function toggleEditMode() {
+            alert('Edit mode functionality would be implemented here');
+        }
+
+        // Quick actions
+        function downloadCV() {
+            alert('CV download functionality would be implemented here');
+        }
+
+        function shareProfile() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Syed Thuha - Software Engineer',
+                    text: 'Check out my profile on IndustrialConnect',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href);
+                alert('Profile link copied to clipboard!');
+            }
+        }
+
+        function viewPublicProfile() {
+            alert('Public profile view functionality would be implemented here');
+        }
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trigger animations
+            setTimeout(() => {
+                animateOnScroll();
+            }, 200);
+        });
+
+        // Scroll event listener
+        window.addEventListener('scroll', animateOnScroll);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

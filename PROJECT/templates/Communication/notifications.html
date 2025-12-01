@@ -1,0 +1,1338 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid #667eea;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Notifications Section */
+        .notifications-section {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 4px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #64748b;
+            background: transparent;
+            border: none;
+        }
+
+        .filter-tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-tab:hover {
+            color: #667eea;
+        }
+
+        .filter-badge {
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+
+        .filter-badge.unread {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        /* Notifications List */
+        .notifications-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+        }
+
+        .notification-item:hover {
+            background: #f8fafc;
+        }
+
+        .notification-item.unread {
+            background: rgba(102, 126, 234, 0.02);
+            border-left: 4px solid #667eea;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.application {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .notification-icon.interview {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .notification-icon.hire {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .notification-icon.exam {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .notification-icon.system {
+            background: rgba(113, 128, 150, 0.1);
+            color: #718096;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 16px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .notification-description {
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .notification-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .notification-actions {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: #f7fafc;
+            color: #718096;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .action-btn.mark-read:hover {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .unread-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            
+            .section-actions {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .notifications-section {
+                margin: 0 16px 32px;
+            }
+            
+            .section-header {
+                padding: 24px;
+            }
+            
+            .notification-item {
+                padding: 20px 24px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .notification-item {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .notification-actions {
+                align-self: flex-end;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Perfect Alignment -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/employer-dashboard">Dashboard</a></li>
+                    <li><a href="/post-job">Post Job</a></li>
+                    <li><a href="/manage-jobs">Manage Jobs</a></li>
+                    <li><a href="/applications">Applications</a></li>
+                    <li><a href="/analytics">Analytics</a></li>
+                    <li><a href="/exams">Exams</a></li>
+                    <li><a href="/candidates">Find Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">8</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-company">Tesla Inc.</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Perfect Alignment -->
+        <div class="page-header fade-in-up">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Notifications</span>
+                        </div>
+                        <h1 class="page-title">Notifications Center</h1>
+                        <p class="page-subtitle">Stay updated with all your hiring activities and important updates</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-ghost" onclick="markAllAsRead()">
+                            <i class="fas fa-check-double"></i>
+                            Mark All Read
+                        </button>
+                        <button class="btn btn-ghost" onclick="clearAll()">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Notifications Section -->
+            <div class="notifications-section fade-in-up">
+                <div class="section-header">
+                    <h3 class="section-title">Your Notifications</h3>
+                    <div class="section-actions">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterNotifications('all')">
+                                All
+                                <span class="filter-badge">8</span>
+                            </button>
+                            <button class="filter-tab" onclick="filterNotifications('unread')">
+                                Unread
+                                <span class="filter-badge unread">5</span>
+                            </button>
+                            <button class="filter-tab" onclick="filterNotifications('applications')">
+                                Applications
+                                <span class="filter-badge">4</span>
+                            </button>
+                            <button class="filter-tab" onclick="filterNotifications('interviews')">
+                                Interviews
+                                <span class="filter-badge">2</span>
+                            </button>
+                            <button class="filter-tab" onclick="filterNotifications('system')">
+                                System
+                                <span class="filter-badge">2</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notifications-list">
+                    <!-- New Application Notification -->
+                    <div class="notification-item unread" data-type="applications" onclick="viewNotification(1)">
+                        <div class="notification-icon application">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">New Application Received</div>
+                            <div class="notification-description">
+                                Sarah Martinez has applied for the Senior Manufacturing Engineer position at Tesla Inc. Review her qualifications and experience.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>2 hours ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Applications</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(1)" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(1)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+
+                    <!-- Interview Scheduled Notification -->
+                    <div class="notification-item unread" data-type="interviews" onclick="viewNotification(2)">
+                        <div class="notification-icon interview">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Interview Scheduled</div>
+                            <div class="notification-description">
+                                Interview with Emily Rodriguez has been scheduled for tomorrow at 2:00 PM for the Process Development Engineer position.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>5 hours ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Interviews</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(2)" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(2)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+
+                    <!-- Job Posted Notification -->
+                    <div class="notification-item" data-type="system" onclick="viewNotification(3)">
+                        <div class="notification-icon system">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Job Posting Published</div>
+                            <div class="notification-description">
+                                Your Quality Engineer position is now live and accepting applications. The posting has been optimized for maximum visibility.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>1 day ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>System</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(3)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Candidate Hired Notification -->
+                    <div class="notification-item" data-type="applications" onclick="viewNotification(4)">
+                        <div class="notification-icon hire">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Candidate Hired Successfully</div>
+                            <div class="notification-description">
+                                Alex Thompson has accepted the offer for the Software Engineer position. Welcome them to your team and begin the onboarding process.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>2 days ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Applications</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(4)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Exam Completed Notification -->
+                    <div class="notification-item unread" data-type="applications" onclick="viewNotification(5)">
+                        <div class="notification-icon exam">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Candidate Completed Assessment</div>
+                            <div class="notification-description">
+                                Michael Johnson has completed the Manufacturing Engineering Fundamentals exam with a score of 92%. Review his performance and consider for next steps.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>3 hours ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Applications</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(5)" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(5)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+
+                    <!-- Interview Reminder -->
+                    <div class="notification-item unread" data-type="interviews" onclick="viewNotification(6)">
+                        <div class="notification-icon interview">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Interview Reminder</div>
+                            <div class="notification-description">
+                                Don't forget: You have an interview with David Wilson scheduled for today at 4:00 PM for the Industrial Automation Engineer position.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>1 hour ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Interviews</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(6)" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(6)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+
+                    <!-- Application Deadline -->
+                    <div class="notification-item" data-type="applications" onclick="viewNotification(7)">
+                        <div class="notification-icon application">
+                            <i class="fas fa-hourglass-end"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Application Deadline Approaching</div>
+                            <div class="notification-description">
+                                The application deadline for your Mechanical Engineer position is approaching in 3 days. Consider extending or closing the position.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>6 hours ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>Applications</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(7)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- System Update -->
+                    <div class="notification-item unread" data-type="system" onclick="viewNotification(8)">
+                        <div class="notification-icon system">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">System Update Available</div>
+                            <div class="notification-description">
+                                New features are available including enhanced candidate matching and improved analytics dashboard. Update now for the best experience.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>12 hours ago</span>
+                                </div>
+                                <span>•</span>
+                                <span>System</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(8)" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="event.stopPropagation(); deleteNotification(8)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Notification functions
+        function viewNotification(id) {
+            console.log(`Viewing notification ${id}`);
+            // Navigate to relevant page based on notification type
+        }
+
+        function markAsRead(id) {
+            console.log(`Marking notification ${id} as read`);
+            const notification = document.querySelector(`[onclick*="${id}"]`);
+            if (notification) {
+                notification.classList.remove('unread');
+                const indicator = notification.querySelector('.unread-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+                
+                // Update mark as read button
+                const markReadBtn = notification.querySelector('.mark-read');
+                if (markReadBtn) {
+                    markReadBtn.remove();
+                }
+                
+                updateNotificationCounts();
+            }
+        }
+
+        function deleteNotification(id) {
+            if (confirm('Are you sure you want to delete this notification?')) {
+                console.log(`Deleting notification ${id}`);
+                const notification = document.querySelector(`[onclick*="viewNotification(${id})"]`);
+                if (notification) {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(-100%)';
+                    setTimeout(() => {
+                        notification.remove();
+                        updateNotificationCounts();
+                        
+                        // Check if list is empty
+                        const remainingNotifications = document.querySelectorAll('.notification-item');
+                        if (remainingNotifications.length === 0) {
+                            showEmptyState();
+                        }
+                    }, 300);
+                }
+            }
+        }
+
+        function markAllAsRead() {
+            console.log('Marking all notifications as read');
+            const unreadNotifications = document.querySelectorAll('.notification-item.unread');
+            unreadNotifications.forEach(notification => {
+                notification.classList.remove('unread');
+                const indicator = notification.querySelector('.unread-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+                const markReadBtn = notification.querySelector('.mark-read');
+                if (markReadBtn) {
+                    markReadBtn.remove();
+                }
+            });
+            updateNotificationCounts();
+            showNotification('All notifications marked as read', 'success');
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all notifications? This action cannot be undone.')) {
+                console.log('Clearing all notifications');
+                const notificationsList = document.querySelector('.notifications-list');
+                notificationsList.innerHTML = '';
+                showEmptyState();
+                updateNotificationCounts();
+                showNotification('All notifications cleared', 'success');
+            }
+        }
+
+        function filterNotifications(type) {
+            console.log(`Filtering notifications by: ${type}`);
+            
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter notifications
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach(notification => {
+                if (type === 'all') {
+                    notification.style.display = 'flex';
+                } else if (type === 'unread') {
+                    notification.style.display = notification.classList.contains('unread') ? 'flex' : 'none';
+                } else {
+                    const notificationType = notification.getAttribute('data-type');
+                    notification.style.display = notificationType === type ? 'flex' : 'none';
+                }
+            });
+            
+            // Check if filtered results are empty
+            const visibleNotifications = Array.from(notifications).filter(n => n.style.display !== 'none');
+            if (visibleNotifications.length === 0) {
+                showEmptyState(`No ${type} notifications found.`);
+            } else {
+                hideEmptyState();
+            }
+        }
+
+        function updateNotificationCounts() {
+            const allCount = document.querySelectorAll('.notification-item').length;
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const applicationCount = document.querySelectorAll('.notification-item[data-type="applications"]').length;
+            const interviewCount = document.querySelectorAll('.notification-item[data-type="interviews"]').length;
+            const systemCount = document.querySelectorAll('.notification-item[data-type="system"]').length;
+            
+            // Update filter badges
+            document.querySelector('.filter-tab:nth-child(1) .filter-badge').textContent = allCount;
+            document.querySelector('.filter-tab:nth-child(2) .filter-badge').textContent = unreadCount;
+            document.querySelector('.filter-tab:nth-child(3) .filter-badge').textContent = applicationCount;
+            document.querySelector('.filter-tab:nth-child(4) .filter-badge').textContent = interviewCount;
+            document.querySelector('.filter-tab:nth-child(5) .filter-badge').textContent = systemCount;
+            
+            // Update navbar badge
+            const navBadge = document.querySelector('.notification-badge');
+            if (navBadge) {
+                navBadge.textContent = unreadCount;
+                navBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function showEmptyState(message = 'No notifications found.') {
+            const notificationsList = document.querySelector('.notifications-list');
+            notificationsList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3>No Notifications</h3>
+                    <p>${message}</p>
+                    <a href="/employer-dashboard" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i>
+                        Go to Dashboard
+                    </a>
+                </div>
+            `;
+        }
+
+        function hideEmptyState() {
+            const emptyState = document.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#48bb78' : type === 'warning' ? '#ed8936' : '#667eea'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                z-index: 1001;
+                font-weight: 600;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Slide in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Notifications page loaded successfully');
+            navbar.classList.remove('hidden');
+            updateNotificationCounts();
+        });
+    </script>
+</body>
+</html>"""
+

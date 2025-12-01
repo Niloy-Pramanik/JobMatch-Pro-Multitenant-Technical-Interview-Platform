@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Manage Exam Questions - JobMatch Pro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Manage Questions for Exam: {{ exam.exam_title }}</h2>
+    <p>Job Position: {{ exam.job.title if exam.job else 'N/A' }}</p>
+    <a href="{{ url_for('add_exam_question', exam_id=exam.id) }}" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Add New Question
+    </a>
+
+    {% if questions %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question Text</th>
+                <th>Options</th>
+                <th>Correct Answer</th>
+                <th>Points</th>
+                <th>Difficulty</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ question.question_text[:100] }}{% if question.question_text|length > 100 %}...{% endif %}</td>
+                <td>
+                    <ul class="mb-0 pl-3">
+                        <li>A: {{ question.option_a }}</li>
+                        <li>B: {{ question.option_b }}</li>
+                        <li>C: {{ question.option_c }}</li>
+                        <li>D: {{ question.option_d }}</li>
+                    </ul>
+                </td>
+                <td>{{ question.correct_answer }}</td>
+                <td>{{ question.points }}</td>
+                <td>{{ question.difficulty_level }}</td>
+                <td>{{ question.category or 'General' }}</td>
+                <td>
+                    <a href="{{ url_for('edit_exam_question', question_id=question.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{{ url_for('delete_exam_question', question_id=question.id) }}" 
+                       class="btn btn-sm btn-danger" 
+                       onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No questions found for this exam yet.</p>
+    {% endif %}
+    <a href="{{ url_for('manage_job_exam', job_id=exam.job_id) }}" class="btn btn-secondary mt-3">Back to Exam Details</a>
+</div>
+{% endblock %}

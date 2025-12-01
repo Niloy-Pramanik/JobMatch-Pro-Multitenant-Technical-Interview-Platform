@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Syed Thuha - IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Landing Page Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 220px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            margin-right: 15px;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        /* Profile Edit Topbar */
+        .profile-topbar {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 24px 0;
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-topbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 32px;
+            height: 32px;
+            background: #48bb78;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-details h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .profile-subtitle {
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .completion-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .completion-bar {
+            width: 200px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .completion-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            width: 75%;
+            transition: width 0.8s ease;
+        }
+
+        .completion-text {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        .preview-btn {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-btn:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            min-height: calc(100vh - 180px);
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 200px;
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-title i {
+            color: #667eea;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item.completed {
+            color: #38a169;
+        }
+
+        .nav-item.completed i {
+            color: #38a169;
+        }
+
+        /* Form Content */
+        .form-content {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section {
+            padding: 40px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .section-description {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: #e53e3e;
+            font-weight: bold;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            margin-top: 24px;
+        }
+
+        .skills-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .skills-input {
+            flex: 1;
+        }
+
+        .add-skill-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-skill-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+            border: 2px solid #e2e8f0;
+            color: #667eea;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .skill-remove {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 2px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .skill-remove:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Experience Section */
+        .experience-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .experience-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .experience-company {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .remove-experience {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-experience:hover {
+            background: #c53030;
+            transform: scale(1.1);
+        }
+
+        .add-experience-btn {
+            background: white;
+            color: #667eea;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .add-experience-btn:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
+        }
+
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px;
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            background: rgba(102, 126, 234, 0.05);
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-label:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #5a6fd8;
+        }
+
+        .file-upload-label i {
+            font-size: 1.5rem;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            background: #f8fafc;
+            padding: 32px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        .auto-save-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #38a169;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .auto-save-indicator i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .nav-container,
+            .profile-topbar-container {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .content-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .sidebar-nav {
+                position: static;
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .profile-topbar-container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .save-btn,
+            .preview-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-details h1 {
+                font-size: 1.8rem;
+            }
+
+            .completion-bar {
+                width: 150px;
+            }
+
+            .form-section {
+                padding: 30px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .sidebar-nav {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 30px 15px;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-actions {
+                padding: 24px 20px;
+            }
+
+            .sidebar-nav {
+                padding: 20px;
+            }
+
+            .profile-details h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .scale-in {
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        @keyframes scaleIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link">Browse Jobs</a></li>
+                <li><a href="/applications" class="nav-link">My Applications</a></li>
+                <li><a href="/profile" class="nav-link active">Profile</a></li>
+                <li><a href="/settings" class="nav-link">Settings</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/profile/edit" class="dropdown-item">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Account Settings
+                    </a>
+                    <a href="/privacy" class="dropdown-item">
+                        <i class="fas fa-shield-alt"></i> Privacy Settings
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Profile Edit Topbar -->
+    <div class="profile-topbar">
+        <div class="profile-topbar-container">
+            <div class="profile-info">
+                <div class="profile-avatar" onclick="uploadAvatar()">
+                    ST
+                    <div class="avatar-upload">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <h1>Edit Profile</h1>
+                    <p class="profile-subtitle">Keep your profile updated to get better job matches</p>
+                    <div class="completion-status">
+                        <div class="completion-bar">
+                            <div class="completion-fill"></div>
+                        </div>
+                        <span class="completion-text">75% Complete</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="preview-btn" onclick="previewProfile()">
+                    <i class="fas fa-eye"></i>
+                    Preview Profile
+                </button>
+                <button class="save-btn" onclick="saveProfile()">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-layout">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav fade-in">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-list"></i>
+                    Profile Sections
+                </h3>
+
+                <div class="nav-item active" onclick="scrollToSection('personal')">
+                    <i class="fas fa-user"></i>
+                    <span>Personal Information</span>
+                </div>
+
+                <div class="nav-item completed" onclick="scrollToSection('contact')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Details</span>
+                </div>
+
+                <div class="nav-item" onclick="scrollToSection('experience')">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Work Experience</span>
+                </div>
+
+                <div class="nav-item" onclick="scrollToSection('education')">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Education</span>
+                </div>
+
+                <div class="nav-item completed" onclick="scrollToSection('skills')">
+                    <i class="fas fa-code"></i>
+                    <span>Skills & Expertise</span>
+                </div>
+
+                <div class="nav-item" onclick="scrollToSection('preferences')">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Job Preferences</span>
+                </div>
+
+                <div class="nav-item" onclick="scrollToSection('documents')">
+                    <i class="fas fa-file-upload"></i>
+                    <span>Documents</span>
+                </div>
+            </nav>
+
+            <!-- Form Content -->
+            <div class="form-content slide-up" style="animation-delay: 0.2s">
+                <!-- Personal Information -->
+                <div class="form-section" id="personal">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-user"></i>
+                            Personal Information
+                        </h2>
+                        <p class="section-description">
+                            Basic information about yourself that employers will see on your profile.
+                        </p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required">First Name</label>
+                            <input type="text" class="form-input" value="Syed" placeholder="Enter your first name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Last Name</label>
+                            <input type="text" class="form-input" value="Thuha" placeholder="Enter your last name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Professional Title</label>
+                            <input type="text" class="form-input" value="Software Engineer" placeholder="e.g., Software Engineer">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-input" value="1995-03-15">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Professional Summary</label>
+                        <textarea class="form-textarea" placeholder="Write a brief summary about your professional background and career goals...">Experienced Software Engineer with 3+ years of expertise in Python, Django, and JavaScript. Passionate about creating scalable web applications and contributing to innovative projects. Strong background in full-stack development with a focus on clean code and user experience.</textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="form-section" id="contact">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-envelope"></i>
+                            Contact Details
+                        </h2>
+                        <p class="section-description">
+                            How employers can reach you for job opportunities.
+                        </p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required">Email Address</label>
+                            <input type="email" class="form-input" value="syed.thuha@email.com" placeholder="your.email@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Phone Number</label>
+                            <input type="tel" class="form-input" value="+880 1712-345678" placeholder="+880 17XX-XXXXXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn Profile</label>
+                            <input type="url" class="form-input" value="https://linkedin.com/in/syed-thuha" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">GitHub Profile</label>
+                            <input type="url" class="form-input" value="https://github.com/syedthuha" placeholder="https://github.com/yourusername">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Location</label>
+                            <select class="form-select">
+                                <option value="">Select Location</option>
+                                <option value="dhaka" selected>Dhaka, Bangladesh</option>
+                                <option value="chittagong">Chittagong, Bangladesh</option>
+                                <option value="sylhet">Sylhet, Bangladesh</option>
+                                <option value="remote">Remote</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Portfolio Website</label>
+                            <input type="url" class="form-input" value="https://syedthuha.dev" placeholder="https://yourportfolio.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Experience -->
+                <div class="form-section" id="experience">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-briefcase"></i>
+                            Work Experience
+                        </h2>
+                        <p class="section-description">
+                            Your professional work history and achievements.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div>
+                                <div class="experience-title">Software Engineer</div>
+                                <div class="experience-company">TechCorp Solutions</div>
+                            </div>
+                            <button class="remove-experience" onclick="removeExperience(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-input" value="Software Engineer">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-input" value="TechCorp Solutions">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Start Date</label>
+                                <input type="month" class="form-input" value="2022-01">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">End Date</label>
+                                <input type="month" class="form-input" placeholder="Current">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Job Description</label>
+                            <textarea class="form-textarea" placeholder="Describe your responsibilities and achievements...">Developed and maintained web applications using Python/Django and JavaScript/React. Collaborated with cross-functional teams to deliver high-quality software solutions. Mentored junior developers and contributed to code reviews.</textarea>
+                        </div>
+                    </div>
+
+                    <button class="add-experience-btn" onclick="addExperience()">
+                        <i class="fas fa-plus"></i>
+                        Add Work Experience
+                    </button>
+                </div>
+
+                <!-- Education -->
+                <div class="form-section" id="education">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            Education
+                        </h2>
+                        <p class="section-description">
+                            Your educational background and qualifications.
+                        </p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Degree</label>
+                            <select class="form-select">
+                                <option value="">Select Degree</option>
+                                <option value="bachelor" selected>Bachelor's Degree</option>
+                                <option value="master">Master's Degree</option>
+                                <option value="phd">PhD</option>
+                                <option value="diploma">Diploma</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Field of Study</label>
+                            <input type="text" class="form-input" value="Computer Science" placeholder="e.g., Computer Science">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Institution</label>
+                            <input type="text" class="form-input" value="University of Dhaka" placeholder="University/College name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Graduation Year</label>
+                            <input type="number" class="form-input" value="2020" placeholder="2020" min="1980" max="2030">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">GPA/Grade</label>
+                            <input type="text" class="form-input" value="3.75" placeholder="3.75 or A-">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills & Expertise -->
+                <div class="form-section" id="skills">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-code"></i>
+                            Skills & Expertise
+                        </h2>
+                        <p class="section-description">
+                            Add your technical and professional skills to help employers find you.
+                        </p>
+                    </div>
+
+                    <div class="skills-container">
+                        <div class="skills-input-group">
+                            <input type="text" class="form-input skills-input" placeholder="Enter a skill (e.g., Python, JavaScript)" id="skillInput">
+                            <button class="add-skill-btn" onclick="addSkill()">
+                                <i class="fas fa-plus"></i>
+                                Add Skill
+                            </button>
+                        </div>
+
+                        <div class="skills-list" id="skillsList">
+                            <div class="skill-tag">
+                                Python
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="skill-tag">
+                                Django
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="skill-tag">
+                                JavaScript
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="skill-tag">
+                                React
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="skill-tag">
+                                PostgreSQL
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="skill-tag">
+                                Git
+                                <button class="skill-remove" onclick="removeSkill(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Preferences -->
+                <div class="form-section" id="preferences">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-sliders-h"></i>
+                            Job Preferences
+                        </h2>
+                        <p class="section-description">
+                            Set your preferences to get better job recommendations.
+                        </p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Preferred Job Type</label>
+                            <select class="form-select">
+                                <option value="full-time" selected>Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="contract">Contract</option>
+                                <option value="freelance">Freelance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Preferred Work Mode</label>
+                            <select class="form-select">
+                                <option value="hybrid" selected>Hybrid</option>
+                                <option value="remote">Remote</option>
+                                <option value="office">Office</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Expected Salary (Monthly)</label>
+                            <input type="number" class="form-input" value="45000" placeholder="45000" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Experience Level</label>
+                            <select class="form-select">
+                                <option value="entry">Entry Level (0-2 years)</option>
+                                <option value="mid" selected>Mid Level (3-5 years)</option>
+                                <option value="senior">Senior Level (5+ years)</option>
+                                <option value="lead">Lead/Manager Level</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Career Interests</label>
+                        <textarea class="form-textarea" placeholder="Describe your career goals and interests...">Interested in full-stack development opportunities with modern technologies. Looking to work in innovative companies that value code quality and continuous learning. Open to remote work and collaborative team environments.</textarea>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="form-section" id="documents">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-file-upload"></i>
+                            Documents
+                        </h2>
+                        <p class="section-description">
+                            Upload your resume and other relevant documents.
+                        </p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Resume/CV</label>
+                            <div class="file-upload">
+                                <input type="file" class="file-upload-input" accept=".pdf,.doc,.docx">
+                                <label class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Click to upload or drag and drop</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Cover Letter</label>
+                            <div class="file-upload">
+                                <input type="file" class="file-upload-input" accept=".pdf,.doc,.docx">
+                                <label class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Click to upload or drag and drop</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <div class="auto-save-indicator">
+                        <i class="fas fa-check-circle"></i>
+                        <span>All changes saved automatically</span>
+                    </div>
+
+                    <div style="display: flex; gap: 16px;">
+                        <button class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-undo"></i>
+                            Reset Changes
+                        </button>
+                        <button class="btn btn-success" onclick="saveAndContinue()">
+                            <i class="fas fa-save"></i>
+                            Save & Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation functions
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                event.target.closest('.nav-item').classList.add('active');
+            }
+        }
+
+        // Avatar upload
+        function uploadAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    showNotification('Avatar uploaded successfully!', 'success');
+                    // In real app, upload file and update avatar
+                }
+            };
+            input.click();
+        }
+
+        // Skills management
+        function addSkill() {
+            const skillInput = document.getElementById('skillInput');
+            const skillText = skillInput.value.trim();
+
+            if (skillText) {
+                const skillsList = document.getElementById('skillsList');
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = `
+                    ${skillText}
+                    <button class="skill-remove" onclick="removeSkill(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                skillsList.appendChild(skillTag);
+                skillInput.value = '';
+
+                showNotification(`Added skill: ${skillText}`, 'success');
+                updateCompletion();
+            }
+        }
+
+        function removeSkill(button) {
+            const skillTag = button.closest('.skill-tag');
+            const skillName = skillTag.textContent.trim();
+            skillTag.remove();
+            showNotification(`Removed skill: ${skillName}`, 'info');
+            updateCompletion();
+        }
+
+        // Experience management
+        function addExperience() {
+            showNotification('New experience section added', 'success');
+            // In real app, add new experience form
+        }
+
+        function removeExperience(button) {
+            const experienceItem = button.closest('.experience-item');
+            if (confirm('Are you sure you want to remove this work experience?')) {
+                experienceItem.remove();
+                showNotification('Work experience removed', 'info');
+                updateCompletion();
+            }
+        }
+
+        // Profile actions
+        function previewProfile() {
+            showNotification('Opening profile preview...', 'info');
+            setTimeout(() => {
+                window.open('/profile/preview', '_blank');
+            }, 500);
+        }
+
+        function saveProfile() {
+            showNotification('Saving profile changes...', 'info');
+
+            setTimeout(() => {
+                showNotification('Profile saved successfully!', 'success');
+                updateCompletion();
+            }, 1500);
+        }
+
+        function saveAndContinue() {
+            showNotification('Saving profile...', 'info');
+
+            setTimeout(() => {
+                showNotification('Profile saved! Redirecting to dashboard...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1000);
+            }, 1500);
+        }
+
+        function resetForm() {
+            if (confirm('Are you sure you want to reset all changes? This cannot be undone.')) {
+                showNotification('Form reset to last saved version', 'warning');
+                // In real app, reload form with saved data
+                location.reload();
+            }
+        }
+
+        // Update completion percentage
+        function updateCompletion() {
+            const completionFill = document.querySelector('.completion-fill');
+            const completionText = document.querySelector('.completion-text');
+
+            // Calculate completion based on filled fields
+            const totalSections = 7;
+            const completedSections = document.querySelectorAll('.nav-item.completed').length;
+            const percentage = Math.round((completedSections / totalSections) * 100);
+
+            completionFill.style.width = percentage + '%';
+            completionText.textContent = percentage + '% Complete';
+
+            if (percentage >= 80) {
+                showNotification('Great! Your profile is almost complete', 'success');
+            }
+        }
+
+        // Auto-save functionality
+        let autoSaveTimeout;
+        function autoSave() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                console.log('Auto-saving...');
+                // In real app, save form data
+            }, 2000);
+        }
+
+        // Add event listeners for auto-save
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', autoSave);
+                input.addEventListener('change', autoSave);
+            });
+
+            // Add Enter key support for skills
+            document.getElementById('skillInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSkill();
+                }
+            });
+
+            showNotification('Profile edit page loaded. Changes are auto-saved.', 'info');
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="closeNotification(this.parentElement)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; margin-left: 15px;">&times;</button>
+            `;
+
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '100px',
+                right: '30px',
+                background: 'white',
+                borderLeft: `5px solid ${getNotificationColor(type)}`,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                borderRadius: '12px',
+                padding: '20px 25px',
+                zIndex: '10000',
+                maxWidth: '400px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.4s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                fontWeight: '500'
+            });
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    closeNotification(notification);
+                }
+            }, 4000);
+        }
+
+        function closeNotification(notification) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: '#38a169',
+                error: '#e53e3e',
+                warning: '#dd6b20',
+                info: '#667eea'
+            };
+            return colors[type] || colors.info;
+        }
+
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

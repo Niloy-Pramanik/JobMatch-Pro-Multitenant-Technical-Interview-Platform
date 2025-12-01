@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Interview - TechCorp Solutions - IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: #1a1a1a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Navigation Bar - Landing Page Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 12px;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 16px;
+            font-size: 1rem;
+        }
+
+        /* Interview Topbar */
+        .interview-topbar {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .interview-topbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .interview-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .interview-details h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .interview-meta {
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .interview-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timer-display {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .room-code {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .end-call-btn {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .end-call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+        }
+
+        /* Video Interface */
+        .video-interface {
+            position: fixed;
+            top: 130px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .main-video-area {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .primary-video {
+            flex: 1;
+            background: #2d3748;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .self-video {
+            height: 180px;
+            background: #4a5568;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .self-video .video-placeholder {
+            font-size: 1rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .participants-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .participant:last-child {
+            border-bottom: none;
+        }
+
+        .participant-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .participant-info {
+            flex: 1;
+        }
+
+        .participant-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .participant-role {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+
+        .participant-status {
+            display: flex;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.online {
+            background: #48bb78;
+        }
+
+        .status-indicator.muted {
+            background: #ed8936;
+        }
+
+        .status-indicator.video-off {
+            background: #e53e3e;
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding-right: 8px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 0.85rem;
+        }
+
+        .chat-message.own {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            margin-left: 20px;
+        }
+
+        .chat-sender {
+            font-weight: 600;
+            margin-bottom: 2px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+
+        .chat-text {
+            line-height: 1.4;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Control Bar */
+        .control-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .control-btn.mute {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+        }
+
+        .control-btn.mute.active {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .control-btn.video {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+        }
+
+        .control-btn.video.active {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .control-btn.screen-share {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .control-btn.screen-share.active {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-label {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #4a5568;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Recording Indicator */
+        .recording-indicator {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .connection-status.good {
+            background: rgba(72, 187, 120, 0.9);
+        }
+
+        .connection-status.fair {
+            background: rgba(237, 137, 54, 0.9);
+        }
+
+        .connection-status.poor {
+            background: rgba(229, 62, 62, 0.9);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 16px;
+            }
+
+            .sidebar {
+                flex-direction: row;
+            }
+
+            .participants-panel,
+            .chat-panel {
+                flex: 1;
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-container,
+            .interview-topbar-container {
+                padding: 0 16px;
+            }
+
+            .video-grid {
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .interview-topbar-container {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .interview-actions {
+                gap: 8px;
+            }
+
+            .control-bar {
+                padding: 12px 16px;
+                gap: 12px;
+            }
+
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1rem;
+            }
+
+            .sidebar {
+                flex-direction: column;
+            }
+
+            .participants-panel,
+            .chat-panel {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-grid {
+                padding: 8px;
+            }
+
+            .self-video {
+                height: 120px;
+            }
+
+            .control-bar {
+                padding: 10px 12px;
+                gap: 10px;
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link">Browse Jobs</a></li>
+                <li><a href="/applications" class="nav-link">My Applications</a></li>
+                <li><a href="/interviews" class="nav-link active">Interviews</a></li>
+                <li><a href="/profile" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/interviews" class="dropdown-item">
+                        <i class="fas fa-video"></i> My Interviews
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="/help" class="dropdown-item">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Interview Topbar -->
+    <div class="interview-topbar">
+        <div class="interview-topbar-container">
+            <div class="interview-info">
+                <div class="company-logo">TC</div>
+                <div class="interview-details">
+                    <h1>Senior Software Engineer Interview</h1>
+                    <div class="interview-meta">TechCorp Solutions • Technical Round • 60 minutes</div>
+                </div>
+            </div>
+
+            <div class="interview-actions">
+                <div class="recording-indicator">
+                    <div class="recording-dot"></div>
+                    <span>Recording</span>
+                </div>
+                <div class="timer-display">
+                    <i class="fas fa-clock"></i>
+                    <span id="interviewTimer">24:36</span>
+                </div>
+                <div class="room-code">Room: TC-2025-001</div>
+                <button class="end-call-btn" onclick="endInterview()">
+                    <i class="fas fa-phone-slash"></i>
+                    End Call
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connection Status -->
+    <div class="connection-status good" id="connectionStatus">
+        <i class="fas fa-wifi"></i>
+        <span>Excellent Connection</span>
+    </div>
+
+    <!-- Video Interface -->
+    <div class="video-interface">
+        <div class="video-grid">
+            <div class="main-video-area">
+                <!-- Primary Video (Interviewer) -->
+                <div class="primary-video">
+                    <div class="video-placeholder">
+                        <i class="fas fa-user" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <div class="video-overlay">Sarah Johnson - Senior Tech Lead</div>
+                    </div>
+                </div>
+
+                <!-- Self Video -->
+                <div class="self-video">
+                    <div class="video-placeholder">
+                        <i class="fas fa-user" style="font-size: 2rem; opacity: 0.3;"></i>
+                        <div class="video-overlay">You (Syed Thuha)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <!-- Participants Panel -->
+                <div class="participants-panel">
+                    <div class="panel-title">
+                        <i class="fas fa-users"></i>
+                        Participants (3)
+                    </div>
+
+                    <div class="participant">
+                        <div class="participant-avatar">SJ</div>
+                        <div class="participant-info">
+                            <div class="participant-name">Sarah Johnson</div>
+                            <div class="participant-role">Senior Tech Lead</div>
+                        </div>
+                        <div class="participant-status">
+                            <div class="status-indicator online"></div>
+                        </div>
+                    </div>
+
+                    <div class="participant">
+                        <div class="participant-avatar">MR</div>
+                        <div class="participant-info">
+                            <div class="participant-name">Mike Rodriguez</div>
+                            <div class="participant-role">HR Manager</div>
+                        </div>
+                        <div class="participant-status">
+                            <div class="status-indicator online"></div>
+                            <div class="status-indicator muted"></div>
+                        </div>
+                    </div>
+
+                    <div class="participant">
+                        <div class="participant-avatar">ST</div>
+                        <div class="participant-info">
+                            <div class="participant-name">Syed Thuha</div>
+                            <div class="participant-role">Candidate</div>
+                        </div>
+                        <div class="participant-status">
+                            <div class="status-indicator online"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Panel -->
+                <div class="chat-panel">
+                    <div class="panel-title">
+                        <i class="fas fa-comments"></i>
+                        Chat
+                    </div>
+
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message">
+                            <div class="chat-sender">Sarah Johnson</div>
+                            <div class="chat-text">Welcome to the interview! We'll start with some technical questions.</div>
+                        </div>
+
+                        <div class="chat-message">
+                            <div class="chat-sender">Mike Rodriguez</div>
+                            <div class="chat-text">Please feel free to ask questions anytime during our discussion.</div>
+                        </div>
+
+                        <div class="chat-message own">
+                            <div class="chat-text">Thank you! I'm excited to discuss the position with you.</div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" placeholder="Type a message..." id="chatInput" onkeypress="handleChatEnter(event)">
+                        <button class="send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <button class="control-btn mute" id="muteBtn" onclick="toggleMute()">
+                <i class="fas fa-microphone"></i>
+                <div class="control-label">Mute</div>
+            </button>
+
+            <button class="control-btn video" id="videoBtn" onclick="toggleVideo()">
+                <i class="fas fa-video"></i>
+                <div class="control-label">Camera</div>
+            </button>
+
+            <button class="control-btn screen-share" id="screenShareBtn" onclick="toggleScreenShare()">
+                <i class="fas fa-desktop"></i>
+                <div class="control-label">Share Screen</div>
+            </button>
+
+            <button class="control-btn" onclick="toggleChat()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <i class="fas fa-comment"></i>
+                <div class="control-label">Chat</div>
+            </button>
+
+            <button class="control-btn" onclick="openSettings()" style="background: linear-gradient(135deg, #4a5568, #2d3748); color: white;">
+                <i class="fas fa-cog"></i>
+                <div class="control-label">Settings</div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Interview timer
+        let interviewStartTime = Date.now() - (24 * 60 + 36) * 1000; // Started 24:36 ago
+        let isMuted = false;
+        let isVideoOn = true;
+        let isScreenSharing = false;
+
+        function updateTimer() {
+            const elapsed = Date.now() - interviewStartTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+
+            document.getElementById('interviewTimer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+
+        // Control functions
+        function toggleMute() {
+            const muteBtn = document.getElementById('muteBtn');
+            const icon = muteBtn.querySelector('i');
+            const label = muteBtn.querySelector('.control-label');
+
+            isMuted = !isMuted;
+
+            if (isMuted) {
+                muteBtn.classList.add('active');
+                icon.className = 'fas fa-microphone-slash';
+                label.textContent = 'Unmute';
+                showNotification('Microphone muted', 'info');
+            } else {
+                muteBtn.classList.remove('active');
+                icon.className = 'fas fa-microphone';
+                label.textContent = 'Mute';
+                showNotification('Microphone unmuted', 'success');
+            }
+        }
+
+        function toggleVideo() {
+            const videoBtn = document.getElementById('videoBtn');
+            const icon = videoBtn.querySelector('i');
+            const label = videoBtn.querySelector('.control-label');
+
+            isVideoOn = !isVideoOn;
+
+            if (!isVideoOn) {
+                videoBtn.classList.add('active');
+                icon.className = 'fas fa-video-slash';
+                label.textContent = 'Turn On';
+                showNotification('Camera turned off', 'info');
+            } else {
+                videoBtn.classList.remove('active');
+                icon.className = 'fas fa-video';
+                label.textContent = 'Camera';
+                showNotification('Camera turned on', 'success');
+            }
+        }
+
+        function toggleScreenShare() {
+            const screenShareBtn = document.getElementById('screenShareBtn');
+            const icon = screenShareBtn.querySelector('i');
+            const label = screenShareBtn.querySelector('.control-label');
+
+            isScreenSharing = !isScreenSharing;
+
+            if (isScreenSharing) {
+                screenShareBtn.classList.add('active');
+                icon.className = 'fas fa-stop';
+                label.textContent = 'Stop Share';
+                showNotification('Screen sharing started', 'success');
+            } else {
+                screenShareBtn.classList.remove('active');
+                icon.className = 'fas fa-desktop';
+                label.textContent = 'Share Screen';
+                showNotification('Screen sharing stopped', 'info');
+            }
+        }
+
+        function toggleChat() {
+            const sidebar = document.querySelector('.sidebar');
+            const chatPanel = document.querySelector('.chat-panel');
+
+            if (chatPanel.style.display === 'none') {
+                chatPanel.style.display = 'flex';
+                showNotification('Chat panel opened', 'info');
+            } else {
+                chatPanel.style.display = 'none';
+                showNotification('Chat panel closed', 'info');
+            }
+        }
+
+        function openSettings() {
+            showNotification('Settings panel would open here', 'info');
+        }
+
+        // Chat functions
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message own';
+                messageDiv.innerHTML = `<div class="chat-text">${message}</div>`;
+
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                chatInput.value = '';
+                showNotification('Message sent', 'success');
+            }
+        }
+
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // End interview
+        function endInterview() {
+            if (confirm('Are you sure you want to end the interview? This action cannot be undone.')) {
+                showNotification('Ending interview...', 'info');
+
+                setTimeout(() => {
+                    showNotification('Interview ended. Redirecting to feedback...', 'success');
+                    // In real app, redirect to interview feedback or results page
+                    setTimeout(() => {
+                        window.location.href = '/interviews';
+                    }, 2000);
+                }, 1500);
+            }
+        }
+
+        // Connection status simulation
+        function updateConnectionStatus() {
+            const statuses = [
+                { class: 'good', icon: 'fa-wifi', text: 'Excellent Connection' },
+                { class: 'fair', icon: 'fa-wifi', text: 'Good Connection' },
+                { class: 'poor', icon: 'fa-exclamation-triangle', text: 'Poor Connection' }
+            ];
+
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            const statusEl = document.getElementById('connectionStatus');
+
+            statusEl.className = `connection-status ${randomStatus.class}`;
+            statusEl.innerHTML = `
+                <i class="fas ${randomStatus.icon}"></i>
+                <span>${randomStatus.text}</span>
+            `;
+        }
+
+        // Update connection status every 30 seconds
+        setInterval(updateConnectionStatus, 30000);
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="closeNotification(this.parentElement)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; margin-left: 15px;">&times;</button>
+            `;
+
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '90px',
+                right: '20px',
+                background: 'white',
+                borderLeft: `5px solid ${getNotificationColor(type)}`,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                borderRadius: '12px',
+                padding: '16px 20px',
+                zIndex: '10000',
+                maxWidth: '350px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.4s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                fontWeight: '500',
+                fontSize: '0.9rem'
+            });
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    closeNotification(notification);
+                }
+            }, 3000);
+        }
+
+        function closeNotification(notification) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: '#38a169',
+                error: '#e53e3e',
+                warning: '#dd6b20',
+                info: '#667eea'
+            };
+            return colors[type] || colors.info;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'm':
+                        e.preventDefault();
+                        toggleMute();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        toggleVideo();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        toggleScreenShare();
+                        break;
+                }
+            }
+        });
+
+        // Initialize interview
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Interview session connected successfully!', 'success');
+
+            // Simulate some chat activity
+            setTimeout(() => {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message';
+                messageDiv.innerHTML = `
+                    <div class="chat-sender">Sarah Johnson</div>
+                    <div class="chat-text">Let's start with your experience with Python frameworks. Can you tell us about your Django projects?</div>
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 5000);
+        });
+
+        // Prevent accidental page close
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = 'Are you sure you want to leave the interview?';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1558 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Recommendations - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #48bb78;
+            border: 2px solid #48bb78;
+        }
+
+        .btn-outline:hover {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .stat-card.pending::before {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .stat-card.approved::before {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-card.completed::before {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card .stat-icon {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .stat-card.approved .stat-icon {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .stat-card.completed .stat-icon {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .trend-up {
+            color: #48bb78;
+        }
+
+        .trend-neutral {
+            color: #718096;
+        }
+
+        /* Recommendations Section */
+        .recommendations-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Filters */
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 200px;
+        }
+
+        /* Recommendation Cards */
+        .recommendations-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .recommendation-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
+        .recommendation-card:hover {
+            border-color: #48bb78;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .candidate-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .candidate-details h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .job-position {
+            font-size: 16px;
+            color: #48bb78;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+            border: 2px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .status-approved {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            border: 2px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .status-rejected {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+            border: 2px solid rgba(229, 62, 62, 0.2);
+        }
+
+        .status-scheduled {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .recommendation-content {
+            margin-bottom: 20px;
+        }
+
+        .recommendation-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .recommendation-notes {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .notes-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .notes-text {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .recommendation-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #cbd5e0;
+            margin-bottom: 24px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            
+            .recommendation-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .recommendation-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .recommendation-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+            
+            .recommendation-meta {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .page-header {
+                padding: 40px 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recommendations-section {
+                padding: 20px;
+                margin: 0 16px 32px;
+            }
+            
+            .stat-card {
+                padding: 24px;
+            }
+            
+            .recommendation-card {
+                padding: 20px;
+            }
+            
+            .user-info {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Proper Alignment -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/interviewer-dashboard">Dashboard</a></li>
+                    <li><a href="/my-interviews">My Interviews</a></li>
+                    <li><a href="/interview-schedule">Schedule</a></li>
+                    <li><a href="/recommendations" class="active">Recommendations</a></li>
+                    <li><a href="/feedback-reports">Feedback</a></li>
+                    <li><a href="/candidate-profiles">Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">5</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">DR</div>
+                        <div class="user-info">
+                            <div class="user-name">Dr. Rebecca Chen</div>
+                            <div class="user-role">Senior Interviewer</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header fade-in-up">
+                <div class="header-content">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/interviewer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Interview Recommendations</span>
+                        </div>
+                        <h1 class="page-title">Interview Recommendations</h1>
+                        <p class="page-subtitle">Review candidate recommendations and manage interview assignments</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/interview-guidelines" class="btn btn-ghost">
+                            <i class="fas fa-book"></i>
+                            Guidelines
+                        </a>
+                        <a href="/interviewer-calendar" class="btn btn-ghost">
+                            <i class="fas fa-calendar"></i>
+                            My Calendar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid fade-in-up">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <span class="stat-value">12</span>
+                    <div class="stat-label">Total Recommendations</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+3 this week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card pending">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="stat-value">5</span>
+                    <div class="stat-label">Pending Review</div>
+                    <div class="stat-trend trend-neutral">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Requires action</span>
+                    </div>
+                </div>
+
+                <div class="stat-card approved">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <span class="stat-value">6</span>
+                    <div class="stat-label">Approved</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+2 this week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card completed">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <span class="stat-value">8</span>
+                    <div class="stat-label">Interviews Completed</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>67% completion rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div class="recommendations-section fade-in-up">
+                <div class="section-header">
+                    <h3 class="section-title">Interview Recommendations</h3>
+                    <div class="section-actions">
+                        <button class="btn btn-outline btn-sm" onclick="exportRecommendations()">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="bulkApprove()">
+                            <i class="fas fa-check-double"></i>
+                            Bulk Approve
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="scheduled">Scheduled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Position</label>
+                        <select class="filter-select" id="positionFilter">
+                            <option value="">All Positions</option>
+                            <option value="manufacturing">Manufacturing Engineer</option>
+                            <option value="aerospace">Aerospace Engineer</option>
+                            <option value="process">Process Engineer</option>
+                            <option value="quality">Quality Engineer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <select class="filter-select" id="dateFilter">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="search-box" placeholder="Search candidates..." id="searchRecommendations">
+                    </div>
+                </div>
+
+                <!-- Recommendations Grid -->
+                <div class="recommendations-grid" id="recommendationsGrid">
+                    <!-- Recommendation Card 1 -->
+                    <div class="recommendation-card" onclick="viewRecommendation('sarah-martinez')">
+                        <div class="recommendation-header">
+                            <div class="candidate-info">
+                                <div class="candidate-avatar">SM</div>
+                                <div class="candidate-details">
+                                    <h3>Sarah Martinez</h3>
+                                    <div class="job-position">Senior Manufacturing Engineer</div>
+                                    <div class="company-name">Tesla Inc.</div>
+                                </div>
+                            </div>
+                            <div class="status-badge status-pending">Pending</div>
+                        </div>
+                        
+                        <div class="recommendation-content">
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended by</div>
+                                    <div class="meta-value">Michael Chen, HR Manager</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended on</div>
+                                    <div class="meta-value">September 15, 2025 at 14:30</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Priority</div>
+                                    <div class="meta-value">High Priority</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Expected Duration</div>
+                                    <div class="meta-value">60 minutes</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-notes">
+                                <div class="notes-title">Recommendation Notes:</div>
+                                <div class="notes-text">
+                                    Sarah has exceptional experience in lean manufacturing and process optimization. Her background at Ford Motor Company aligns perfectly with our EV production requirements. Strong technical skills in automation systems and proven track record of cost reduction initiatives. Highly recommended for technical interview focusing on manufacturing processes and continuous improvement methodologies.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('sarah-martinez')">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); rejectRecommendation('sarah-martinez')">
+                                <i class="fas fa-times"></i>
+                                Reject
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); approveRecommendation('sarah-martinez')">
+                                <i class="fas fa-check"></i>
+                                Approve & Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation Card 2 -->
+                    <div class="recommendation-card" onclick="viewRecommendation('michael-johnson')">
+                        <div class="recommendation-header">
+                            <div class="candidate-info">
+                                <div class="candidate-avatar">MJ</div>
+                                <div class="candidate-details">
+                                    <h3>Michael Johnson</h3>
+                                    <div class="job-position">Aerospace Systems Engineer</div>
+                                    <div class="company-name">Tesla Inc.</div>
+                                </div>
+                            </div>
+                            <div class="status-badge status-approved">Approved</div>
+                        </div>
+                        
+                        <div class="recommendation-content">
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended by</div>
+                                    <div class="meta-value">Lisa Rodriguez, Engineering Lead</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended on</div>
+                                    <div class="meta-value">September 14, 2025 at 11:20</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Priority</div>
+                                    <div class="meta-value">Medium Priority</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Scheduled for</div>
+                                    <div class="meta-value">September 16, 2025 at 16:30</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-notes">
+                                <div class="notes-title">Recommendation Notes:</div>
+                                <div class="notes-text">
+                                    Michael brings 12 years of aerospace experience with deep knowledge in aircraft systems design. His expertise in certification processes and safety protocols makes him an ideal candidate. Focus the interview on systems integration challenges and regulatory compliance. His SpaceX background is particularly relevant for our aviation projects.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('michael-johnson')">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); rescheduleInterview('michael-johnson')">
+                                <i class="fas fa-calendar"></i>
+                                Reschedule
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); joinInterview('michael-johnson')">
+                                <i class="fas fa-video"></i>
+                                Join Interview
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation Card 3 -->
+                    <div class="recommendation-card" onclick="viewRecommendation('emily-rodriguez')">
+                        <div class="recommendation-header">
+                            <div class="candidate-info">
+                                <div class="candidate-avatar">ER</div>
+                                <div class="candidate-details">
+                                    <h3>Emily Rodriguez</h3>
+                                    <div class="job-position">Process Development Engineer</div>
+                                    <div class="company-name">Tesla Inc.</div>
+                                </div>
+                            </div>
+                            <div class="status-badge status-scheduled">Scheduled</div>
+                        </div>
+                        
+                        <div class="recommendation-content">
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended by</div>
+                                    <div class="meta-value">David Park, Process Manager</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended on</div>
+                                    <div class="meta-value">September 13, 2025 at 09:15</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Priority</div>
+                                    <div class="meta-value">High Priority</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Scheduled for</div>
+                                    <div class="meta-value">September 17, 2025 at 10:00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-notes">
+                                <div class="notes-title">Recommendation Notes:</div>
+                                <div class="notes-text">
+                                    Emily has outstanding chemical engineering background with 6 years of process optimization experience. Her work in sustainable manufacturing processes aligns with our environmental goals. Recommend focusing on process scale-up challenges and green chemistry applications. Her Six Sigma certification is a plus.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('emily-rodriguez')">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); prepareInterview('emily-rodriguez')">
+                                <i class="fas fa-clipboard"></i>
+                                Prepare
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); rescheduleInterview('emily-rodriguez')">
+                                <i class="fas fa-calendar"></i>
+                                Reschedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation Card 4 -->
+                    <div class="recommendation-card" onclick="viewRecommendation('david-wilson')">
+                        <div class="recommendation-header">
+                            <div class="candidate-info">
+                                <div class="candidate-avatar">DW</div>
+                                <div class="candidate-details">
+                                    <h3>David Wilson</h3>
+                                    <div class="job-position">Industrial Automation Engineer</div>
+                                    <div class="company-name">Tesla Inc.</div>
+                                </div>
+                            </div>
+                            <div class="status-badge status-pending">Pending</div>
+                        </div>
+                        
+                        <div class="recommendation-content">
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended by</div>
+                                    <div class="meta-value">Jennifer Liu, Automation Lead</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Recommended on</div>
+                                    <div class="meta-value">September 12, 2025 at 16:45</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Priority</div>
+                                    <div class="meta-value">Medium Priority</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Expected Duration</div>
+                                    <div class="meta-value">90 minutes</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-notes">
+                                <div class="notes-title">Recommendation Notes:</div>
+                                <div class="notes-text">
+                                    David has 10 years of experience in PLC programming and SCADA systems. His expertise in industrial robotics and automation systems is exactly what we need for our production line upgrades. Focus on his experience with Siemens and Allen-Bradley systems. Technical assessment should include control logic design.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('david-wilson')">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); rejectRecommendation('david-wilson')">
+                                <i class="fas fa-times"></i>
+                                Reject
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); approveRecommendation('david-wilson')">
+                                <i class="fas fa-check"></i>
+                                Approve & Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Recommendation management functions
+        function viewRecommendation(candidateId) {
+            console.log(`Viewing recommendation details for: ${candidateId}`);
+            // Navigate to detailed recommendation view
+            window.location.href = `/recommendation-details/${candidateId}`;
+        }
+
+        function viewCandidateProfile(candidateId) {
+            console.log(`Viewing candidate profile: ${candidateId}`);
+            // Navigate to candidate profile
+            window.location.href = `/candidate-profile/${candidateId}`;
+        }
+
+        function approveRecommendation(candidateId) {
+            console.log(`Approving recommendation for: ${candidateId}`);
+            
+            // Update status badge
+            const card = event.target.closest('.recommendation-card');
+            const statusBadge = card.querySelector('.status-badge');
+            statusBadge.className = 'status-badge status-approved';
+            statusBadge.textContent = 'Approved';
+            
+            // Update actions
+            const actionsContainer = card.querySelector('.recommendation-actions');
+            actionsContainer.innerHTML = `
+                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('${candidateId}')">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </button>
+                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); scheduleInterview('${candidateId}')">
+                    <i class="fas fa-calendar"></i>
+                    Schedule
+                </button>
+                <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); startInterview('${candidateId}')">
+                    <i class="fas fa-video"></i>
+                    Interview
+                </button>
+            `;
+            
+            // Show success notification
+            showNotification('Recommendation approved successfully!', 'success');
+        }
+
+        function rejectRecommendation(candidateId) {
+            if (confirm('Are you sure you want to reject this recommendation?')) {
+                console.log(`Rejecting recommendation for: ${candidateId}`);
+                
+                // Update status badge
+                const card = event.target.closest('.recommendation-card');
+                const statusBadge = card.querySelector('.status-badge');
+                statusBadge.className = 'status-badge status-rejected';
+                statusBadge.textContent = 'Rejected';
+                
+                // Update actions
+                const actionsContainer = card.querySelector('.recommendation-actions');
+                actionsContainer.innerHTML = `
+                    <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); viewCandidateProfile('${candidateId}')">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); reconsiderRecommendation('${candidateId}')">
+                        <i class="fas fa-undo"></i>
+                        Reconsider
+                    </button>
+                `;
+                
+                showNotification('Recommendation rejected', 'warning');
+            }
+        }
+
+        function scheduleInterview(candidateId) {
+            console.log(`Scheduling interview for: ${candidateId}`);
+            // Open interview scheduling modal
+            window.location.href = `/schedule-interview/${candidateId}`;
+        }
+
+        function rescheduleInterview(candidateId) {
+            console.log(`Rescheduling interview for: ${candidateId}`);
+            // Open rescheduling modal
+            window.location.href = `/reschedule-interview/${candidateId}`;
+        }
+
+        function joinInterview(candidateId) {
+            console.log(`Joining interview with: ${candidateId}`);
+            // Open video interview platform
+            window.open(`/interview-room/${candidateId}`, '_blank');
+        }
+
+        function prepareInterview(candidateId) {
+            console.log(`Preparing interview for: ${candidateId}`);
+            // Navigate to interview preparation
+            window.location.href = `/interview-prep/${candidateId}`;
+        }
+
+        function exportRecommendations() {
+            console.log('Exporting recommendations');
+            // Implement export functionality
+            showNotification('Recommendations exported successfully!', 'success');
+        }
+
+        function bulkApprove() {
+            const pendingRecommendations = document.querySelectorAll('.status-pending').length;
+            if (pendingRecommendations > 0) {
+                if (confirm(`Approve all ${pendingRecommendations} pending recommendations?`)) {
+                    console.log('Bulk approving recommendations');
+                    showNotification(`${pendingRecommendations} recommendations approved!`, 'success');
+                    
+                    // Update all pending status badges
+                    document.querySelectorAll('.status-pending').forEach(badge => {
+                        badge.className = 'status-badge status-approved';
+                        badge.textContent = 'Approved';
+                    });
+                }
+            } else {
+                showNotification('No pending recommendations to approve', 'info');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#48bb78' : type === 'warning' ? '#ed8936' : '#667eea'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                z-index: 1001;
+                font-weight: 600;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Slide in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Filter functions
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = ['statusFilter', 'positionFilter', 'dateFilter'];
+            
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', function() {
+                        console.log(`Filter ${filterId} changed to: ${this.value}`);
+                        applyFilters();
+                    });
+                }
+            });
+
+            // Search functionality
+            const searchBox = document.getElementById('searchRecommendations');
+            if (searchBox) {
+                let searchTimeout;
+                searchBox.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        console.log(`Search filter: ${this.value}`);
+                        applyFilters();
+                    }, 500);
+                });
+            }
+
+            console.log('Interviewer recommendations page loaded successfully');
+        });
+
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const positionFilter = document.getElementById('positionFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const searchFilter = document.getElementById('searchRecommendations').value.toLowerCase();
+            
+            console.log('Applying filters:', { statusFilter, positionFilter, dateFilter, searchFilter });
+            
+            // In a real application, this would filter the recommendations grid
+        }
+
+        // Animate counters on page load
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            setTimeout(animateCounters, 500);
+            navbar.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>"""
+

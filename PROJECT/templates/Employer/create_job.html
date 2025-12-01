@@ -1,0 +1,1227 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 40px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .form-description {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #e53e3e;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-help {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .skills-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skills-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: #1a202c;
+        }
+
+        .skill-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .skill-level {
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .skill-required {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .skill-preferred {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .add-skill-btn {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            background: none;
+            color: #4a5568;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-skill-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .save-draft {
+            color: #718096;
+            background: none;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .save-draft:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+
+        /* Salary Range */
+        .salary-range {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .salary-input {
+            flex: 1;
+        }
+
+        .salary-separator {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-container {
+                padding: 24px;
+                margin: 0 16px 32px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .header-content {
+                padding: 40px 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .header-content {
+                padding: 32px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-ghost {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .salary-range {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Perfect Alignment -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/employer-dashboard">Dashboard</a></li>
+                    <li><a href="/post-job" class="active">Post Job</a></li>
+                    <li><a href="/manage-jobs">Manage Jobs</a></li>
+                    <li><a href="/applications">Applications</a></li>
+                    <li><a href="/analytics">Analytics</a></li>
+                    <li><a href="/exams">Exams</a></li>
+                    <li><a href="/candidates">Find Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-company">Tesla Inc.</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header with Perfect Alignment -->
+        <div class="page-header fade-in-up">
+            <div class="header-content">
+                <div class="header-inner">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Post New Job</span>
+                        </div>
+                        <h1 class="page-title">Post New Job</h1>
+                        <p class="page-subtitle">Create a compelling job posting to attract top industrial talent</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/job-templates" class="btn btn-ghost">
+                            <i class="fas fa-copy"></i>
+                            Use Template
+                        </a>
+                        <a href="/manage-jobs" class="btn btn-ghost">
+                            <i class="fas fa-list"></i>
+                            My Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Job Creation Form -->
+            <div class="form-container fade-in-up">
+                <div class="form-header">
+                    <h2 class="form-title">Create Job Posting</h2>
+                    <p class="form-description">Fill out the details below to create an attractive job posting for industrial professionals</p>
+                </div>
+
+                <form id="jobForm" action="/jobs" method="POST">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            Basic Information
+                        </h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label required" for="jobTitle">Job Title</label>
+                                <input type="text" id="jobTitle" name="title" class="form-input" placeholder="e.g. Senior Manufacturing Engineer" required>
+                                <div class="form-help">Be specific and descriptive to attract the right candidates</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="department">Department</label>
+                                <select id="department" name="department" class="form-input form-select" required>
+                                    <option value="">Select Department</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                    <option value="quality">Quality Assurance</option>
+                                    <option value="operations">Operations</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="management">Management</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="jobType">Employment Type</label>
+                                <select id="jobType" name="job_type" class="form-input form-select" required>
+                                    <option value="">Select Type</option>
+                                    <option value="full-time">Full-time</option>
+                                    <option value="part-time">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                    <option value="temporary">Temporary</option>
+                                    <option value="internship">Internship</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="experienceLevel">Experience Level</label>
+                                <select id="experienceLevel" name="experience_level" class="form-input form-select" required>
+                                    <option value="">Select Level</option>
+                                    <option value="entry">Entry Level (0-2 years)</option>
+                                    <option value="mid">Mid Level (3-5 years)</option>
+                                    <option value="senior">Senior Level (6-10 years)</option>
+                                    <option value="lead">Lead Level (10+ years)</option>
+                                    <option value="executive">Executive Level</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="location">Location</label>
+                                <input type="text" id="location" name="location" class="form-input" placeholder="e.g. Austin, TX" required>
+                                <div class="form-help">City, State or "Remote" for remote positions</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="remote">Remote Work</label>
+                                <select id="remote" name="remote_option" class="form-input form-select">
+                                    <option value="none">On-site Only</option>
+                                    <option value="hybrid">Hybrid</option>
+                                    <option value="full">Fully Remote</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compensation -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            Compensation & Benefits
+                        </h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label class="form-label required">Salary Range (Annual)</label>
+                                <div class="salary-range">
+                                    <div class="salary-input">
+                                        <input type="number" name="salary_min" class="form-input" placeholder="60000" min="0" step="1000" required>
+                                        <div class="form-help">Minimum salary</div>
+                                    </div>
+                                    <div class="salary-separator">to</div>
+                                    <div class="salary-input">
+                                        <input type="number" name="salary_max" class="form-input" placeholder="90000" min="0" step="1000" required>
+                                        <div class="form-help">Maximum salary</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="benefits">Benefits Package</label>
+                                <select id="benefits" name="benefits" class="form-input form-select">
+                                    <option value="standard">Standard Benefits</option>
+                                    <option value="comprehensive">Comprehensive Benefits</option>
+                                    <option value="premium">Premium Benefits</option>
+                                    <option value="custom">Custom Package</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="bonus">Bonus Structure</label>
+                                <select id="bonus" name="bonus" class="form-input form-select">
+                                    <option value="none">No Bonus</option>
+                                    <option value="performance">Performance Bonus</option>
+                                    <option value="annual">Annual Bonus</option>
+                                    <option value="commission">Commission Based</option>
+                                    <option value="profit-sharing">Profit Sharing</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job Description -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            Job Description
+                        </h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label class="form-label required" for="summary">Job Summary</label>
+                                <textarea id="summary" name="summary" class="form-input form-textarea" placeholder="Provide a brief overview of the role and what the candidate will be doing..." required></textarea>
+                                <div class="form-help">2-3 sentences describing the main purpose of the role</div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label required" for="responsibilities">Key Responsibilities</label>
+                                <textarea id="responsibilities" name="responsibilities" class="form-input form-textarea" placeholder="• Lead manufacturing process optimization projects&#10;• Collaborate with cross-functional teams&#10;• Implement lean manufacturing principles..." required></textarea>
+                                <div class="form-help">List the main duties and responsibilities (use bullet points)</div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label required" for="qualifications">Qualifications & Requirements</label>
+                                <textarea id="qualifications" name="qualifications" class="form-input form-textarea" placeholder="• Bachelor's degree in Mechanical/Industrial Engineering&#10;• 5+ years of manufacturing experience&#10;• Experience with CAD software..." required></textarea>
+                                <div class="form-help">Education, experience, and essential requirements</div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label" for="preferred">Preferred Qualifications</label>
+                                <textarea id="preferred" name="preferred_qualifications" class="form-input form-textarea" placeholder="• Master's degree preferred&#10;• Six Sigma certification&#10;• Previous automotive industry experience..."></textarea>
+                                <div class="form-help">Nice-to-have qualifications that would be advantageous</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Requirements -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            Skills Requirements
+                        </h3>
+                        
+                        <div class="skills-container">
+                            <div class="skills-section">
+                                <div class="skills-title">Required Skills</div>
+                                <div id="requiredSkills">
+                                    <div class="skill-item">
+                                        <span class="skill-name">Lean Manufacturing</span>
+                                        <div class="skill-actions">
+                                            <span class="skill-level skill-required">Required</span>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="removeSkill(this)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-name">CAD Software</span>
+                                        <div class="skill-actions">
+                                            <span class="skill-level skill-required">Required</span>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="removeSkill(this)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="add-skill-btn" onclick="addSkill('required')">
+                                    <i class="fas fa-plus"></i> Add Required Skill
+                                </button>
+                            </div>
+                            
+                            <div class="skills-section">
+                                <div class="skills-title">Preferred Skills</div>
+                                <div id="preferredSkills">
+                                    <div class="skill-item">
+                                        <span class="skill-name">Six Sigma</span>
+                                        <div class="skill-actions">
+                                            <span class="skill-level skill-preferred">Preferred</span>
+                                            <button type="button" class="btn btn-warning btn-xs" onclick="removeSkill(this)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-name">Project Management</span>
+                                        <div class="skill-actions">
+                                            <span class="skill-level skill-preferred">Preferred</span>
+                                            <button type="button" class="btn btn-warning btn-xs" onclick="removeSkill(this)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="add-skill-btn" onclick="addSkill('preferred')">
+                                    <i class="fas fa-plus"></i> Add Preferred Skill
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Settings -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-settings"></i>
+                            </div>
+                            Application Settings
+                        </h3>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="applicationDeadline">Application Deadline</label>
+                                <input type="date" id="applicationDeadline" name="application_deadline" class="form-input">
+                                <div class="form-help">Leave blank for open-ended applications</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="positions">Number of Positions</label>
+                                <input type="number" id="positions" name="positions" class="form-input" value="1" min="1" max="50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="urgency">Urgency Level</label>
+                                <select id="urgency" name="urgency" class="form-input form-select">
+                                    <option value="normal">Normal</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="visibility">Job Visibility</label>
+                                <select id="visibility" name="visibility" class="form-input form-select">
+                                    <option value="public">Public (Visible to all)</option>
+                                    <option value="internal">Internal Only</option>
+                                    <option value="invited">Invited Candidates Only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="save-draft" onclick="saveDraft()">
+                            <i class="fas fa-save"></i>
+                            Save as Draft
+                        </button>
+                        
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="previewJob()">
+                                <i class="fas fa-eye"></i>
+                                Preview
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-rocket"></i>
+                                Post Job
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Skills management
+        function addSkill(type) {
+            const skillName = prompt('Enter skill name:');
+            if (skillName && skillName.trim()) {
+                const container = document.getElementById(type === 'required' ? 'requiredSkills' : 'preferredSkills');
+                const skillItem = document.createElement('div');
+                skillItem.className = 'skill-item';
+                skillItem.innerHTML = `
+                    <span class="skill-name">${skillName.trim()}</span>
+                    <div class="skill-actions">
+                        <span class="skill-level skill-${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                        <button type="button" class="btn btn-${type === 'required' ? 'danger' : 'warning'} btn-xs" onclick="removeSkill(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(skillItem);
+            }
+        }
+
+        function removeSkill(button) {
+            button.closest('.skill-item').remove();
+        }
+
+        // Form functions
+        function saveDraft() {
+            console.log('Saving job as draft...');
+            // Implement save draft functionality
+            alert('Job saved as draft!');
+        }
+
+        function previewJob() {
+            console.log('Opening job preview...');
+            // Implement preview functionality
+            window.open('/job-preview', '_blank');
+        }
+
+        // Form submission
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Posting job...');
+            
+            // Collect form data
+            const formData = new FormData(this);
+            
+            // Add skills data
+            const requiredSkills = Array.from(document.querySelectorAll('#requiredSkills .skill-name')).map(el => el.textContent);
+            const preferredSkills = Array.from(document.querySelectorAll('#preferredSkills .skill-name')).map(el => el.textContent);
+            
+            formData.append('required_skills', JSON.stringify(requiredSkills));
+            formData.append('preferred_skills', JSON.stringify(preferredSkills));
+            
+            // Simulate form submission
+            setTimeout(() => {
+                alert('Job posted successfully!');
+                window.location.href = '/manage-jobs';
+            }, 1000);
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Create job page loaded');
+            navbar.classList.remove('hidden');
+            
+            // Set minimum date for application deadline
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('applicationDeadline').setAttribute('min', today);
+        });
+    </script>
+</body>
+</html>"""
+

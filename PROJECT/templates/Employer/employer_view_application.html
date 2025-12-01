@@ -1,0 +1,1510 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Application - IndustrialConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Fixed Navbar with Perfect Alignment */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            transition: transform 0.3s ease, background 0.3s ease;
+            transform: translateY(0);
+            height: 80px;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            margin: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #edf2f7;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .user-menu:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.2;
+        }
+
+        .user-dropdown {
+            color: #718096;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            transform: translateY(1px);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Application Layout */
+        .application-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Main Application Content */
+        .application-main {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .subsection-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+
+        /* Candidate Overview */
+        .candidate-overview {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .candidate-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 32px;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .candidate-info h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .candidate-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        .candidate-basic-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        /* Match Scores */
+        .match-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .score-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .score-card.profile-match .score-value {
+            color: #48bb78;
+        }
+
+        .score-card.exam-score .score-value {
+            color: #667eea;
+        }
+
+        .score-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .score-description {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* Professional Summary */
+        .professional-summary {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-text {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Cover Letter */
+        .cover-letter {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .cover-letter-text {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Skills Analysis */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .skills-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skill-info {
+            flex: 1;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .skill-meta {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .skill-level {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .skill-level.expert {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .skill-level.advanced {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .skill-level.intermediate {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .skill-level.beginner {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .importance-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+
+        .importance-required {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .importance-preferred {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+
+        .importance-nice-to-have {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+        }
+
+        /* Sidebar */
+        .application-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+
+        /* Application Status */
+        .status-current {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .status-new {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .status-under-review {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+            border: 2px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .status-shortlisted {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            border: 2px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .status-hired {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9f7aea;
+            border: 2px solid rgba(159, 122, 234, 0.2);
+        }
+
+        .status-rejected {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+            border: 2px solid rgba(229, 62, 62, 0.2);
+        }
+
+        .applied-date {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        /* Status History */
+        .status-history {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .history-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+
+        .history-notes {
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quick-actions .btn {
+            justify-content: flex-start;
+        }
+
+        /* Interviewer Recommendations */
+        .interviewer-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .interviewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .interviewer-name {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .recommendation-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+
+        .recommendation-date {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-notes {
+            font-size: 14px;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .application-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .match-scores {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .candidate-basic-info {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            
+            .candidate-overview {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .candidate-basic-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-card {
+                padding: 20px;
+            }
+            
+            .sidebar-card {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 0;
+            }
+            
+            .page-header {
+                padding: 40px 0;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Proper Alignment -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-industry"></i>
+                    IndustrialConnect
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="/employer-dashboard">Dashboard</a></li>
+                    <li><a href="/post-job">Post Job</a></li>
+                    <li><a href="/manage-jobs">Manage Jobs</a></li>
+                    <li><a href="/applications" class="active">Applications</a></li>
+                    <li><a href="/analytics">Analytics</a></li>
+                    <li><a href="/candidates">Find Candidates</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-company">Tesla Inc.</div>
+                        </div>
+                        <i class="fas fa-chevron-down user-dropdown"></i>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header fade-in-up">
+                <div class="header-content">
+                    <div class="page-info">
+                        <div class="breadcrumb">
+                            <a href="/employer-dashboard">Dashboard</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <a href="/applications">Applications</a>
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Sarah Martinez</span>
+                        </div>
+                        <h1 class="page-title">Application Review</h1>
+                        <p class="page-subtitle">Comprehensive candidate evaluation and decision making</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/applications" class="btn btn-ghost">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Applications
+                        </a>
+                        <button class="btn btn-ghost" onclick="printApplication()">
+                            <i class="fas fa-print"></i>
+                            Print Application
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Layout -->
+            <div class="application-layout fade-in-up">
+                <!-- Main Content -->
+                <div class="application-main">
+                    <!-- Candidate Overview -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Candidate Overview</h3>
+                        </div>
+                        
+                        <div class="candidate-overview">
+                            <div class="candidate-avatar">SM</div>
+                            <div class="candidate-info">
+                                <h2>Sarah Martinez</h2>
+                                <div class="candidate-contact">
+                                    <div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>sarah.martinez@email.com</span>
+                                    </div>
+                                    <div class="contact-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>+1 (555) 123-4567</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="candidate-basic-info">
+                                    <div class="info-item">
+                                        <div class="info-label">Current Position</div>
+                                        <div class="info-value">Senior Manufacturing Engineer</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Experience</div>
+                                        <div class="info-value">8 years</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Education</div>
+                                        <div class="info-value">Master's in Mechanical Engineering</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Location</div>
+                                        <div class="info-value">Austin, TX</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Salary Expectation</div>
+                                        <div class="info-value">$95,000 annually</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Match Scores -->
+                        <div class="match-scores">
+                            <div class="score-card profile-match">
+                                <div class="score-value">87%</div>
+                                <div class="score-label">Profile Match</div>
+                                <div class="score-description">Based on job requirements</div>
+                            </div>
+                            <div class="score-card exam-score">
+                                <div class="score-value">92%</div>
+                                <div class="score-label">Exam Score</div>
+                                <div class="score-description">Technical assessment</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Summary -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Professional Summary</h3>
+                        </div>
+                        
+                        <div class="professional-summary">
+                            <div class="summary-text">
+                                Experienced Manufacturing Engineer with 8+ years in automotive and aerospace industries. Proven track record of implementing lean manufacturing principles, reducing production costs by 15%, and leading cross-functional teams. Expertise in process optimization, quality control, and automation systems. Strong background in Six Sigma methodologies and continuous improvement initiatives.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Letter -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Cover Letter</h3>
+                        </div>
+                        
+                        <div class="cover-letter">
+                            <div class="cover-letter-text">
+                                <p>Dear Hiring Manager,</p>
+                                <br>
+                                <p>I am excited to apply for the Senior Manufacturing Engineer position at Tesla. With over 8 years of experience in automotive manufacturing and a proven track record of implementing lean manufacturing principles, I am confident in my ability to contribute to Tesla's mission of accelerating sustainable transport.</p>
+                                <br>
+                                <p>In my current role at Ford Motor Company, I have successfully led process optimization initiatives that resulted in a 15% reduction in production costs and a 20% improvement in overall equipment effectiveness. My expertise in automation systems and robotics aligns perfectly with Tesla's advanced manufacturing approach.</p>
+                                <br>
+                                <p>I am particularly drawn to Tesla's innovative culture and commitment to sustainability. I believe my experience in implementing environmentally conscious manufacturing processes and my passion for continuous improvement would be valuable assets to your team.</p>
+                                <br>
+                                <p>Thank you for considering my application. I look forward to the opportunity to discuss how my skills and experience can contribute to Tesla's continued success.</p>
+                                <br>
+                                <p>Sincerely,<br>Sarah Martinez</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Analysis -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Skills Analysis</h3>
+                        </div>
+                        
+                        <div class="skills-grid">
+                            <div class="skills-section">
+                                <h4 class="subsection-title">Matching Skills</h4>
+                                <div class="skills-list">
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">Lean Manufacturing</div>
+                                            <div class="skill-meta">Expert • 6 years experience</div>
+                                        </div>
+                                        <div class="skill-level expert">Expert</div>
+                                        <div class="importance-badge importance-required">Required</div>
+                                    </div>
+                                    
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">Process Optimization</div>
+                                            <div class="skill-meta">Advanced • 5 years experience</div>
+                                        </div>
+                                        <div class="skill-level advanced">Advanced</div>
+                                        <div class="importance-badge importance-required">Required</div>
+                                    </div>
+                                    
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">Six Sigma</div>
+                                            <div class="skill-meta">Advanced • 4 years experience</div>
+                                        </div>
+                                        <div class="skill-level advanced">Advanced</div>
+                                        <div class="importance-badge importance-preferred">Preferred</div>
+                                    </div>
+                                    
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">CAD Software</div>
+                                            <div class="skill-meta">Expert • 8 years experience</div>
+                                        </div>
+                                        <div class="skill-level expert">Expert</div>
+                                        <div class="importance-badge importance-required">Required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="skills-section">
+                                <h4 class="subsection-title">Missing Skills</h4>
+                                <div class="skills-list">
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">Tesla Manufacturing Systems</div>
+                                            <div class="skill-meta">Minimum 2 years required</div>
+                                        </div>
+                                        <div class="importance-badge importance-preferred">Preferred</div>
+                                    </div>
+                                    
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <div class="skill-name">Electric Vehicle Systems</div>
+                                            <div class="skill-meta">Nice to have</div>
+                                        </div>
+                                        <div class="importance-badge importance-nice-to-have">Nice to Have</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- All Candidate Skills -->
+                        <div style="margin-top: 32px;">
+                            <h4 class="subsection-title">All Candidate Skills</h4>
+                            <div class="skills-list">
+                                <div class="skill-item">
+                                    <div class="skill-info">
+                                        <div class="skill-name">Manufacturing Engineering</div>
+                                        <div class="skill-meta">Engineering • 8 years</div>
+                                    </div>
+                                    <div class="skill-level expert">Expert</div>
+                                </div>
+                                
+                                <div class="skill-item">
+                                    <div class="skill-info">
+                                        <div class="skill-name">Project Management</div>
+                                        <div class="skill-meta">Management • 5 years</div>
+                                    </div>
+                                    <div class="skill-level advanced">Advanced</div>
+                                </div>
+                                
+                                <div class="skill-item">
+                                    <div class="skill-info">
+                                        <div class="skill-name">Quality Control</div>
+                                        <div class="skill-meta">Quality • 6 years</div>
+                                    </div>
+                                    <div class="skill-level expert">Expert</div>
+                                </div>
+                                
+                                <div class="skill-item">
+                                    <div class="skill-info">
+                                        <div class="skill-name">Automation Systems</div>
+                                        <div class="skill-meta">Technical • 4 years</div>
+                                    </div>
+                                    <div class="skill-level advanced">Advanced</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="application-sidebar">
+                    <!-- Application Status -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-title">Application Status</div>
+                        
+                        <div class="status-current">
+                            <div class="status-badge status-new">New</div>
+                            <div class="applied-date">Applied September 14, 2025 at 14:30</div>
+                        </div>
+                        
+                        <h5 style="margin-bottom: 16px; font-weight: 600; color: #1a202c;">Status History</h5>
+                        <div class="status-history">
+                            <div class="history-item">
+                                <div class="history-icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <div class="history-content">
+                                    <div class="history-title">Application Submitted</div>
+                                    <div class="history-date">Sep 14, 2025 at 14:30</div>
+                                    <div class="history-notes">Candidate submitted application with CV and cover letter</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-title">Quick Actions</div>
+                        
+                        <div class="quick-actions">
+                            <button class="btn btn-primary btn-sm" onclick="changeStatus('under-review')">
+                                <i class="fas fa-eye"></i>
+                                Mark as Under Review
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="changeStatus('shortlisted')">
+                                <i class="fas fa-star"></i>
+                                Shortlist Candidate
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="scheduleInterview()">
+                                <i class="fas fa-calendar"></i>
+                                Schedule Interview
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="downloadCV()">
+                                <i class="fas fa-download"></i>
+                                Download CV
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="sendMessage()">
+                                <i class="fas fa-envelope"></i>
+                                Send Message
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="rejectApplication()">
+                                <i class="fas fa-times"></i>
+                                Reject Application
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recomment Interviewer -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-title">Recommend Interviewer</div>
+                        
+                        <button class="btn btn-outline btn-sm" onclick="recommendInterviewer()" style="width: 100%; margin-bottom: 16px;">
+                            <i class="fas fa-plus"></i>
+                            Recommend for Interview
+                        </button>
+                        
+                        <h5 style="margin-bottom: 16px; font-weight: 600; color: #1a202c;">Interviewer Recommendations</h5>
+                        
+                        <div class="interviewer-card">
+                            <div class="interviewer-header">
+                                <div class="interviewer-name">Michael Chen</div>
+                                <div class="recommendation-status">Approved</div>
+                            </div>
+                            <div class="recommendation-date">Recommended on September 15, 2025 at 09:15</div>
+                            <div class="recommendation-notes">
+                                <strong>Notes:</strong> Strong candidate with excellent manufacturing background. Would be perfect fit for our EV production line team.
+                            </div>
+                        </div>
+                        
+                        <div class="interviewer-card">
+                            <div class="interviewer-header">
+                                <div class="interviewer-name">Lisa Rodriguez</div>
+                                <div class="recommendation-status">Pending</div>
+                            </div>
+                            <div class="recommendation-date">Recommended on September 15, 2025 at 11:30</div>
+                            <div class="recommendation-notes">
+                                <strong>Notes:</strong> Need to verify Six Sigma certification level before proceeding.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        let scrollTimer = null;
+
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+            }
+            scrollTimer = setTimeout(handleScroll, 10);
+        });
+
+        // Application management functions
+        function changeStatus(newStatus) {
+            console.log(`Changing application status to: ${newStatus}`);
+            
+            // Update status badge
+            const statusBadge = document.querySelector('.status-badge');
+            statusBadge.className = `status-badge status-${newStatus}`;
+            statusBadge.textContent = newStatus.replace('-', ' ').toUpperCase();
+            
+            // Add to status history
+            const statusHistory = document.querySelector('.status-history');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerHTML = `
+                <div class="history-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="history-content">
+                    <div class="history-title">Status Changed to ${newStatus.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+                    <div class="history-date">${new Date().toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    })}</div>
+                    <div class="history-notes">Status updated by John Doe</div>
+                </div>
+            `;
+            statusHistory.appendChild(historyItem);
+        }
+
+        function scheduleInterview() {
+            console.log('Opening interview scheduling modal');
+            alert('Interview scheduling modal would open here');
+        }
+
+        function downloadCV() {
+            console.log('Downloading CV');
+            // Simulate file download
+            const link = document.createElement('a');
+            link.href = '#';
+            link.download = 'Sarah_Martinez_CV.pdf';
+            link.click();
+        }
+
+        function sendMessage() {
+            console.log('Opening message composer');
+            alert('Message composer would open here');
+        }
+
+        function rejectApplication() {
+            if (confirm('Are you sure you want to reject this application? This action cannot be undone.')) {
+                changeStatus('rejected');
+                console.log('Application rejected');
+            }
+        }
+
+        function recommendInterviewer() {
+            console.log('Opening interviewer recommendation form');
+            alert('Interviewer recommendation form would open here');
+        }
+
+        function printApplication() {
+            window.print();
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Application view page loaded');
+            navbar.classList.remove('hidden');
+            
+            // Animate score counters
+            setTimeout(() => {
+                const scoreValues = document.querySelectorAll('.score-value');
+                scoreValues.forEach(scoreElement => {
+                    const targetValue = parseInt(scoreElement.textContent);
+                    let currentValue = 0;
+                    const increment = targetValue / 50;
+                    
+                    const timer = setInterval(() => {
+                        currentValue += increment;
+                        if (currentValue >= targetValue) {
+                            scoreElement.textContent = targetValue + '%';
+                            clearInterval(timer);
+                        } else {
+                            scoreElement.textContent = Math.floor(currentValue) + '%';
+                        }
+                    }, 30);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>"""
+
+

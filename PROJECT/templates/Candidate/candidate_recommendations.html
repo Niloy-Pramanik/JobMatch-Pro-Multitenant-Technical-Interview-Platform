@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Job Recommendations - IndustrialConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar - Landing Page Style */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            margin-right: 15px;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .user-dropdown-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 220px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            margin-right: 15px;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #4a5568;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        /* Recommendations Topbar */
+        .recommendations-topbar {
+            background: white;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 24px 0;
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendations-topbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recommendations-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .recommendations-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .recommendations-details h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .recommendations-subtitle {
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .recommendations-filters {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .filter-dropdown {
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .filter-dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .results-count {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            min-height: calc(100vh - 180px);
+        }
+
+        /* Recommendations Grid */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .recommendation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .job-info {
+            flex: 1;
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 16px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .company-name {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .match-score.good {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .match-score.fair {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .match-score.poor {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .job-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .meta-item i {
+            color: #667eea;
+            font-size: 0.85rem;
+        }
+
+        .job-description {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .salary-info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .salary-range {
+            font-weight: 700;
+            color: #38a169;
+            font-size: 1.1rem;
+        }
+
+        .posted-date {
+            color: #718096;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .match-reasons {
+            background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .match-reasons-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-reasons-title i {
+            color: #667eea;
+        }
+
+        .match-reason {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .match-reason:last-child {
+            margin-bottom: 0;
+        }
+
+        .match-reason i {
+            color: #48bb78;
+            font-size: 0.8rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .bookmark-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #718096;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .bookmark-btn:hover,
+        .bookmark-btn.bookmarked {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
+        }
+
+        /* Quick Filters */
+        .quick-filters {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-weight: 700;
+            color: #2d3748;
+            margin-right: 10px;
+        }
+
+        .filter-chip {
+            padding: 10px 20px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: white;
+            border-radius: 24px;
+            padding: 80px 40px;
+            text-align: center;
+            color: #718096;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 24px;
+            color: #e2e8f0;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state .btn-primary {
+            display: inline-flex;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .loading-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 70%;
+            margin-bottom: 16px;
+        }
+
+        .skeleton-company {
+            height: 20px;
+            width: 50%;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-text {
+            height: 16px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-text:last-child {
+            width: 80%;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .nav-container,
+            .recommendations-topbar-container {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 25px;
+            }
+
+            .recommendations-filters {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .recommendations-topbar-container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .recommendations-filters {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .filter-dropdown,
+            .results-count {
+                width: 100%;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .recommendation-card {
+                padding: 24px;
+            }
+
+            .job-meta {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .quick-filters {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .recommendations-details h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 30px 15px;
+            }
+
+            .recommendation-card {
+                padding: 20px;
+            }
+
+            .quick-filters {
+                padding: 20px;
+            }
+
+            .empty-state {
+                padding: 60px 30px;
+            }
+
+            .recommendations-details h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .scale-in {
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        @keyframes scaleIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-industry"></i>
+                IndustrialConnect
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/jobs" class="nav-link">Browse Jobs</a></li>
+                <li><a href="/recommendations" class="nav-link active">Recommendations</a></li>
+                <li><a href="/applications" class="nav-link">My Applications</a></li>
+                <li><a href="/profile" class="nav-link">Profile</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-dropdown-btn">
+                    <div class="user-avatar">ST</div>
+                    <span>Syed Thuha</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/profile" class="dropdown-item">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a href="/preferences" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i> Job Preferences
+                    </a>
+                    <a href="/bookmarks" class="dropdown-item">
+                        <i class="fas fa-bookmark"></i> Saved Jobs
+                    </a>
+                    <a href="/settings" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Recommendations Topbar -->
+    <div class="recommendations-topbar">
+        <div class="recommendations-topbar-container">
+            <div class="recommendations-info">
+                <div class="recommendations-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <div class="recommendations-details">
+                    <h1>Personalized Job Recommendations</h1>
+                    <p class="recommendations-subtitle">Jobs matched to your skills, experience, and preferences</p>
+                </div>
+            </div>
+
+            <div class="recommendations-filters">
+                <select class="filter-dropdown" onchange="filterRecommendations(this.value)">
+                    <option value="all">All Matches</option>
+                    <option value="excellent">Excellent Match (90%+)</option>
+                    <option value="good">Good Match (70-89%)</option>
+                    <option value="fair">Fair Match (50-69%)</option>
+                </select>
+                <div class="results-count">
+                    <i class="fas fa-search"></i>
+                    <span id="resultsCount">6</span> recommendations found
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Quick Filters -->
+        <section class="quick-filters fade-in">
+            <span class="filter-label">Quick Filters:</span>
+            <span class="filter-chip active" onclick="toggleFilter(this, 'recent')" data-filter="recent">Recent Postings</span>
+            <span class="filter-chip" onclick="toggleFilter(this, 'remote')" data-filter="remote">Remote Jobs</span>
+            <span class="filter-chip" onclick="toggleFilter(this, 'senior')" data-filter="senior">Senior Level</span>
+            <span class="filter-chip" onclick="toggleFilter(this, 'tech')" data-filter="tech">Technology</span>
+            <span class="filter-chip" onclick="toggleFilter(this, 'salary')" data-filter="salary">High Salary</span>
+            <button class="refresh-btn" onclick="refreshRecommendations()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+        </section>
+
+        <!-- Recommendations Grid -->
+        <section class="recommendations-grid slide-up" style="animation-delay: 0.2s">
+            <!-- Recommendation Card 1 -->
+            <div class="recommendation-card" onclick="viewJobDetails(1)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Senior Software Engineer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">TC</div>
+                            <div class="company-name">TechCorp Solutions</div>
+                        </div>
+                    </div>
+                    <div class="match-score good">
+                        <i class="fas fa-star"></i>
+                        <span>96% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Dhaka, Bangladesh</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>5+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 12, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$28,000 - $35,000</div>
+                    <div class="posted-date">2 days ago</div>
+                </div>
+
+                <p class="job-description">
+                    We are seeking a talented Senior Software Engineer to join our innovative development team. 
+                    You will play a key role in designing, developing, and maintaining cutting-edge web applications 
+                    that serve millions of users worldwide...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Strong skill alignment with Python and Django</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Experience requirement met (3+ years)</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Location preference match</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Salary expectation aligned</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/1" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(1)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn" onclick="event.stopPropagation(); bookmarkJob(this, 1)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Card 2 -->
+            <div class="recommendation-card" onclick="viewJobDetails(2)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Full Stack Developer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">IL</div>
+                            <div class="company-name">Innovation Labs</div>
+                        </div>
+                    </div>
+                    <div class="match-score good">
+                        <i class="fas fa-star"></i>
+                        <span>91% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Remote</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>3+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 11, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$32,000 - $40,000</div>
+                    <div class="posted-date">3 days ago</div>
+                </div>
+
+                <p class="job-description">
+                    Join our fast-growing fintech startup as a Full Stack Developer! You'll be building innovative 
+                    financial solutions using modern technologies. We offer flexible remote work, competitive salary, 
+                    and equity options...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>JavaScript and React expertise matches</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Remote work preference aligned</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Experience requirement exceeded</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/2" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(2)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn bookmarked" onclick="event.stopPropagation(); bookmarkJob(this, 2)">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Card 3 -->
+            <div class="recommendation-card" onclick="viewJobDetails(3)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Python Developer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">DC</div>
+                            <div class="company-name">DataCorp Industries</div>
+                        </div>
+                    </div>
+                    <div class="match-score good">
+                        <i class="fas fa-star"></i>
+                        <span>87% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Dhaka, Bangladesh</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>2+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 07, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$25,000 - $32,000</div>
+                    <div class="posted-date">1 week ago</div>
+                </div>
+
+                <p class="job-description">
+                    Exciting opportunity to work with big data and machine learning! As a Python Developer, you'll 
+                    build data pipelines, create analytics dashboards, and work with our data science team...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Python proficiency strongly matches</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Data analysis skills relevant</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Location and experience aligned</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/3" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(3)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn" onclick="event.stopPropagation(); bookmarkJob(this, 3)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Card 4 -->
+            <div class="recommendation-card" onclick="viewJobDetails(4)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Machine Learning Engineer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">AI</div>
+                            <div class="company-name">AI Innovations Hub</div>
+                        </div>
+                    </div>
+                    <div class="match-score good">
+                        <i class="fas fa-star"></i>
+                        <span>89% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Remote</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>3+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 09, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$35,000 - $45,000</div>
+                    <div class="posted-date">5 days ago</div>
+                </div>
+
+                <p class="job-description">
+                    Join our cutting-edge AI team and work on revolutionary machine learning projects that push 
+                    the boundaries of artificial intelligence. You'll develop ML models, optimize algorithms...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ML and Python skills align perfectly</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>High salary matches expectations</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Remote work preference</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/4" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(4)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn" onclick="event.stopPropagation(); bookmarkJob(this, 4)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Card 5 -->
+            <div class="recommendation-card" onclick="viewJobDetails(5)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Backend Developer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">ST</div>
+                            <div class="company-name">StartupTech Inc</div>
+                        </div>
+                    </div>
+                    <div class="match-score good">
+                        <i class="fas fa-star"></i>
+                        <span>83% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Chittagong, Bangladesh</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>3+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 10, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$26,000 - $34,000</div>
+                    <div class="posted-date">4 days ago</div>
+                </div>
+
+                <p class="job-description">
+                    We're building the future of e-commerce in Bangladesh! As a Backend Developer, you'll design 
+                    and implement scalable APIs, work with microservices architecture...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Backend development skills match</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Experience level appropriate</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Technology stack alignment</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/5" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(5)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn" onclick="event.stopPropagation(); bookmarkJob(this, 5)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Card 6 -->
+            <div class="recommendation-card" onclick="viewJobDetails(6)">
+                <div class="card-header">
+                    <div class="job-info">
+                        <h2 class="job-title">Frontend Developer</h2>
+                        <div class="company-info">
+                            <div class="company-logo">WD</div>
+                            <div class="company-name">WebDev Solutions</div>
+                        </div>
+                    </div>
+                    <div class="match-score fair">
+                        <i class="fas fa-star"></i>
+                        <span>78% Match</span>
+                    </div>
+                </div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Dhaka, Bangladesh</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Full-time</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>2+ years experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted Sep 08, 2025</span>
+                    </div>
+                </div>
+
+                <div class="salary-info">
+                    <div class="salary-range">$23,000 - $30,000</div>
+                    <div class="posted-date">6 days ago</div>
+                </div>
+
+                <p class="job-description">
+                    Create stunning user interfaces and exceptional user experiences! As a Frontend Developer, 
+                    you'll work with React, TypeScript, and modern CSS frameworks...
+                </p>
+
+                <div class="match-reasons">
+                    <div class="match-reasons-title">
+                        <i class="fas fa-bullseye"></i>
+                        Why This Matches:
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>React and JavaScript skills match</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Frontend experience relevant</span>
+                    </div>
+                    <div class="match-reason">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Location preference aligned</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/jobs/6" class="action-btn btn-primary" onclick="event.stopPropagation()">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); applyQuick(6)">
+                        <i class="fas fa-paper-plane"></i>
+                        Quick Apply
+                    </button>
+                    <button class="bookmark-btn" onclick="event.stopPropagation(); bookmarkJob(this, 6)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Filter recommendations by match quality
+        function filterRecommendations(filterType) {
+            const cards = document.querySelectorAll('.recommendation-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const matchScore = parseInt(card.querySelector('.match-score span').textContent);
+                let shouldShow = false;
+
+                switch(filterType) {
+                    case 'excellent':
+                        shouldShow = matchScore >= 90;
+                        break;
+                    case 'good':
+                        shouldShow = matchScore >= 70 && matchScore < 90;
+                        break;
+                    case 'fair':
+                        shouldShow = matchScore >= 50 && matchScore < 70;
+                        break;
+                    default:
+                        shouldShow = true;
+                }
+
+                if (shouldShow) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('resultsCount').textContent = visibleCount;
+            showNotification(`Filtered to ${visibleCount} recommendations`, 'info');
+        }
+
+        // Toggle quick filters
+        function toggleFilter(element, filterType) {
+            element.classList.toggle('active');
+
+            const isActive = element.classList.contains('active');
+            const filterName = element.textContent;
+
+            if (isActive) {
+                showNotification(`${filterName} filter applied`, 'info');
+            } else {
+                showNotification(`${filterName} filter removed`, 'info');
+            }
+
+            // In real implementation, this would filter the results
+            console.log(`Filter ${filterType} is now:`, isActive ? 'active' : 'inactive');
+        }
+
+        // Refresh recommendations
+        function refreshRecommendations() {
+            showNotification('Refreshing recommendations...', 'info');
+
+            // Show loading state
+            const grid = document.querySelector('.recommendations-grid');
+            grid.innerHTML = createLoadingCards();
+
+            setTimeout(() => {
+                location.reload(); // In real app, this would fetch new recommendations
+            }, 2000);
+        }
+
+        // Create loading skeleton cards
+        function createLoadingCards() {
+            let loadingHTML = '';
+            for (let i = 0; i < 6; i++) {
+                loadingHTML += `
+                    <div class="loading-card">
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-company"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                `;
+            }
+            return loadingHTML;
+        }
+
+        // View job details
+        function viewJobDetails(jobId) {
+            showNotification('Loading job details...', 'info');
+
+            setTimeout(() => {
+                window.location.href = `/jobs/${jobId}`;
+            }, 500);
+        }
+
+        // Quick apply to job
+        function applyQuick(jobId) {
+            showNotification('Preparing quick application...', 'info');
+
+            setTimeout(() => {
+                showNotification('Application submitted successfully!', 'success');
+                console.log('Quick applied to job:', jobId);
+            }, 1500);
+        }
+
+        // Bookmark job functionality
+        function bookmarkJob(button, jobId) {
+            const icon = button.querySelector('i');
+
+            if (button.classList.contains('bookmarked')) {
+                button.classList.remove('bookmarked');
+                icon.className = 'far fa-bookmark';
+                showNotification('Job removed from bookmarks', 'info');
+            } else {
+                button.classList.add('bookmarked');
+                icon.className = 'fas fa-bookmark';
+                showNotification('Job bookmarked successfully!', 'success');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button onclick="closeNotification(this.parentElement)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; margin-left: 15px;">&times;</button>
+            `;
+
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '100px',
+                right: '30px',
+                background: 'white',
+                borderLeft: `5px solid ${getNotificationColor(type)}`,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                borderRadius: '12px',
+                padding: '20px 25px',
+                zIndex: '10000',
+                maxWidth: '400px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.4s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                fontWeight: '500'
+            });
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    closeNotification(notification);
+                }
+            }, 4000);
+        }
+
+        function closeNotification(notification) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 400);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: '#38a169',
+                error: '#e53e3e',
+                warning: '#dd6b20',
+                info: '#667eea'
+            };
+            return colors[type] || colors.info;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Recommendations page initialized');
+
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('6 personalized recommendations loaded based on your profile!', 'success');
+            }, 1500);
+        });
+
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
