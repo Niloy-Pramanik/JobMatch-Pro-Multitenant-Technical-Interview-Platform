@@ -152,5 +152,5 @@ FLASK-DBMS-PROJECT-master/
 ```
 
 ## Contributor
-- https://github.com/Knocktern
+- https://github.com/Niloy-Pramanik
   
